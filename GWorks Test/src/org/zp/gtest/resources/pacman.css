@@ -1,0 +1,196 @@
+sheet.PACMAN_SPRITES
+sprite.D {
+	background: url(pacman.png) -30px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.E {
+	background: url(pacman.png) -39px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.F {
+	background: url(pacman.png) -48px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.G {
+	background: url(pacman.png) -57px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.A {
+	background: url(pacman.png) -3px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.B {
+	background: url(pacman.png) -12px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.C {
+	background: url(pacman.png) -21px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.DASH {
+	background: url(pacman.png) -91px -54px;
+	width: 6px; 
+	height: 7px; 
+}
+sprite.L {
+	background: url(pacman.png) -92px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.COPYRIGHT {
+	background: url(pacman.png) -119px -53px;
+	width: 8px; 
+	height: 8px; 
+}
+sprite.FOUR {
+	background: url(pacman.png) -38px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.M {
+	background: url(pacman.png) -101px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.PERIOD {
+	background: url(pacman.png) -99px -54px;
+	width: 5px; 
+	height: 7px; 
+}
+sprite.N {
+	background: url(pacman.png) -110px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.O {
+	background: url(pacman.png) -119px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.H {
+	background: url(pacman.png) -66px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.I {
+	background: url(pacman.png) -75px -68px;
+	width: 6px; 
+	height: 7px; 
+}
+sprite.K {
+	background: url(pacman.png) -83px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.U {
+	background: url(pacman.png) -163px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.T {
+	background: url(pacman.png) -155px -68px;
+	width: 6px; 
+	height: 7px; 
+}
+sprite.SEVEN {
+	background: url(pacman.png) -64px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.V {
+	background: url(pacman.png) -172px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.EXCLAMATION_POINT {
+	background: url(pacman.png) -130px -53px;
+	width: 4px; 
+	height: 8px; 
+}
+sprite.LOGO {
+	background: url(pacman.png) -2px -4px;
+	width: 182px; 
+	height: 46px; 
+}
+sprite.ONE {
+	background: url(pacman.png) -12px -54px;
+	width: 6px; 
+	height: 7px; 
+}
+sprite.RED_A {
+	background: url(pacman.png) -157px -54px;
+	width: 7px; 
+	height: 8px; 
+}
+sprite.S {
+	background: url(pacman.png) -146px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.R {
+	background: url(pacman.png) -137px -68px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.TWO {
+	background: url(pacman.png) -20px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.SIX {
+	background: url(pacman.png) -56px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.Y {
+	background: url(pacman.png) -181px -68px;
+	width: 6px; 
+	height: 7px; 
+}
+sprite.EIGHT {
+	background: url(pacman.png) -73px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.ZERO {
+	background: url(pacman.png) -3px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.ORANGE_A {
+	background: url(pacman.png) -177px -54px;
+	width: 7px; 
+	height: 8px; 
+}
+sprite.FIVE {
+	background: url(pacman.png) -47px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.ARROW {
+	background: url(pacman.png) -107px -54px;
+	width: 8px; 
+	height: 7px; 
+}
+sprite.NINE {
+	background: url(pacman.png) -82px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.THREE {
+	background: url(pacman.png) -29px -54px;
+	width: 7px; 
+	height: 7px; 
+}
+sprite.BLUE_A {
+	background: url(pacman.png) -167px -54px;
+	width: 7px; 
+	height: 8px; 
+}
