@@ -22,7 +22,7 @@ public class Framerate implements GPaintStrategy {
 		double framerate = loop.getActualFramerate();
 		graphics.drawString(String.valueOf(framerate) + " FPS", 25, 25);
 		if(currentFrame > canvas.FPS) {
-			if(framerate < min && framerate != -1.0D)
+			if(framerate < min)
 				min = framerate;
 			if(framerate > max)
 				max = framerate;

@@ -36,13 +36,13 @@ public class Game {
 					x = 0;
 					y += image.getHeight();
 				}
+				if(y + image.getHeight() >= canvas.getHeight()) {
+					x = 0;
+					y = 0;
+				}
 			}
 		});
-//		for(int iii = 0; iii < canvas.getWidth(); iii += 20) {
-//			gameState1.addGPaintStrategy(new XLine(iii));
-//		}
 		gameState1.addGPaintStrategy(new Framerate(canvas));
-//		gameState1.addGPaintStrategy(new XLine(0));
 		canvas.setGState(gameState1);
 		frame.setVisible(true);
 		frame.setResizable(false);
