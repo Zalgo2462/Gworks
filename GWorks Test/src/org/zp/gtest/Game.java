@@ -18,13 +18,13 @@ public class Game {
 		final GFrame frame = new GFrame("Test", canvas);
 		canvas.registerDefaultInputListeners();
 		GMutableState gameState1 = new GMutableState();
-		/*gameState1.addGPaintStrategy(new GPaintStrategy() {
+		gameState1.addGPaintStrategy(new GPaintStrategy() {
 			int x = 0;
 			int y = 0;
 			boolean mouthOpen = false;
 			@Override
 			public void paint(GCanvas canvas, Graphics graphics) {
-//				graphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+				graphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 				BufferedImage image = !mouthOpen ?
 						Resources.PACMAN_SPRITES.getSprite("RIGHT_PACMAN_1") :
 						Resources.PACMAN_SPRITES.getSprite("RIGHT_PACMAN_2");
@@ -37,12 +37,12 @@ public class Game {
 					y += image.getHeight();
 				}
 			}
-		});*/
-		for(int iii = 0; iii < canvas.getWidth(); iii += 20) {
-			gameState1.addGPaintStrategy(new XLine(iii));
-		}
+		});
+//		for(int iii = 0; iii < canvas.getWidth(); iii += 20) {
+//			gameState1.addGPaintStrategy(new XLine(iii));
+//		}
 		gameState1.addGPaintStrategy(new Framerate(canvas));
-		gameState1.addGPaintStrategy(new XLine(0));
+//		gameState1.addGPaintStrategy(new XLine(0));
 		canvas.setGState(gameState1);
 		frame.setVisible(true);
 		frame.setResizable(false);
