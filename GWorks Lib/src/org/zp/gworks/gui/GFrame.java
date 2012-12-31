@@ -65,7 +65,6 @@ public final class GFrame extends Frame {
 
 	public void dispose() {
 		super.dispose();
-		canvas.getLoop().setIsRunning(false);
-		canvas.getGameThread().interrupt();
+		canvas.stopCanvas();
 	}
 }

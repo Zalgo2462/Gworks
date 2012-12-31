@@ -19,6 +19,7 @@ public final class GCanvas extends Canvas {
 	public final int FRAME_DELAY;
 	private final int BUFFERS;
 	private Thread gameThread;
+	private Thread timerAccuracyThread;
 	private GLoop loop;
 	private GMutableState backgroundState;
 	private GState gState;
@@ -45,8 +46,11 @@ public final class GCanvas extends Canvas {
 		createBackgroundState();
 		createGLoop();
 		createRenderer();
+		createTimerAccuracyThread();
 		createGameThread();
 		gameThread.start();
+		if(System.getProperty("os.name").startsWith("win"))
+			timerAccuracyThread.start();
 	}
 
 	public void createBufferStrategy(final int buffers) {
@@ -78,8 +82,22 @@ public final class GCanvas extends Canvas {
 			this.renderer = new GRenderer(this);
 	}
 
+	private void createTimerAccuracyThread() {
+		timerAccuracyThread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(Long.MAX_VALUE);
+				} catch (Exception e) {}
+			}
+		});
+		timerAccuracyThread.setName("GWorks Timer");
+		timerAccuracyThread.setDaemon(true);
+	}
+
 	private void createGameThread() {
 		this.gameThread = new Thread(getLoop());
+		this.gameThread.setName("GWorks Game Thread");
 	}
 
 	public GMutableState getBackgroundState() {
@@ -127,5 +145,11 @@ public final class GCanvas extends Canvas {
 	public void registerCustomInputListeners(final KeyListener kl, final MouseListener ml) {
 		addKeyListener(kl);
 		addMouseListener(ml);
+	}
+
+	public void stopCanvas() {
+		loop.setIsRunning(false);
+		gameThread.interrupt();
+		timerAccuracyThread.interrupt();
 	}
 }
