@@ -38,6 +38,10 @@ public class Game {
 				}
 			}
 		});*/
+		for(int iii = 0; iii < canvas.getWidth(); iii += 20) {
+			gameState1.addGPaintStrategy(new XLine(iii));
+		}
+		gameState1.addGPaintStrategy(new Framerate(canvas));
 		gameState1.addGPaintStrategy(new XLine(0));
 		canvas.setGState(gameState1);
 		frame.setVisible(true);

@@ -27,7 +27,7 @@ public final class GCanvas extends Canvas {
 	public GCanvas(final Dimension dimension, final int fps, final int buffers) {
 		super();
 		this.FPS = fps;
-		this.FRAME_DELAY = Math.round(1000.0F / (float) FPS);
+		this.FRAME_DELAY = Math.round(1000000000.0F / (float) FPS);
 		this.BUFFERS = buffers;
 		setMinimumSize(dimension);
 		setPreferredSize(dimension);
