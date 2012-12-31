@@ -18,7 +18,7 @@ public class Framerate implements GPaintStrategy {
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics) {
 		currentFrame++;
-		graphics.setColor(Color.WHITE);
+		graphics.setColor(Color.BLACK);
 		double framerate = loop.getActualFramerate();
 		graphics.drawString(String.valueOf(framerate) + " FPS", 25, 25);
 		if(currentFrame > canvas.FPS) {

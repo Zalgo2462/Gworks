@@ -16,6 +16,6 @@ public class Keyboard implements GPaintStrategy{
 		KeyEvent e = ((GKeyListener)canvas.getKeyListeners()[0]).getNextTypedEvent();
 		if(e != null)
 			string += e.getKeyChar();
-		graphics.drawString(string, 25, 75);
+		graphics.drawString("Keyboard input: " + string, 25, 125);
 	}
 }

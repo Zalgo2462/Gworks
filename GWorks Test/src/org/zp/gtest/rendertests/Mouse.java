@@ -16,6 +16,6 @@ public class Mouse implements GPaintStrategy {
 		MouseEvent e = ((GMouseListener)canvas.getMouseListeners()[0]).getNextClickedEvent();
 		if(e != null)
 			currPoint = e.getPoint();
-		graphics.drawString(currPoint.toString(), 25, 50);
+		graphics.drawString(currPoint.toString(), 25, 105);
 	}
 }
