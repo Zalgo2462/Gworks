@@ -10,8 +10,8 @@ public class Resources {
 	static {
 		try {
 			PACMAN_SPRITES = new GSpriteSheet(
-					Resources.class.getResourceAsStream("/org/zp/gtest/resources/pacman.png"),
-					Resources.class.getResourceAsStream(("/org/zp/gtest/resources/pacman.css")));
+					Resources.class.getResourceAsStream("/org/zp/pacman/resources/pacman.png"),
+					Resources.class.getResourceAsStream(("/org/zp/pacman/resources/pacman.css")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
