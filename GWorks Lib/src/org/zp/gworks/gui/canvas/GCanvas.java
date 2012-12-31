@@ -7,6 +7,7 @@ import org.zp.gworks.gui.canvas.rendering.GRenderer;
 import org.zp.gworks.logic.GLoop;
 import org.zp.gworks.logic.GState.GMutableState;
 import org.zp.gworks.logic.GState.GState;
+import sun.java2d.pipe.hw.ExtendedBufferCapabilities;
 
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -49,7 +50,17 @@ public final class GCanvas extends Canvas {
 	}
 
 	public void createBufferStrategy(final int buffers) {
-		super.createBufferStrategy(buffers);
+		final GraphicsConfiguration gc = GraphicsEnvironment.
+				getLocalGraphicsEnvironment().
+				getDefaultScreenDevice().getDefaultConfiguration();
+		final ExtendedBufferCapabilities ebc = new ExtendedBufferCapabilities(gc.getBufferCapabilities(),
+				ExtendedBufferCapabilities.VSyncType.VSYNC_ON);
+		try {
+			super.createBufferStrategy(buffers, ebc);
+		} catch (AWTException e) {
+			System.err.println(e.toString());
+			super.createBufferStrategy(buffers);
+		}
 		this.strategy = getBufferStrategy();
 	}
 
@@ -95,13 +106,15 @@ public final class GCanvas extends Canvas {
 		return renderer;
 	}
 
-	public synchronized void drawStrategy(final GPaintStrategy paintStrategy) {
+	public void drawStrategies(final GPaintStrategy... paintStrategies) {
 		Graphics graphics = strategy.getDrawGraphics();
-		paintStrategy.paint(this, graphics);
+		for(GPaintStrategy paintStrategy : paintStrategies){
+			paintStrategy.paint(this, graphics);
+		}
 		graphics.dispose();
 	}
 
-	public synchronized void showBuffer() {
+	public void showBuffer() {
 		strategy.show();
 		Toolkit.getDefaultToolkit().sync();
 	}

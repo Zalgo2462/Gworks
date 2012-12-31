@@ -5,7 +5,6 @@ import org.zp.gworks.logic.GLoop;
 import org.zp.gworks.logic.GTickListener;
 
 import java.awt.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GRenderer implements GTickListener {
 	private final GCanvas canvas;
@@ -20,14 +19,11 @@ public class GRenderer implements GTickListener {
 	}
 	@Override
 	public void tick(final GLoop loop) {
-		canvas.drawStrategy(clearStrategy);
-		for(GPaintStrategy strategy : canvas.getBackgroundState().getPaintStrategies()) {
-			canvas.drawStrategy(strategy);
-		}
+		canvas.drawStrategies(clearStrategy);
+		canvas.drawStrategies(canvas.getBackgroundState().getPaintStrategies());
 		if(canvas.getGState() != null) {
-			for(GPaintStrategy strategy : canvas.getGState().getPaintStrategies()) {
-				canvas.drawStrategy(strategy);
-			}
+			canvas.drawStrategies(canvas.getGState().getPaintStrategies());
+
 		}
 		canvas.showBuffer();
 	}

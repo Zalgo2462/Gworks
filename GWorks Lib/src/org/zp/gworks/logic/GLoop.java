@@ -51,7 +51,7 @@ public final class GLoop implements Runnable {
 
 	private void syncFramerate() {
 		try {
-			Thread.sleep(((cycleTime - System.nanoTime()) / 1000000));
+			Thread.sleep((Math.max(0, cycleTime - System.nanoTime()) / 1000000));
 			frameTimes.offer(System.nanoTime());
 			if(frameTimes.size() > canvas.FPS) {
 				frameTimes.poll();
