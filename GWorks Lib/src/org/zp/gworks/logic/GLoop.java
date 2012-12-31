@@ -22,7 +22,7 @@ public final class GLoop implements Runnable {
 	public void run() {
 		cycleTime = System.nanoTime();
 		while (isRunning) {
-			syncFramerate();
+			cycleTime += canvas.FRAME_DELAY;
 			for(GTickListener listener : canvas.getBackgroundState().getTickListeners()) {
 				listener.tick(this);
 			}
@@ -32,6 +32,7 @@ public final class GLoop implements Runnable {
 				}
 			}
 			canvas.getRenderer().tick(this);
+			syncFramerate();
 		}
 	}
 
@@ -49,10 +50,8 @@ public final class GLoop implements Runnable {
 	}
 
 	private void syncFramerate() {
-		cycleTime += canvas.FRAME_DELAY;
-		long difference = (int) (cycleTime - System.nanoTime());
 		try {
-			Thread.sleep(Math.max(0, Math.round(difference / 1000000)));
+			Thread.sleep(((cycleTime - System.nanoTime()) / 1000000));
 			frameTimes.offer(System.nanoTime());
 			if(frameTimes.size() > 20) {
 				frameTimes.poll();
