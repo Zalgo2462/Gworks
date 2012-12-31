@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 
 public class Game {
 	public static void main(String[] args) {
-		final GCanvas canvas = new GCanvas(new Dimension(400, 500), 32, 3);
+		final GCanvas canvas = new GCanvas(new Dimension(400, 500), 32, 2);
 		final GFrame frame = new GFrame("Test", canvas);
 		canvas.registerDefaultInputListeners();
 		GMutableState gameState1 = new GMutableState();
