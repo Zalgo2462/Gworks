@@ -17,7 +17,7 @@ public class Game {
 		final GCanvas canvas = new GCanvas(new Dimension(400, 500), 32, 2);
 		final GFrame frame = new GFrame("Test", canvas);
 		canvas.registerDefaultInputListeners();
-		GMutableState gameState1 = new GMutableState();
+		final GMutableState gameState1 = new GMutableState();
 		gameState1.addGPaintStrategy(new GPaintStrategy() {
 			int x = 0;
 			int y = 0;
@@ -28,15 +28,15 @@ public class Game {
 				BufferedImage image = !mouthOpen ?
 						Resources.PACMAN_SPRITES.getSprite("RIGHT_PACMAN_1") :
 						Resources.PACMAN_SPRITES.getSprite("RIGHT_PACMAN_2");
-				graphics.drawImage(image, x, y, null);
+				graphics.drawImage(image, x, y, image.getWidth() + 10, image.getHeight() + 10,  null);
 				x += 2;
 				if(x % 8 == 0)
 					mouthOpen = !mouthOpen;
-				if(x + image.getWidth() >= canvas.getWidth()) {
+				if(x + image.getWidth() + 10 >= canvas.getWidth()) {
 					x = 0;
-					y += image.getHeight();
+					y += image.getHeight() + 10;
 				}
-				if(y + image.getHeight() >= canvas.getHeight()) {
+				if(y + image.getHeight() + 10 >= canvas.getHeight()) {
 					x = 0;
 					y = 0;
 				}
