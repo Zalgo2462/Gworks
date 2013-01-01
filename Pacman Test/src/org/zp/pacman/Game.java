@@ -17,7 +17,7 @@ public class Game {
 	public static final int BUFFERS = 2;
 
 	public static void main(final String args[]) {
-		frame = new GFrame(TITLE, getCanvas());
+		frame = getFrame();
 		frame.setVisible(true);
 		getCanvas().getBackgroundState().addGPaintStrategy(new GPaintStrategy() {
 			int x = 0;
