@@ -1,13 +1,14 @@
 package org.zp.gworks.logic;
 
 import org.zp.gworks.gui.canvas.GCanvas;
+import org.zp.gworks.logic.GState.GState;
 
 import java.util.LinkedList;
 
 public final class GLoop implements Runnable {
 	private final GCanvas canvas;
 
-	private long cycleTime;
+	private long currentTime;
 	private LinkedList<Long> frameTimes;
 
 	private volatile boolean isRunning;
@@ -20,29 +21,19 @@ public final class GLoop implements Runnable {
 
 	@Override
 	public void run() {
-		cycleTime = System.nanoTime();
+		currentTime = System.nanoTime();
 		while (isRunning) {
-			cycleTime += canvas.FRAME_DELAY;
-			for(GTickListener listener : canvas.getBackgroundState().getTickListeners()) {
-				listener.tick(this);
-			}
-			if(canvas.getGState() != null) {
-				for(GTickListener listener : canvas.getGState().getTickListeners()) {
-					listener.tick(this);
+			long newTime = System.nanoTime();
+			long delta = newTime - currentTime;
+			currentTime = newTime;
+			for(GState state : canvas.getGStates()) {
+				for(GTickListener listener : state.getTickListeners()) {
+					listener.tick(canvas, delta);
 				}
 			}
-			canvas.getRenderer().tick(this);
+			canvas.getRenderer().tick(canvas, delta);
 			syncFramerate();
 		}
-	}
-
-	public void runGTickListenerAsThreaded(final GTickListener tickListener) {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				tickListener.tick(GLoop.this);
-			}
-		}).run();
 	}
 
 	public void setIsRunning(final boolean running) {
@@ -51,7 +42,7 @@ public final class GLoop implements Runnable {
 
 	private void syncFramerate() {
 		try {
-			Thread.sleep((Math.max(0, cycleTime - System.nanoTime()) / 1000000));
+			Thread.sleep((Math.max(0, currentTime + canvas.FRAME_DELAY - System.nanoTime()) / 1000000));
 			frameTimes.offer(System.nanoTime());
 			if(frameTimes.size() > canvas.FPS) {
 				frameTimes.poll();

@@ -1,34 +1,57 @@
 package org.zp.gtest;
 
-import org.zp.gtest.rendertests.*;
+import org.zp.gtest.rendertests.ColorChanger.ColorChangerState;
+import org.zp.gtest.rendertests.Framerate.FramerateState;
+import org.zp.gtest.rendertests.ImageViewer.ImageViewerState;
+import org.zp.gtest.rendertests.Keyboard.KeyboardState;
+import org.zp.gtest.rendertests.Mouse.MouseState;
+import org.zp.gtest.rendertests.XLine.XLineState;
+import org.zp.gtest.rendertests.YLine.YLineState;
 import org.zp.gtest.resources.Resources;
 import org.zp.gworks.gui.canvas.GCanvas;
-import org.zp.gworks.gui.GFrame;
-import org.zp.gworks.gui.canvas.rendering.GPaintStrategy;
-import org.zp.gworks.logic.GState.GImmutableState;
-import org.zp.gworks.logic.GState.GMutableState;
-import org.zp.gworks.logic.GState.GState;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public class Game {
+public class Game extends Frame {
+	private GCanvas canvas;
+
 	public static void main(String[] args) {
-		final GCanvas canvas = new GCanvas(new Dimension(400, 500), 32, 2);
-		final GFrame frame = new GFrame("Test", canvas);
-		canvas.registerDefaultInputListeners();
-		final GMutableState gameState1 = new GMutableState();
-		gameState1.addGPaintStrategy(new ColorChanger());
-		for(int iii = 0; iii < canvas.getWidth(); iii += 20)
-			gameState1.addGPaintStrategy(new XLine(iii));
-		for(int iii = 0; iii < canvas.getHeight(); iii += 20)
-			gameState1.addGPaintStrategy(new YLine(iii));
-		gameState1.addGPaintStrategy(new Keyboard());
-		gameState1.addGPaintStrategy(new Mouse());
-		gameState1.addGPaintStrategy(new Framerate(canvas));
-		canvas.setGState(gameState1);
-		frame.setVisible(true);
-		frame.setResizable(false);
+		new Game();
+	}
+
+	public Game() {
+		init();
+		pack();
+		setTitle("GTest");
+		setVisible(true);
+		//setResizable(false);
 		canvas.requestFocus();
+		canvas.addGState(new ColorChangerState());
+		canvas.addGState(new XLineState());
+		canvas.addGState(new YLineState());
+		canvas.addGState(new ImageViewerState(Resources.PACMAN_SPRITES.getSprite("RIGHT_PACMAN_1")));
+		canvas.addGState(new FramerateState());
+		canvas.addGState(new KeyboardState());
+		canvas.addGState(new MouseState());
+	}
+
+	public void init() {
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				canvas.dispose();
+				dispose();
+				System.exit(0);
+			}
+		});
+		canvas = getCanvas();
+		add(canvas);
+	}
+
+	public GCanvas getCanvas() {
+		if(canvas != null)
+			return canvas;
+		return (canvas = new GCanvas(new Dimension(800, 600), 60, 2));
 	}
 }

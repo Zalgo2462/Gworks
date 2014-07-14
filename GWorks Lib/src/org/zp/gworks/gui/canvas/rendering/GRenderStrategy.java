@@ -4,6 +4,6 @@ import org.zp.gworks.gui.canvas.GCanvas;
 
 import java.awt.*;
 
-public interface GPaintStrategy {
+public interface GRenderStrategy {
 	public void paint(GCanvas canvas, Graphics graphics);
 }

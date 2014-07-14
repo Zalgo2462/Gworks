@@ -1,22 +1,23 @@
-package org.zp.gtest.rendertests;
+package org.zp.gtest.rendertests.Framerate;
 
 import org.zp.gworks.gui.canvas.GCanvas;
-import org.zp.gworks.gui.canvas.rendering.GPaintStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
 import org.zp.gworks.logic.GLoop;
 
 import java.awt.*;
 
-public class Framerate implements GPaintStrategy {
-	private final GLoop loop;
+public class FramerateRenderer implements GRenderStrategy {
+	private GLoop loop;
 	private long currentFrame = 0;
 	private double min = Double.MAX_VALUE;
 	private double max = Double.MIN_VALUE;
 
-	public Framerate(GCanvas canvas) {
-		this.loop = canvas.getLoop();
-	}
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics) {
+		if(loop == null) {
+			loop = canvas.getLoop();
+		}
+
 		currentFrame++;
 		graphics.setColor(Color.BLACK);
 		double framerate = loop.getActualFramerate();

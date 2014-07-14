@@ -1,12 +1,12 @@
-package org.zp.gtest.rendertests;
+package org.zp.gtest.rendertests.ColorChanger;
 
 import org.zp.gworks.gui.canvas.GCanvas;
-import org.zp.gworks.gui.canvas.rendering.GPaintStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
 
 import java.awt.*;
 import java.util.Random;
 
-public class ColorChanger implements GPaintStrategy {
+public class ColorChangerRenderer implements GRenderStrategy {
 	private Color now = Color.BLACK;
 	private Color next = Color.WHITE;
 	private Random random = new Random();

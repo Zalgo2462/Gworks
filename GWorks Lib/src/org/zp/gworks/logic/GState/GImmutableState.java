@@ -1,15 +1,18 @@
 package org.zp.gworks.logic.GState;
 
-import org.zp.gworks.gui.canvas.rendering.GPaintStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
 import org.zp.gworks.logic.GTickListener;
 
-public class GImmutableState implements GState {
-	private GTickListener[] tickListeners;
-	private GPaintStrategy[] paintStrategies;
+public abstract class GImmutableState implements GState {
+	private GTickListener[] tickListeners = new GTickListener[0];
+	private GRenderStrategy[] renderStrategies = new GRenderStrategy[0];
 
-	public GImmutableState(final GTickListener[] tickListeners, final GPaintStrategy[] paintStrategies) {
+	protected void setTickListeners(GTickListener[] tickListeners) {
 		this.tickListeners = tickListeners;
-		this.paintStrategies = paintStrategies;
+	}
+
+	protected void setRenderStrategies(GRenderStrategy[] renderStrategies) {
+		this.renderStrategies = renderStrategies;
 	}
 
 	@Override
@@ -18,7 +21,8 @@ public class GImmutableState implements GState {
 	}
 
 	@Override
-	public GPaintStrategy[] getPaintStrategies() {
-		return paintStrategies;
+	public GRenderStrategy[] getRenderStrategies() {
+		return renderStrategies;
 	}
+
 }

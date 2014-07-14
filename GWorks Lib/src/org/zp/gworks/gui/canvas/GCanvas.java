@@ -2,38 +2,42 @@ package org.zp.gworks.gui.canvas;
 
 import org.zp.gworks.gui.canvas.input.GKeyListener;
 import org.zp.gworks.gui.canvas.input.GMouseListener;
-import org.zp.gworks.gui.canvas.rendering.GPaintStrategy;
 import org.zp.gworks.gui.canvas.rendering.GRenderer;
 import org.zp.gworks.logic.GLoop;
-import org.zp.gworks.logic.GState.GMutableState;
 import org.zp.gworks.logic.GState.GState;
 import sun.java2d.pipe.hw.ExtendedBufferCapabilities;
 
 import java.awt.*;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferStrategy;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class GCanvas extends Canvas {
+	public final Dimension DIMENSION;
 	public final int FPS;
 	public final int FRAME_DELAY;
 	private final int BUFFERS;
+	private CopyOnWriteArrayList<GState> gStates;
 	private Thread gameThread;
 	private Thread timerAccuracyThread;
 	private GLoop loop;
-	private GMutableState backgroundState;
-	private GState gState;
-	private BufferStrategy strategy;
 	private GRenderer renderer;
+	private GKeyListener keyListener;
+	private GMouseListener mouseListener;
 
 	public GCanvas(final Dimension dimension, final int fps, final int buffers) {
 		super();
+		this.DIMENSION = dimension;
 		this.FPS = fps;
 		this.FRAME_DELAY = Math.round(1000000000.0F / (float) FPS);
 		this.BUFFERS = buffers;
+		this.gStates = new CopyOnWriteArrayList<GState>();
 		setMinimumSize(dimension);
 		setPreferredSize(dimension);
 		setMaximumSize(dimension);
+		createTimerAccuracyThread();
+		createGLoop();
+		createRenderer();
+		createGameThread();
+		registerEventListeners();
 	}
 
 	public GCanvas(final Dimension dimension, final int fps) {
@@ -43,21 +47,16 @@ public final class GCanvas extends Canvas {
 	public void addNotify() {
 		super.addNotify();
 		createBufferStrategy(BUFFERS);
-		createBackgroundState();
-		createGLoop();
-		createRenderer();
-		createTimerAccuracyThread();
-		createGameThread();
-		gameThread.start();
 		if(System.getProperty("os.name").startsWith("win"))
 			timerAccuracyThread.start();
+		gameThread.start();
 	}
 
 	public void createBufferStrategy(final int buffers) {
-		final GraphicsConfiguration gc = GraphicsEnvironment.
-				getLocalGraphicsEnvironment().
+		final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().
 				getDefaultScreenDevice().getDefaultConfiguration();
-		final ExtendedBufferCapabilities ebc = new ExtendedBufferCapabilities(gc.getBufferCapabilities(),
+		final ExtendedBufferCapabilities ebc = new ExtendedBufferCapabilities(
+				gc.getBufferCapabilities(),
 				ExtendedBufferCapabilities.VSyncType.VSYNC_ON);
 		try {
 			super.createBufferStrategy(buffers, ebc);
@@ -65,11 +64,6 @@ public final class GCanvas extends Canvas {
 			System.err.println(e.toString());
 			super.createBufferStrategy(buffers);
 		}
-		this.strategy = getBufferStrategy();
-	}
-
-	private void createBackgroundState() {
-		this.backgroundState = new GMutableState();
 	}
 
 	private void createGLoop() {
@@ -88,7 +82,9 @@ public final class GCanvas extends Canvas {
 			public void run() {
 				try {
 					Thread.sleep(Long.MAX_VALUE);
-				} catch (Exception e) {}
+				} catch (InterruptedException e) {
+					getLoop().setIsRunning(false);
+				}
 			}
 		});
 		timerAccuracyThread.setName("GWorks Timer");
@@ -100,8 +96,11 @@ public final class GCanvas extends Canvas {
 		this.gameThread.setName("GWorks Game Thread");
 	}
 
-	public GMutableState getBackgroundState() {
-		return backgroundState;
+	private void registerEventListeners() {
+		this.keyListener = new GKeyListener();
+		this.mouseListener = new GMouseListener();
+		addKeyListener(keyListener);
+		addMouseListener(mouseListener);
 	}
 
 	public GLoop getLoop() {
@@ -112,42 +111,29 @@ public final class GCanvas extends Canvas {
 		return gameThread;
 	}
 
-	public void setGState(final GState gState) {
-		this.gState = gState;
+	public void addGState(final GState gState) {
+		gStates.add(gState);
 	}
 
-	public GState getGState() {
-		return gState;
+	public void removeGState(final GState gState) {gStates.remove(gState); }
+
+	public CopyOnWriteArrayList<GState> getGStates() {
+		return gStates;
 	}
 
 	public GRenderer getRenderer() {
 		return renderer;
 	}
 
-	public void drawStrategies(final GPaintStrategy... paintStrategies) {
-		Graphics graphics = strategy.getDrawGraphics();
-		for(GPaintStrategy paintStrategy : paintStrategies){
-			paintStrategy.paint(this, graphics);
-		}
-		graphics.dispose();
+	public GKeyListener getGKeyListener() {
+		return keyListener;
 	}
 
-	public void showBuffer() {
-		strategy.show();
-		Toolkit.getDefaultToolkit().sync();
+	public GMouseListener getGMouseListener() {
+		return mouseListener;
 	}
 
-	public void registerDefaultInputListeners() {
-		addKeyListener(new GKeyListener());
-		addMouseListener(new GMouseListener());
-	}
-
-	public void registerCustomInputListeners(final KeyListener kl, final MouseListener ml) {
-		addKeyListener(kl);
-		addMouseListener(ml);
-	}
-
-	public void stopCanvas() {
+	public void dispose() {
 		loop.setIsRunning(false);
 		gameThread.interrupt();
 		timerAccuracyThread.interrupt();
