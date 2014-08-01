@@ -4,7 +4,7 @@ import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.logic.GTickListener;
 
 import java.awt.event.KeyEvent;
-import java.util.Queue;
+import java.util.Collection;
 
 /**
  * Date: 7/13/2014
@@ -20,9 +20,9 @@ public class ImageViewerController implements GTickListener {
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		Queue<Integer> pressedKeys = canvas.getGKeyListener().getPressedKeyCodes();
-		for(Integer code : pressedKeys) {
-			switch(code) {
+		Collection<Integer> pressedKeys = canvas.getGKeyListener().getPressedKeyCodes();
+		for (Integer code : pressedKeys) {
+			switch (code) {
 				case KeyEvent.VK_RIGHT:
 					state.setX(Math.round(state.getX() + SPEED * delta / 1000000000F));
 					break;

@@ -1,11 +1,11 @@
 package org.zp.gtest.rendertests.ImageViewer;
 
 import org.zp.gworks.gui.canvas.GCanvas;
-import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 
 import java.awt.*;
 
-public class ImageViewerRenderer implements GRenderStrategy {
+public class ImageViewerRenderer implements GRenderListener {
 	private final ImageViewerState state;
 
 	public ImageViewerRenderer(final ImageViewerState state) {
@@ -13,7 +13,7 @@ public class ImageViewerRenderer implements GRenderStrategy {
 	}
 
 	@Override
-	public void paint(GCanvas canvas, Graphics graphics) {
+	public void paint(GCanvas canvas, Graphics graphics, long delta) {
 		graphics.drawImage(state.getImage(), state.getX(), state.getY(), null);
 	}
 }

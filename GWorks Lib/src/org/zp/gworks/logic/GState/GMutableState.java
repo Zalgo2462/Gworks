@@ -1,6 +1,6 @@
 package org.zp.gworks.logic.GState;
 
-import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GTickListener;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -8,34 +8,34 @@ import java.util.concurrent.CopyOnWriteArrayList;
 //Mutable GState
 public abstract class GMutableState implements GState {
 	private CopyOnWriteArrayList<GTickListener> tickListeners;
-	private CopyOnWriteArrayList<GRenderStrategy> renderStrategies;
+	private CopyOnWriteArrayList<GRenderListener> renderStrategies;
 
 	protected GMutableState() {
 		this.tickListeners = new CopyOnWriteArrayList<GTickListener>();
-		this.renderStrategies = new CopyOnWriteArrayList<GRenderStrategy>();
+		this.renderStrategies = new CopyOnWriteArrayList<GRenderListener>();
 	}
 
 	public GTickListener[] getTickListeners() {
 		return tickListeners.toArray(new GTickListener[tickListeners.size()]);
 	}
 
-	public GRenderStrategy[] getRenderStrategies() {
-		return renderStrategies.toArray(new GRenderStrategy[renderStrategies.size()]);
+	public GRenderListener[] getRenderStrategies() {
+		return renderStrategies.toArray(new GRenderListener[renderStrategies.size()]);
 	}
 
-	protected void addGTickListener(final GTickListener tickListener) {
-		tickListeners.add(tickListener);
+	public boolean addGTickListener(final GTickListener tickListener) {
+		return tickListeners.add(tickListener);
 	}
 
-	protected void addGPaintStrategy(final GRenderStrategy renderStrategy) {
-		renderStrategies.add(renderStrategy);
+	public boolean addGRenderListener(final GRenderListener renderStrategy) {
+		return renderStrategies.add(renderStrategy);
 	}
 
-	protected void removeGTickListener(final GTickListener tickListener) {
-		tickListeners.remove(tickListener);
+	public boolean removeGTickListener(final GTickListener tickListener) {
+		return tickListeners.remove(tickListener);
 	}
 
-	protected void removeGPaintStrategy(final GRenderStrategy renderStrategy) {
-		renderStrategies.remove(renderStrategy);
+	public boolean removeGPaintStrategy(final GRenderListener renderStrategy) {
+		return renderStrategies.remove(renderStrategy);
 	}
 }

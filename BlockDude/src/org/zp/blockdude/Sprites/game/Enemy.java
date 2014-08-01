@@ -1,30 +1,37 @@
 package org.zp.blockdude.sprites.game;
 
-import org.zp.blockdude.sprites.Sprite;
+import org.zp.blockdude.states.playstate.PlayState;
+import org.zp.blockdude.states.playstate.ticklisteners.EnemyDeath;
+import org.zp.blockdude.states.playstate.ticklisteners.EnemyMissiles;
+import org.zp.blockdude.states.playstate.ticklisteners.EnemyMovement;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class Enemy extends Sprite {
-	private BufferedImage sprite;
+public class Enemy extends Character {
+	private PlayState playState;
+	private EnemyMissiles enemyMissiles;
+	private EnemyMovement enemyMovement;
+	private EnemyDeath enemyDeath;
 
-	public Enemy(final int size, final int speed) {
-		createSprite(size);
-		setSpeed(speed);
+	public Enemy(final PlayState playState, final int size, final int speed) {
+		super(size, Color.RED);
+		getMovement().setMaxSpeed(speed);
+		getRotation().setSpeed(Math.PI);
+		this.playState = playState;
+		this.enemyMissiles = new EnemyMissiles(playState, this);
+		this.enemyMovement = new EnemyMovement(playState, this);
+		this.enemyDeath = new EnemyDeath(playState, this);
 	}
 
-	private void createSprite(final int size) {
-		Dimension d = new Dimension(size, size);
-		if(d.getWidth() <= 0 || d.getHeight() <= 0)
-			d.setSize(5, 5);
-		sprite = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB);
-		Graphics g = sprite.getGraphics();
-		g.setColor(Color.RED);
-		g.fillRect(0, 0, d.width, d.height);
-		g.dispose();
+	public EnemyMissiles getEnemyMissiles() {
+		return enemyMissiles;
 	}
 
-	public BufferedImage getSprite() {
-		return sprite;
+	public EnemyMovement getEnemyMovement() {
+		return enemyMovement;
+	}
+
+	public EnemyDeath getEnemyDeath() {
+		return enemyDeath;
 	}
 }

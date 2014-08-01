@@ -1,6 +1,6 @@
 package org.zp.gtest.rendertests.Framerate;
 
-import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 
 /**
@@ -9,6 +9,6 @@ import org.zp.gworks.logic.GState.GImmutableState;
  */
 public class FramerateState extends GImmutableState {
 	public FramerateState() {
-		setRenderStrategies(new GRenderStrategy[] {new FramerateRenderer()});
+		setRenderStrategies(new GRenderListener[]{new FramerateRenderer()});
 	}
 }

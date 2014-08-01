@@ -1,6 +1,6 @@
 package org.zp.gtest.rendertests.XLine;
 
-import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 import org.zp.gworks.logic.GTickListener;
 
@@ -11,8 +11,8 @@ public class XLineState extends GImmutableState {
 	public XLineState(final int start) {
 		x = start;
 		backwards = false;
-		setTickListeners(new GTickListener[] {new XLineController(this)});
-		setRenderStrategies(new GRenderStrategy[]{new XLineRenderer(this)});
+		setTickListeners(new GTickListener[]{new XLineController(this)});
+		setRenderStrategies(new GRenderListener[]{new XLineRenderer(this)});
 	}
 
 	public XLineState() {

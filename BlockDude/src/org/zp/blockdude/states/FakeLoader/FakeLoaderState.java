@@ -1,8 +1,8 @@
 package org.zp.blockdude.states.fakeloader;
 
-import org.zp.blockdude.states.fakeloader.renderstrategies.FakeLoaderRenderer;
-import org.zp.blockdude.states.fakeloader.ticklisteners.TickCounter;
-import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
+import org.zp.blockdude.states.fakeloader.renderlisteners.FakeLoaderRenderer;
+import org.zp.blockdude.states.fakeloader.ticklisteners.TimeCounter;
+import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 import org.zp.gworks.logic.GTickListener;
 
@@ -14,8 +14,8 @@ public class FakeLoaderState extends GImmutableState {
 	private double progress = 0F;
 
 	public FakeLoaderState() {
-		setTickListeners(new GTickListener[] {new TickCounter(this)});
-		setRenderStrategies(new GRenderStrategy[] {new FakeLoaderRenderer(this)});
+		setTickListeners(new GTickListener[]{new TimeCounter(this)});
+		setRenderStrategies(new GRenderListener[]{new FakeLoaderRenderer(this)});
 	}
 
 	public double getProgress() {

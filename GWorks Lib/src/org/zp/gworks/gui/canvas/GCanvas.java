@@ -30,6 +30,7 @@ public final class GCanvas extends Canvas {
 		this.FRAME_DELAY = Math.round(1000000000.0F / (float) FPS);
 		this.BUFFERS = buffers;
 		this.gStates = new CopyOnWriteArrayList<GState>();
+		setSize(dimension);
 		setMinimumSize(dimension);
 		setPreferredSize(dimension);
 		setMaximumSize(dimension);
@@ -111,11 +112,13 @@ public final class GCanvas extends Canvas {
 		return gameThread;
 	}
 
-	public void addGState(final GState gState) {
-		gStates.add(gState);
+	public boolean addGState(final GState gState) {
+		return gStates.add(gState);
 	}
 
-	public void removeGState(final GState gState) {gStates.remove(gState); }
+	public boolean removeGState(final GState gState) {
+		return gStates.remove(gState);
+	}
 
 	public CopyOnWriteArrayList<GState> getGStates() {
 		return gStates;

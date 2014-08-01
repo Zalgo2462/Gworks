@@ -1,16 +1,16 @@
 package org.zp.blockdude;
 
 public enum Level {
-	ONE(1, 25, 125),
-	TWO(2, 25, 125),
-	THREE(2, 25, 150),
-	FOUR(3, 25, 150),
-	FIVE(5, 25, 150),
-	SIX(5, 20, 150),
-	SEVEN(7, 20, 150),
-	EIGHT(8, 15, 150),
-	NINE(9, 10, 150),
-	TEN(10, 10, 125);
+	ONE(1, 25, 250),
+	TWO(2, 25, 250),
+	THREE(2, 25, 250),
+	FOUR(3, 25, 250),
+	FIVE(5, 25, 250),
+	SIX(5, 20, 300),
+	SEVEN(7, 20, 250),
+	EIGHT(8, 15, 250),
+	NINE(9, 10, 250),
+	TEN(10, 10, 250);
 	private final int enemies;
 	private final int enemySize;
 	private final int enemySpeed;

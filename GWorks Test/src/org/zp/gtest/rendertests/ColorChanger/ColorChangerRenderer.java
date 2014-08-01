@@ -1,19 +1,19 @@
 package org.zp.gtest.rendertests.ColorChanger;
 
 import org.zp.gworks.gui.canvas.GCanvas;
-import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 
 import java.awt.*;
 import java.util.Random;
 
-public class ColorChangerRenderer implements GRenderStrategy {
+public class ColorChangerRenderer implements GRenderListener {
 	private Color now = Color.BLACK;
 	private Color next = Color.WHITE;
 	private Random random = new Random();
 
 	@Override
-	public void paint(GCanvas canvas, Graphics graphics) {
-		if(!now.equals(next)) {
+	public void paint(GCanvas canvas, Graphics graphics, long delta) {
+		if (!now.equals(next)) {
 			int r1 = now.getRed();
 			int g1 = now.getGreen();
 			int b1 = now.getBlue();
@@ -28,7 +28,7 @@ public class ColorChangerRenderer implements GRenderStrategy {
 			g1 += (g2 - g1) / 10;
 			b1 += (b2 - b1) / 10;
 
-			if(r1 == rTest && g1 == gTest && b1 == bTest) {
+			if (r1 == rTest && g1 == gTest && b1 == bTest) {
 				r1 = r2;
 				g1 = g2;
 				b1 = b2;

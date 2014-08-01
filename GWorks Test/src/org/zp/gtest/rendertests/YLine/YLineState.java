@@ -1,13 +1,13 @@
 package org.zp.gtest.rendertests.YLine;
 
 import org.zp.gworks.gui.canvas.GCanvas;
-import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 import org.zp.gworks.logic.GTickListener;
 
 import java.awt.*;
 
-public class YLineState extends GImmutableState implements GTickListener, GRenderStrategy {
+public class YLineState extends GImmutableState implements GTickListener, GRenderListener {
 	private int y;
 	private boolean backwards;
 	private final int SPEED = 50;
@@ -16,8 +16,8 @@ public class YLineState extends GImmutableState implements GTickListener, GRende
 	public YLineState(final int start) {
 		this.y = start;
 		this.backwards = false;
-		setTickListeners(new GTickListener[] {this});
-		setRenderStrategies(new GRenderStrategy[] {this});
+		setTickListeners(new GTickListener[]{this});
+		setRenderStrategies(new GRenderListener[]{this});
 	}
 
 	public YLineState() {
@@ -25,19 +25,19 @@ public class YLineState extends GImmutableState implements GTickListener, GRende
 	}
 
 	@Override
-	public void paint(GCanvas canvas, Graphics graphics) {
+	public void paint(GCanvas canvas, Graphics graphics, long delta) {
 		graphics.setColor(Color.BLACK);
 		graphics.drawLine(0, y, canvas.getWidth(), y);
 	}
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		if(y >= canvas.getHeight()) {
+		if (y >= canvas.getHeight()) {
 			backwards = true;
 		} else if (y <= 0) {
 			backwards = false;
 		}
-		if(!backwards) {
+		if (!backwards) {
 			y += Math.round(SPEED * delta / 1000000000F);
 		} else {
 			y -= Math.round(SPEED * delta / 1000000000F);

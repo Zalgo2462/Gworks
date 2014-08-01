@@ -1,6 +1,6 @@
 package org.zp.gtest.rendertests.ColorChanger;
 
-import org.zp.gworks.gui.canvas.rendering.GRenderStrategy;
+import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 
 /**
@@ -9,6 +9,6 @@ import org.zp.gworks.logic.GState.GImmutableState;
  */
 public class ColorChangerState extends GImmutableState {
 	public ColorChangerState() {
-		setRenderStrategies(new GRenderStrategy[] {new ColorChangerRenderer()});
+		setRenderStrategies(new GRenderListener[]{new ColorChangerRenderer()});
 	}
 }

@@ -2,12 +2,10 @@ package org.zp.gtest;
 
 import org.zp.gtest.rendertests.ColorChanger.ColorChangerState;
 import org.zp.gtest.rendertests.Framerate.FramerateState;
-import org.zp.gtest.rendertests.ImageViewer.ImageViewerState;
 import org.zp.gtest.rendertests.Keyboard.KeyboardState;
 import org.zp.gtest.rendertests.Mouse.MouseState;
 import org.zp.gtest.rendertests.XLine.XLineState;
 import org.zp.gtest.rendertests.YLine.YLineState;
-import org.zp.gtest.resources.Resources;
 import org.zp.gworks.gui.canvas.GCanvas;
 
 import java.awt.*;
@@ -31,7 +29,7 @@ public class Game extends Frame {
 		canvas.addGState(new ColorChangerState());
 		canvas.addGState(new XLineState());
 		canvas.addGState(new YLineState());
-		canvas.addGState(new ImageViewerState(Resources.PACMAN_SPRITES.getSprite("RIGHT_PACMAN_1")));
+		//gcanvas.addGState(new ImageViewerState(Resources.PACMAN_SPRITES.getSprite("RIGHT_PACMAN_1")));
 		canvas.addGState(new FramerateState());
 		canvas.addGState(new KeyboardState());
 		canvas.addGState(new MouseState());
@@ -50,7 +48,7 @@ public class Game extends Frame {
 	}
 
 	public GCanvas getCanvas() {
-		if(canvas != null)
+		if (canvas != null)
 			return canvas;
 		return (canvas = new GCanvas(new Dimension(800, 600), 60, 2));
 	}

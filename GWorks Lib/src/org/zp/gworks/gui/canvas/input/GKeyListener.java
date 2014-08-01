@@ -2,13 +2,13 @@ package org.zp.gworks.gui.canvas.input;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
-import java.util.Queue;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class GKeyListener implements KeyListener {
 	private final ConcurrentLinkedQueue<KeyEvent> typedEvents, pressedEvents, releasedEvents;
-    private final ConcurrentLinkedQueue<Integer> pressedKeyCodes;
+	private final ConcurrentLinkedQueue<Integer> pressedKeyCodes;
+
 	public GKeyListener() {
 		typedEvents = new ConcurrentLinkedQueue<KeyEvent>();
 		pressedEvents = new ConcurrentLinkedQueue<KeyEvent>();
@@ -28,7 +28,7 @@ public final class GKeyListener implements KeyListener {
 		return releasedEvents.poll();
 	}
 
-	public Queue<Integer> getPressedKeyCodes() {
+	public Collection<Integer> getPressedKeyCodes() {
 		return pressedKeyCodes;
 	}
 
@@ -40,14 +40,14 @@ public final class GKeyListener implements KeyListener {
 	@Override
 	public void keyPressed(final KeyEvent e) {
 		pressedEvents.offer(e);
-		if(!pressedKeyCodes.contains(e.getKeyCode()))
-			pressedKeyCodes.add(e.getKeyCode());
+		if (!pressedKeyCodes.contains(e.getKeyCode()))
+			pressedKeyCodes.offer(e.getKeyCode());
 	}
 
 	@Override
 	public void keyReleased(final KeyEvent e) {
 		releasedEvents.offer(e);
-		if(pressedKeyCodes.contains(e.getKeyCode()))
+		if (pressedKeyCodes.contains(e.getKeyCode()))
 			pressedKeyCodes.remove(e.getKeyCode());
 	}
 }
