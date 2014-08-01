@@ -33,12 +33,9 @@ public class PlayerDeath implements GTickListener {
 						DIMENSION.height / 2 - player.getRenderer().getSprite().getHeight() / 2
 				);
 			} else {
-				player.getRenderer().setRendered(false);
-				playState.removeGTickListener(player.getPlayerMovement());
-				playState.removeGTickListener(player.getPlayerMissiles());
-				playState.removeGTickListener(player.getPlayerDeath());
+				playState.uninitLevel();
 				canvas.removeGState(playState);
-				canvas.addGState(new GameOverState());
+				canvas.addGState(new GameOverState(playState.getScore()));
 			}
 		}
 	}

@@ -22,7 +22,7 @@ public class SpriteManager {
 	}
 
 	public boolean unregisterSprite(Sprite sprite) {
-		return sprites.remove(sprite) && state.removeGPaintStrategy(sprite.getRenderer());
+		return sprites.remove(sprite) && state.removeGRenderListener(sprite.getRenderer());
 	}
 
 	public enum PLAY_AREA_EDGE {

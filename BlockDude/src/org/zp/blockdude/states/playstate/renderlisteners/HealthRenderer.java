@@ -13,29 +13,29 @@ import java.awt.*;
  */
 public class HealthRenderer implements GRenderListener {
 	private final int HEALTH_SPEED = 50; //health points per second
-	private int lastHealth;
+	private int displayedHealth;
 	private Player player;
 
 	public HealthRenderer(Player player) {
 		this.player = player;
-		lastHealth = player.getHealth();
+		displayedHealth = player.getHealth();
 	}
 
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
 		graphics.setColor(Color.GREEN);
 		double dHealth = HEALTH_SPEED * delta / 1000000000D;
-		if (player.getHealth() - lastHealth < 0) {
-			lastHealth -= Math.ceil(dHealth);
-		} else if (player.getHealth() - lastHealth > 0) {
-			lastHealth += Math.ceil(dHealth);
+		if (player.getHealth() - displayedHealth < 0) {
+			displayedHealth -= Math.ceil(dHealth);
+		} else if (player.getHealth() - displayedHealth > 0) {
+			displayedHealth += Math.ceil(dHealth);
 		}
 
 		graphics.setColor(Color.GREEN);
 
 		int healthWidth = Math.round(
 				Math.round(
-						(UI_CONSTANTS.INFO_AREA_RIGHT - UI_CONSTANTS.HEALTH_BAR_START) * (lastHealth / 100D)
+						(UI_CONSTANTS.INFO_AREA_RIGHT - UI_CONSTANTS.HEALTH_BAR_START) * (displayedHealth / 100D)
 				)
 		);
 
@@ -60,6 +60,6 @@ public class HealthRenderer implements GRenderListener {
 	}
 
 	public int getHealth() {
-		return lastHealth;
+		return displayedHealth;
 	}
 }

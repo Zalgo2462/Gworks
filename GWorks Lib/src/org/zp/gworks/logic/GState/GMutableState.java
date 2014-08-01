@@ -35,7 +35,7 @@ public abstract class GMutableState implements GState {
 		return tickListeners.remove(tickListener);
 	}
 
-	public boolean removeGPaintStrategy(final GRenderListener renderStrategy) {
+	public boolean removeGRenderListener(final GRenderListener renderStrategy) {
 		return renderStrategies.remove(renderStrategy);
 	}
 }

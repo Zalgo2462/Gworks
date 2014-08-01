@@ -58,6 +58,7 @@ public class PlayerMissiles implements GTickListener {
 				spriteManager.unregisterSprite(missile);
 				iterator.remove();
 				e.damage(player.getMissileDamage());
+				playState.setScore(playState.getScore() + player.getMissileDamage());
 			}
 		}
 	}

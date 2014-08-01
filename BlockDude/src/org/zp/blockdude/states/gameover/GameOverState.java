@@ -9,7 +9,14 @@ import org.zp.gworks.logic.GState.GImmutableState;
  * Time: 2:22 PM
  */
 public class GameOverState extends GImmutableState {
-	public GameOverState() {
-		setRenderStrategies(new GRenderListener[]{new GameOverRenderer()});
+	private int score;
+
+	public GameOverState(int score) {
+		this.score = score;
+		setRenderStrategies(new GRenderListener[]{new GameOverRenderer(this)});
+	}
+
+	public int getScore() {
+		return score;
 	}
 }

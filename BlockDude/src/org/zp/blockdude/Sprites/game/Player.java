@@ -1,27 +1,52 @@
 package org.zp.blockdude.sprites.game;
 
-import org.zp.blockdude.sprites.Sprite;
+import org.zp.blockdude.states.playstate.PlayState;
+import org.zp.blockdude.states.playstate.renderlisteners.HealthRenderer;
+import org.zp.blockdude.states.playstate.ticklisteners.PlayerDeath;
+import org.zp.blockdude.states.playstate.ticklisteners.PlayerMissiles;
+import org.zp.blockdude.states.playstate.ticklisteners.PlayerMovement;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class Player extends Sprite {
-	private BufferedImage sprite;
+public class Player extends Character {
+	private PlayState playState;
+	private PlayerMissiles playerMissiles;
+	private PlayerMovement playerMovement;
+	private PlayerDeath playerDeath;
+	private HealthRenderer healthRenderer;
+	private int lives;
 
-	public Player() {
-		setSpeed(100);
-		createSprite();
+	public Player(final PlayState playState) {
+		super(25, Color.GREEN);
+		this.playState = playState;
+		this.playerMissiles = new PlayerMissiles(playState, this);
+		this.playerMovement = new PlayerMovement(playState, this);
+		this.playerDeath = new PlayerDeath(playState, this);
+		this.healthRenderer = new HealthRenderer(this);
+		this.lives = 3;
 	}
 
-	private void createSprite() {
-		sprite = new BufferedImage(25, 25, BufferedImage.TYPE_INT_ARGB);
-		Graphics g = sprite.getGraphics();
-		g.setColor(Color.GREEN);
-		g.fillRect(0, 0, 25, 25);
-		g.dispose();
+	public PlayerMissiles getPlayerMissiles() {
+		return playerMissiles;
 	}
 
-	public BufferedImage getSprite() {
-		return sprite;
+	public PlayerMovement getPlayerMovement() {
+		return playerMovement;
+	}
+
+	public PlayerDeath getPlayerDeath() {
+		return playerDeath;
+	}
+
+	public HealthRenderer getHealthRenderer() {
+		return healthRenderer;
+	}
+
+	public int getLives() {
+		return lives;
+	}
+
+	public void setLives(int lives) {
+		this.lives = lives;
 	}
 }
