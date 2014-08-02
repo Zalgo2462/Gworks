@@ -25,43 +25,6 @@ public class SpriteManager {
 		return sprites.remove(sprite) && state.removeGRenderListener(sprite.getRenderer());
 	}
 
-	public enum PLAY_AREA_EDGE {
-		TOP(
-				PlayState.UI_CONSTANTS.PLAY_AREA_LEFT,
-				0,
-				PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT,
-				PlayState.UI_CONSTANTS.PLAY_AREA_TOP
-		),
-		RIGHT(
-				PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT,
-				PlayState.UI_CONSTANTS.PLAY_AREA_TOP,
-				1,
-				PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM
-		),
-		BOTTOM(
-				PlayState.UI_CONSTANTS.PLAY_AREA_LEFT,
-				PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM,
-				PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT,
-				1
-		),
-		LEFT(
-				PlayState.UI_CONSTANTS.PLAY_AREA_LEFT - 1,
-				PlayState.UI_CONSTANTS.PLAY_AREA_TOP,
-				1,
-				PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM
-		),
-		NONE(0, 0, 0, 0);
-		private Area area;
-
-		PLAY_AREA_EDGE(int x, int y, int w, int h) {
-			this.area = new Area(new Rectangle(x, y, w, h));
-		}
-
-		public Area getArea() {
-			return area;
-		}
-	}
-
 	public Double getAngleIfCollisionWithEdge(Sprite sprite, PLAY_AREA_EDGE edge) {
 		Area area1 = new Area(sprite.getRenderer().getBounds());
 		Area area2 = edge.getArea();
@@ -142,5 +105,42 @@ public class SpriteManager {
 		Area areaA = new Area(sprite1.getRenderer().getBounds());
 		areaA.intersect(new Area(sprite2.getRenderer().getBounds()));
 		return areaA;
+	}
+
+	public enum PLAY_AREA_EDGE {
+		TOP(
+				PlayState.UI_CONSTANTS.PLAY_AREA_LEFT,
+				0,
+				PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT,
+				PlayState.UI_CONSTANTS.PLAY_AREA_TOP
+		),
+		RIGHT(
+				PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT,
+				PlayState.UI_CONSTANTS.PLAY_AREA_TOP,
+				1,
+				PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM
+		),
+		BOTTOM(
+				PlayState.UI_CONSTANTS.PLAY_AREA_LEFT,
+				PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM,
+				PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT,
+				1
+		),
+		LEFT(
+				PlayState.UI_CONSTANTS.PLAY_AREA_LEFT - 1,
+				PlayState.UI_CONSTANTS.PLAY_AREA_TOP,
+				1,
+				PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM
+		),
+		NONE(0, 0, 0, 0);
+		private Area area;
+
+		PLAY_AREA_EDGE(int x, int y, int w, int h) {
+			this.area = new Area(new Rectangle(x, y, w, h));
+		}
+
+		public Area getArea() {
+			return area;
+		}
 	}
 }
