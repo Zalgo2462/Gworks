@@ -12,8 +12,8 @@ import java.util.LinkedList;
  * Time: 12:18 AM
  */
 public abstract class Character extends Sprite {
-	private final Color color;
 	protected final LinkedList<Missile> missiles;
+	private final Color color;
 	protected double lastMissileFiredTime;
 	protected double missilesPerSecond;
 	protected int missileDamage;
@@ -22,7 +22,7 @@ public abstract class Character extends Sprite {
 	public Character(int size, Color color) {
 		this.color = color;
 		getMovement().setAcceleration(200);
-		getMovement().setMaxSpeed(200);
+		getMovement().setMaxSpeed(250);
 		getMovement().setDeceleration(-200);
 		getRotation().setSpeed(Math.PI);
 		renderer.setSprite(createSprite(size));

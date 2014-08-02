@@ -10,13 +10,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class GameFrame extends Frame {
-	private static GCanvas canvas;
 	public static final Dimension DIMENSION = new Dimension(800, 600);
+	private static GCanvas canvas;
 	public GImmutableState fakeLoadingState;
-
-	public static void main(String[] args) {
-		new GameFrame();
-	}
 
 	public GameFrame() {
 		setResizable(true);
@@ -25,6 +21,16 @@ public class GameFrame extends Frame {
 		setTitle("BlockDude");
 		setVisible(true);
 		canvas.requestFocus();
+	}
+
+	public static void main(String[] args) {
+		new GameFrame();
+	}
+
+	public static GCanvas getCanvas() {
+		if (canvas != null)
+			return canvas;
+		return (canvas = new GCanvas(DIMENSION, 50, 2));
 	}
 
 	public void init() {
@@ -39,11 +45,5 @@ public class GameFrame extends Frame {
 		fakeLoadingState = new FakeLoaderState();
 		canvas.addGState(fakeLoadingState);
 		add(canvas);
-	}
-
-	public static GCanvas getCanvas() {
-		if (canvas != null)
-			return canvas;
-		return (canvas = new GCanvas(DIMENSION, 50, 2));
 	}
 }
