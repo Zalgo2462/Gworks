@@ -1,11 +1,10 @@
 package org.zp.blockdude.sprites.game;
 
+import org.zp.blockdude.ColorScheme;
 import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.blockdude.states.playstate.ticklisteners.EnemyDeath;
 import org.zp.blockdude.states.playstate.ticklisteners.EnemyMissiles;
 import org.zp.blockdude.states.playstate.ticklisteners.EnemyMovement;
-
-import java.awt.*;
 
 public class Enemy extends Character {
 	private PlayState playState;
@@ -17,7 +16,7 @@ public class Enemy extends Character {
 
 	public Enemy(final PlayState playState, final int size, final int speed,
 	             final double playerAttraction, final double enemyRepulsion, final int randomness) {
-		super(size, Color.RED);
+		super(size, ColorScheme.LIGHTER_RED.getColor());
 		getMovement().setMaxSpeed(speed);
 		getRotation().setSpeed(Math.PI);
 		this.playState = playState;

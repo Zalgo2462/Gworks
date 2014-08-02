@@ -1,6 +1,5 @@
 package org.zp.blockdude.states.playstate.ticklisteners;
 
-import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.sprites.Sprite;
 import org.zp.blockdude.sprites.game.Enemy;
 import org.zp.blockdude.sprites.game.Player;
@@ -21,7 +20,7 @@ public class PlayerMovement implements GTickListener {
 	public PlayerMovement(PlayState playState, Player player) {
 		this.playState = playState;
 		this.player = player;
-		this.keyListener = GameFrame.getCanvas().getGKeyListener();
+		this.keyListener = playState.getCanvas().getGKeyListener();
 		this.blockInputTime = System.currentTimeMillis();
 	}
 
@@ -88,7 +87,7 @@ public class PlayerMovement implements GTickListener {
 			e.getEnemyMovement().blockRotation(150);
 		}
 
-		SpriteManager.PLAY_AREA_EDGE canvasEdge = playState.getSpriteManager().checkForEdgeCollision(player);
+		SpriteManager.PlayAreaEdge canvasEdge = playState.getSpriteManager().checkForEdgeCollision(player);
 		switch (canvasEdge) {
 			case TOP:
 			case BOTTOM:

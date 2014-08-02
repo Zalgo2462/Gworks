@@ -1,5 +1,6 @@
 package org.zp.gtest.rendertests.ImageViewer;
 
+import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 import org.zp.gworks.logic.GTickListener;
@@ -14,7 +15,8 @@ public class ImageViewerState extends GImmutableState {
 	private final BufferedImage image;
 	private int x, y = 0;
 
-	public ImageViewerState(final BufferedImage image) {
+	public ImageViewerState(final GCanvas canvas, final BufferedImage image) {
+		super(canvas);
 		this.image = image;
 		setTickListeners(new GTickListener[]{new ImageViewerController(this)});
 		setRenderStrategies(new GRenderListener[]{new ImageViewerRenderer(this)});

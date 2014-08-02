@@ -1,5 +1,6 @@
 package org.zp.blockdude.states.playstate.renderlisteners;
 
+import org.zp.blockdude.ColorScheme;
 import org.zp.blockdude.sprites.game.Player;
 import org.zp.blockdude.states.playstate.PlayState.UI_CONSTANTS;
 import org.zp.gworks.gui.canvas.GCanvas;
@@ -23,15 +24,13 @@ public class HealthRenderer implements GRenderListener {
 
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
-		graphics.setColor(Color.GREEN);
+		graphics.setColor(ColorScheme.GREEN.getColor());
 		double dHealth = HEALTH_SPEED * delta / 1000000000D;
 		if (player.getHealth() - displayedHealth < 0) {
 			displayedHealth -= Math.ceil(dHealth);
 		} else if (player.getHealth() - displayedHealth > 0) {
 			displayedHealth += Math.ceil(dHealth);
 		}
-
-		graphics.setColor(Color.GREEN);
 
 		int healthWidth = Math.round(
 				Math.round(
@@ -54,8 +53,18 @@ public class HealthRenderer implements GRenderListener {
 
 		int xPos = UI_CONSTANTS.LIVES_BAR_END - 25;
 		for (int iii = 0; iii < player.getLives(); iii++) {
-			graphics.drawImage(player.getRenderer().getSprite(), xPos, UI_CONSTANTS.INFO_AREA_TOP, 25, 25, null);
-			xPos -= 30;
+			graphics.drawImage(player.getRenderer().getSprite(),
+					xPos,
+					UI_CONSTANTS.INFO_AREA_TOP,
+					xPos + UI_CONSTANTS.INFO_AREA_HEIGHT,
+					UI_CONSTANTS.INFO_AREA_TOP + UI_CONSTANTS.INFO_AREA_HEIGHT,
+					0,
+					0,
+					player.getRenderer().getSprite().getWidth(),
+					player.getRenderer().getSprite().getHeight(),
+					null
+			);
+			xPos -= UI_CONSTANTS.INFO_AREA_HEIGHT + 5;
 		}
 	}
 

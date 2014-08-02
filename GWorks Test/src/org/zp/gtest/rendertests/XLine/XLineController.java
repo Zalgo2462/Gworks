@@ -17,15 +17,15 @@ public class XLineController implements GTickListener {
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		if(state.getX() >= canvas.getWidth()) {
+		if (state.getX() >= canvas.getWidth()) {
 			state.setBackwards(true);
 		} else if (state.getX() <= 0) {
 			state.setBackwards(false);
 		}
-		if(!state.isBackwards()) {
-			state.setX(Math.round(state.getX() + SPEED * delta / 1000000000F));
+		if (!state.isBackwards()) {
+			state.setX(state.getX() + SPEED * delta / 1000000000D);
 		} else {
-			state.setX(Math.round(state.getX() - SPEED * delta / 1000000000F));
+			state.setX(state.getX() - SPEED * delta / 1000000000D);
 		}
 	}
 }

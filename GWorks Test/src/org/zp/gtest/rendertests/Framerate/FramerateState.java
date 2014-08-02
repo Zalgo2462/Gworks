@@ -1,5 +1,6 @@
 package org.zp.gtest.rendertests.Framerate;
 
+import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 
@@ -8,7 +9,8 @@ import org.zp.gworks.logic.GState.GImmutableState;
  * Time: 12:28 PM
  */
 public class FramerateState extends GImmutableState {
-	public FramerateState() {
+	public FramerateState(final GCanvas canvas) {
+		super(canvas);
 		setRenderStrategies(new GRenderListener[]{new FramerateRenderer()});
 	}
 }

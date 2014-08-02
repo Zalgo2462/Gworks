@@ -7,4 +7,8 @@ public interface GState {
 	public GTickListener[] getTickListeners();
 
 	public GRenderListener[] getRenderStrategies();
+
+	public void onAddGState();
+
+	public void onRemoveGState();
 }

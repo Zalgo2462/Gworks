@@ -1,5 +1,6 @@
 package org.zp.blockdude.states.playstate.renderlisteners;
 
+import org.zp.blockdude.ColorScheme;
 import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.blockdude.states.playstate.PlayState.UI_CONSTANTS;
@@ -21,7 +22,7 @@ public class InfoAreaRenderer implements GRenderListener {
 
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
-		graphics.setColor(Color.BLACK);
+		graphics.setColor(ColorScheme.DARKER_GREEN.getColor());
 		graphics.drawLine(0, UI_CONSTANTS.PLAY_AREA_TOP,
 				GameFrame.DIMENSION.width, UI_CONSTANTS.PLAY_AREA_TOP);
 		graphics.setFont(graphics.getFont().deriveFont((float) UI_CONSTANTS.INFO_AREA_HEIGHT));

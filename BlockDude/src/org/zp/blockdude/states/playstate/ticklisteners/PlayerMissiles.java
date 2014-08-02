@@ -1,6 +1,5 @@
 package org.zp.blockdude.states.playstate.ticklisteners;
 
-import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.sprites.Sprite;
 import org.zp.blockdude.sprites.game.Enemy;
 import org.zp.blockdude.sprites.game.Missile;
@@ -28,7 +27,7 @@ public class PlayerMissiles implements GTickListener {
 		this.playState = playState;
 		this.player = player;
 		this.spriteManager = playState.getSpriteManager();
-		this.keyListener = GameFrame.getCanvas().getGKeyListener();
+		this.keyListener = playState.getCanvas().getGKeyListener();
 	}
 
 	@Override
@@ -45,11 +44,12 @@ public class PlayerMissiles implements GTickListener {
 					missile.getMovement().getXMovement() * missile.getMovement().getSpeed() * delta / 1000000000F,
 					missile.getMovement().getYMovement() * missile.getMovement().getSpeed() * delta / 1000000000F
 			);
-			SpriteManager.PLAY_AREA_EDGE canvasEdge = spriteManager.checkForEdgeCollision(missile);
-			if (canvasEdge != SpriteManager.PLAY_AREA_EDGE.NONE) {
+			SpriteManager.PlayAreaEdge canvasEdge = spriteManager.checkForEdgeCollision(missile);
+			if (canvasEdge != SpriteManager.PlayAreaEdge.NONE) {
 				missile.getRenderer().setRendered(false);
 				spriteManager.unregisterSprite(missile);
 				iterator.remove();
+				return;
 			}
 			Sprite collided = spriteManager.checkForCollision(missile, playState.getEnemies());
 			if (collided != null) {

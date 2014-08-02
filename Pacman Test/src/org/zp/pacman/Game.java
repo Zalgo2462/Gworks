@@ -8,16 +8,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Game extends Frame {
-	private static GCanvas canvas;
 	public static final String TITLE = "Pacman";
 	public static final Dimension GAME_SIZE = new Dimension(400, 500);
 	public static final int FPS = 32;
 	public static final int BUFFERS = 2;
-
-	public static void main(final String args[]) {
-		new Game();
-
-	}
+	private static GCanvas canvas;
 
 	public Game() {
 		init();
@@ -26,6 +21,11 @@ public class Game extends Frame {
 		setVisible(true);
 		setResizable(false);
 		canvas.requestFocus();
+	}
+
+	public static void main(final String args[]) {
+		new Game();
+
 	}
 
 	private void init() {
@@ -37,7 +37,7 @@ public class Game extends Frame {
 			}
 		});
 		canvas = new GCanvas(GAME_SIZE, FPS, BUFFERS);
-		canvas.addGState(new PacmanState());
+		canvas.addGState(new PacmanState(canvas));
 		add(canvas);
 	}
 }

@@ -18,14 +18,18 @@ public class SpriteManager {
 	}
 
 	public boolean registerSprite(Sprite sprite) {
-		return sprites.add(sprite) && state.addGRenderListener(sprite.getRenderer());
+		boolean toReturn = sprites.add(sprite);
+		toReturn = state.addGRenderListener(sprite.getRenderer()) && toReturn;
+		return toReturn;
 	}
 
 	public boolean unregisterSprite(Sprite sprite) {
-		return sprites.remove(sprite) && state.removeGRenderListener(sprite.getRenderer());
+		boolean toReturn = sprites.remove(sprite);
+		toReturn = state.removeGRenderListener(sprite.getRenderer()) && toReturn;
+		return toReturn;
 	}
 
-	public Double getAngleIfCollisionWithEdge(Sprite sprite, PLAY_AREA_EDGE edge) {
+	public Double getAngleIfCollisionWithEdge(Sprite sprite, PlayAreaEdge edge) {
 		Area area1 = new Area(sprite.getRenderer().getBounds());
 		Area area2 = edge.getArea();
 		area1.intersect(area2);
@@ -41,13 +45,13 @@ public class SpriteManager {
 		return sprite.getMovement().getAngleTo(x + width / 2, y + height / 2);
 	}
 
-	public PLAY_AREA_EDGE checkForEdgeCollision(Sprite sprite) {
-		for (PLAY_AREA_EDGE edge : PLAY_AREA_EDGE.values()) {
+	public PlayAreaEdge checkForEdgeCollision(Sprite sprite) {
+		for (PlayAreaEdge edge : PlayAreaEdge.values()) {
 			if (getAngleIfCollisionWithEdge(sprite, edge) != null) {
 				return edge;
 			}
 		}
-		return PLAY_AREA_EDGE.NONE;
+		return PlayAreaEdge.NONE;
 	}
 
 	public Double getAngleIfCollision(Sprite sprite, Collection<Sprite> sprites) {
@@ -107,7 +111,7 @@ public class SpriteManager {
 		return areaA;
 	}
 
-	public enum PLAY_AREA_EDGE {
+	public enum PlayAreaEdge {
 		TOP(
 				PlayState.UI_CONSTANTS.PLAY_AREA_LEFT,
 				0,
@@ -135,7 +139,7 @@ public class SpriteManager {
 		NONE(0, 0, 0, 0);
 		private Area area;
 
-		PLAY_AREA_EDGE(int x, int y, int w, int h) {
+		PlayAreaEdge(int x, int y, int w, int h) {
 			this.area = new Area(new Rectangle(x, y, w, h));
 		}
 

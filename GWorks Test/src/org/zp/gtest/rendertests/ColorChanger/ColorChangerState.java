@@ -1,5 +1,6 @@
 package org.zp.gtest.rendertests.ColorChanger;
 
+import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 
@@ -8,7 +9,8 @@ import org.zp.gworks.logic.GState.GImmutableState;
  * Time: 12:25 PM
  */
 public class ColorChangerState extends GImmutableState {
-	public ColorChangerState() {
+	public ColorChangerState(GCanvas canvas) {
+		super(canvas);
 		setRenderStrategies(new GRenderListener[]{new ColorChangerRenderer()});
 	}
 }

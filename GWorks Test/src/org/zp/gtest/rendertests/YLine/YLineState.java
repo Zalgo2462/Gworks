@@ -8,26 +8,32 @@ import org.zp.gworks.logic.GTickListener;
 import java.awt.*;
 
 public class YLineState extends GImmutableState implements GTickListener, GRenderListener {
-	private int y;
-	private boolean backwards;
 	private final int SPEED = 50;
+	private double y;
+	private boolean backwards;
 
 
-	public YLineState(final int start) {
+	public YLineState(final GCanvas canvas, final int start) {
+		super(canvas);
 		this.y = start;
 		this.backwards = false;
 		setTickListeners(new GTickListener[]{this});
 		setRenderStrategies(new GRenderListener[]{this});
 	}
 
-	public YLineState() {
-		this(0);
+	public YLineState(final GCanvas canvas) {
+		this(canvas, 0);
 	}
 
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
 		graphics.setColor(Color.BLACK);
-		graphics.drawLine(0, y, canvas.getWidth(), y);
+		graphics.drawLine(
+				0,
+				Math.round(Math.round(y)),
+				canvas.getWidth(),
+				Math.round(Math.round(y))
+		);
 	}
 
 	@Override
@@ -38,9 +44,9 @@ public class YLineState extends GImmutableState implements GTickListener, GRende
 			backwards = false;
 		}
 		if (!backwards) {
-			y += Math.round(SPEED * delta / 1000000000F);
+			y += SPEED * delta / 1000000000D;
 		} else {
-			y -= Math.round(SPEED * delta / 1000000000F);
+			y -= SPEED * delta / 1000000000D;
 		}
 	}
 }

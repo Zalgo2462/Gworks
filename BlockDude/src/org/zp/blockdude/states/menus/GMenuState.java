@@ -1,6 +1,5 @@
 package org.zp.blockdude.states.menus;
 
-import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.states.menus.ui.GButton;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
@@ -15,22 +14,19 @@ import java.util.LinkedList;
  * Date: 8/1/2014
  * Time: 7:56 PM
  */
-public class GMenuState extends GMutableState implements GRenderListener {
+public class GMenuState extends GMutableState {
 	private Color bgColor;
-	private int x, y, width, height;
+	private Rectangle bounds;
 	private LinkedList<GButton> buttons;
 	private GMenuMouseListener mouseListener;
 
-	public GMenuState(Color bgColor, int x, int y, int width, int height) {
+	public GMenuState(GCanvas canvas, Color bgColor, int x, int y, int width, int height) {
+		super(canvas);
 		this.bgColor = bgColor;
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
+		this.bounds = new Rectangle(x, y, width, height);
 		this.buttons = new LinkedList<GButton>();
 		this.mouseListener = new GMenuMouseListener();
-		GameFrame.getCanvas().addMouseListener(mouseListener);
-		addGRenderListener(this);
+		addGRenderListener(new GMenuRenderer());
 	}
 
 	public void addGButton(GButton button) {
@@ -40,26 +36,29 @@ public class GMenuState extends GMutableState implements GRenderListener {
 	}
 
 	public boolean removeGButton(GButton button) {
-		return buttons.remove(button) && removeGRenderListener(button) && removeGTickListener(button);
+		boolean toReturn = buttons.remove(button);
+		toReturn = removeGRenderListener(button) && toReturn;
+		toReturn = removeGTickListener(button) && toReturn;
+		return toReturn;
+	}
+
+	public Rectangle getBounds() {
+		return bounds;
 	}
 
 	@Override
-	public void paint(GCanvas canvas, Graphics graphics, long delta) {
-		graphics.setColor(bgColor);
-		graphics.fillRect(x, y, width, height);
+	public void onAddGState() {
+		canvas.addMouseListener(mouseListener);
 	}
 
-	public void dispose() {
-		GameFrame.getCanvas().removeMouseListener(mouseListener);
+	@Override
+	public void onRemoveGState() {
+		canvas.removeMouseListener(mouseListener);
 	}
 
 	private class GMenuMouseListener implements MouseListener {
-		private Rectangle bounds;
-		private GButton currentlyPressed;
 
-		public GMenuMouseListener() {
-			this.bounds = new Rectangle(x, y, width, height);
-		}
+		private GButton currentlyPressed;
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -109,6 +108,15 @@ public class GMenuState extends GMutableState implements GRenderListener {
 
 		@Override
 		public void mouseExited(MouseEvent e) {
+		}
+	}
+
+	private class GMenuRenderer implements GRenderListener {
+
+		@Override
+		public void paint(GCanvas canvas, Graphics graphics, long delta) {
+			graphics.setColor(bgColor);
+			graphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
 	}
 }

@@ -1,12 +1,11 @@
 package org.zp.blockdude.sprites.game;
 
+import org.zp.blockdude.ColorScheme;
 import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.blockdude.states.playstate.renderlisteners.HealthRenderer;
 import org.zp.blockdude.states.playstate.ticklisteners.PlayerDeath;
 import org.zp.blockdude.states.playstate.ticklisteners.PlayerMissiles;
 import org.zp.blockdude.states.playstate.ticklisteners.PlayerMovement;
-
-import java.awt.*;
 
 public class Player extends Character {
 	private PlayState playState;
@@ -17,7 +16,7 @@ public class Player extends Character {
 	private int lives;
 
 	public Player(final PlayState playState) {
-		super(25, Color.GREEN);
+		super(25, ColorScheme.GREEN.getColor());
 		this.playState = playState;
 		this.playerMissiles = new PlayerMissiles(playState, this);
 		this.playerMovement = new PlayerMovement(playState, this);

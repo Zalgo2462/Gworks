@@ -1,5 +1,6 @@
 package org.zp.blockdude.states.gameover.renderlisteners;
 
+import org.zp.blockdude.ColorScheme;
 import org.zp.blockdude.states.gameover.GameOverState;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
@@ -20,9 +21,10 @@ public class GameOverRenderer implements GRenderListener {
 
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
-		graphics.setColor(Color.BLACK);
+		graphics.setColor(ColorScheme.MENU_BACKGROUND.getColor());
 		graphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		graphics.setFont(graphics.getFont().deriveFont(50F));
+		graphics.setColor(ColorScheme.DARKER_GREEN.getColor());
+		graphics.setFont(new Font("BatmanForeverOutline", Font.BOLD, 50));
 		FontMetrics fontMetrics = graphics.getFontMetrics();
 		Rectangle2D bounds1 = fontMetrics.getStringBounds("GAME OVER", graphics);
 		Rectangle2D bounds2 = fontMetrics.getStringBounds("FINAL SCORE: " + gameOverState.getScore(), graphics);
@@ -34,7 +36,6 @@ public class GameOverRenderer implements GRenderListener {
 		);
 		int x = (int) (canvas.getWidth() / 2 - bounds1.getCenterX());
 		int y = (int) (canvas.getHeight() / 2 - bounds3.getCenterY());
-		graphics.setColor(Color.WHITE);
 		graphics.drawString("GAME OVER", x, y);
 		x = (int) (canvas.getWidth() / 2 - bounds2.getCenterX());
 		y += bounds2.getHeight();

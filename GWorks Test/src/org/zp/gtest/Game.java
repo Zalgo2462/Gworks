@@ -15,10 +15,6 @@ import java.awt.event.WindowEvent;
 public class Game extends Frame {
 	private GCanvas canvas;
 
-	public static void main(String[] args) {
-		new Game();
-	}
-
 	public Game() {
 		init();
 		pack();
@@ -26,13 +22,16 @@ public class Game extends Frame {
 		setVisible(true);
 		//setResizable(false);
 		canvas.requestFocus();
-		canvas.addGState(new ColorChangerState());
-		canvas.addGState(new XLineState());
-		canvas.addGState(new YLineState());
-		//gcanvas.addGState(new ImageViewerState(Resources.PACMAN_SPRITES.getSprite("RIGHT_PACMAN_1")));
-		canvas.addGState(new FramerateState());
-		canvas.addGState(new KeyboardState());
-		canvas.addGState(new MouseState());
+		canvas.addGState(new ColorChangerState(canvas));
+		canvas.addGState(new XLineState(canvas));
+		canvas.addGState(new YLineState(canvas));
+		canvas.addGState(new FramerateState(canvas));
+		canvas.addGState(new KeyboardState(canvas));
+		canvas.addGState(new MouseState(canvas));
+	}
+
+	public static void main(String[] args) {
+		new Game();
 	}
 
 	public void init() {

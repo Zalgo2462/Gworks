@@ -1,6 +1,5 @@
 package org.zp.blockdude.states.playstate.ticklisteners;
 
-import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.sprites.Sprite;
 import org.zp.blockdude.sprites.game.Enemy;
 import org.zp.blockdude.states.playstate.PlayState;
@@ -52,13 +51,13 @@ public class EnemyMovement implements GTickListener {
 			if (enemy.getMovement().getLocation().getX() < 200) {
 				x += 20;
 			}
-			if (GameFrame.getCanvas().getWidth() - enemy.getMovement().getLocation().getX() < 200) {
+			if (playState.getCanvas().getWidth() - enemy.getMovement().getLocation().getX() < 200) {
 				x -= 20;
 			}
 			if (enemy.getMovement().getLocation().getY() < 200) {
 				y += 20;
 			}
-			if (GameFrame.getCanvas().getHeight() - enemy.getMovement().getLocation().getY() < 200) {
+			if (playState.getCanvas().getHeight() - enemy.getMovement().getLocation().getY() < 200) {
 				y -= 20;
 			}
 			if (playState.getPlayer().getMovement().getLocation().getX() > enemy.getMovement().getLocation().getX()) {
@@ -112,7 +111,7 @@ public class EnemyMovement implements GTickListener {
 			e.getEnemyMovement().blockRotation(150);
 		}
 
-		SpriteManager.PLAY_AREA_EDGE canvasEdge = playState.getSpriteManager().checkForEdgeCollision(enemy);
+		SpriteManager.PlayAreaEdge canvasEdge = playState.getSpriteManager().checkForEdgeCollision(enemy);
 		switch (canvasEdge) {
 			case TOP:
 			case BOTTOM:

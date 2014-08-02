@@ -20,7 +20,8 @@ public class PacmanState extends GImmutableState implements GTickListener, GRend
 	boolean mouthOpen = false;
 	BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 
-	public PacmanState() {
+	public PacmanState(GCanvas canvas) {
+		super(canvas);
 		setTickListeners(new GTickListener[]{this});
 		setRenderStrategies(new GRenderListener[]{this});
 	}

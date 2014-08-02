@@ -6,8 +6,6 @@ import org.zp.gworks.logic.GTickListener;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.font.FontRenderContext;
-import java.awt.font.TextLayout;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -15,42 +13,25 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Date: 8/1/2014
  * Time: 8:00 PM
  */
-public class GButton implements GTickListener, GRenderListener {
-	private Color bgColor;
-	private Color fgColor;
-	private Point location;
-	private int margin;
-	private Rectangle textBounds;
-	private Rectangle buttonBounds;
-	private Font font;
-	private String text;
-	private boolean pressed;
-	private ConcurrentLinkedQueue<MouseEvent> mouseClicks;
-	private LinkedList<Runnable> runnables;
+public abstract class GButton implements GTickListener, GRenderListener {
+	protected Color bgColor;
+	protected Color fgColor;
+	protected boolean outlined;
+	protected Point location;
+	protected int horizontalMargin;
+	protected int verticalMargin;
+	protected Rectangle buttonBounds;
+	protected boolean pressed;
+	protected ConcurrentLinkedQueue<MouseEvent> mouseClicks;
+	protected LinkedList<Runnable> runnables;
 
-	public GButton(String text) {
-		this(text, 20);
-	}
-
-	public GButton(String text, int margin) {
-		this(text, new Font("Arial", Font.PLAIN, 18), margin);
-	}
-
-	public GButton(String text, Font font, int margin) {
-		this(Color.WHITE, Color.BLACK, text, font, margin);
-	}
-
-	public GButton(Color fgColor, Color bgColor, String text, int margin) {
-		this(fgColor, bgColor, text, new Font("Arial", Font.PLAIN, 18), margin);
-	}
-
-	public GButton(Color fgColor, Color bgColor, String text, Font font, int margin) {
-		this.fgColor = fgColor;
-		this.bgColor = bgColor;
-		this.text = text;
-		this.font = font;
+	protected GButton() {
+		this.fgColor = Color.BLACK;
+		this.bgColor = Color.WHITE;
+		this.outlined = true;
 		this.location = new Point(0, 0);
-		this.margin = margin;
+		this.horizontalMargin = 0;
+		this.verticalMargin = 0;
 		pressed = false;
 		mouseClicks = new ConcurrentLinkedQueue<MouseEvent>();
 		runnables = new LinkedList<Runnable>();
@@ -58,8 +39,6 @@ public class GButton implements GTickListener, GRenderListener {
 
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
-		graphics.setFont(font);
-		updateBounds(((Graphics2D) graphics).getFontRenderContext());
 		graphics.setColor(
 				pressed ? bgColor.darker().darker() : bgColor
 		);
@@ -67,12 +46,16 @@ public class GButton implements GTickListener, GRenderListener {
 		graphics.setColor(
 				pressed ? fgColor.darker().darker() : fgColor
 		);
-		graphics.drawString(
-				text,
-				(int) (buttonBounds.getCenterX() - textBounds.getCenterX()),
-				(int) (buttonBounds.getCenterY() - textBounds.getCenterY())
-		);
+		paintContents(canvas, graphics, delta);
+		if (outlined) {
+			graphics.setColor(
+					pressed ? fgColor.darker().darker() : fgColor
+			);
+			graphics.drawRect(location.x, location.y, buttonBounds.width, buttonBounds.height);
+		}
 	}
+
+	protected abstract void paintContents(GCanvas canvas, Graphics graphics, long delta);
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
@@ -82,20 +65,6 @@ public class GButton implements GTickListener, GRenderListener {
 				r.run();
 			}
 		}
-	}
-
-	private void updateBounds() {
-		FontRenderContext frc = new FontRenderContext(font.getTransform(), true, true);
-		updateBounds(frc);
-	}
-
-	private void updateBounds(FontRenderContext frc) {
-		TextLayout textLayout = new TextLayout(text, font, frc);
-		Rectangle stringBounds = textLayout.getBounds().getBounds();
-		textBounds = new Rectangle(stringBounds);
-		stringBounds.grow(margin, margin);
-		stringBounds.setLocation(location);
-		buttonBounds = stringBounds;
 	}
 
 	public Color getBgColor() {
@@ -114,45 +83,53 @@ public class GButton implements GTickListener, GRenderListener {
 		this.fgColor = fgColor;
 	}
 
+	public boolean isOutlined() {
+		return outlined;
+	}
+
+	public void setOutlined(boolean outlined) {
+		this.outlined = outlined;
+	}
+
 	public Point getLocation() {
 		return location;
 	}
 
 	public void setLocation(Point location) {
 		this.location = location;
-		updateBounds();
+		updateButtonBounds();
 	}
 
-	public int getMargin() {
-		return margin;
+	public int getHorizontalMargin() {
+		return horizontalMargin;
 	}
 
-	public void setMargin(int margin) {
-		this.margin = margin;
-		updateBounds();
+	public void setHorizontalMargin(int horizMargin) {
+		this.horizontalMargin = horizMargin;
+		updateButtonBounds();
 	}
 
-	public Font getFont() {
-		return font;
+	public int getVerticalMargin() {
+		return verticalMargin;
 	}
 
-	public void setFont(Font font) {
-		this.font = font;
-		updateBounds();
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-		updateBounds();
+	public void setVerticalMargin(int vertMargin) {
+		this.verticalMargin = vertMargin;
+		updateButtonBounds();
 	}
 
 	public Rectangle getBounds() {
 		return buttonBounds;
 	}
+
+	protected final void updateButtonBounds() {
+		Rectangle innerBounds = new Rectangle(getInnerBounds());
+		innerBounds.grow(getHorizontalMargin(), getVerticalMargin());
+		innerBounds.setLocation(getLocation());
+		buttonBounds = innerBounds;
+	}
+
+	protected abstract Rectangle getInnerBounds();
 
 	public boolean isPressed() {
 		return pressed;

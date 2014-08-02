@@ -48,7 +48,7 @@ public final class GCanvas extends Canvas {
 	public void addNotify() {
 		super.addNotify();
 		createBufferStrategy(BUFFERS);
-		if(System.getProperty("os.name").startsWith("win"))
+		if (System.getProperty("os.name").startsWith("win"))
 			timerAccuracyThread.start();
 		gameThread.start();
 	}
@@ -68,12 +68,12 @@ public final class GCanvas extends Canvas {
 	}
 
 	private void createGLoop() {
-		if(loop == null)
+		if (loop == null)
 			this.loop = new GLoop(this);
 	}
 
 	private void createRenderer() {
-		if(renderer == null)
+		if (renderer == null)
 			this.renderer = new GRenderer(this);
 	}
 
@@ -113,10 +113,12 @@ public final class GCanvas extends Canvas {
 	}
 
 	public boolean addGState(final GState gState) {
+		gState.onAddGState();
 		return gStates.add(gState);
 	}
 
 	public boolean removeGState(final GState gState) {
+		gState.onRemoveGState();
 		return gStates.remove(gState);
 	}
 
@@ -137,6 +139,9 @@ public final class GCanvas extends Canvas {
 	}
 
 	public void dispose() {
+		for (GState gState : gStates) {
+			removeGState(gState);
+		}
 		loop.setIsRunning(false);
 		gameThread.interrupt();
 		timerAccuracyThread.interrupt();

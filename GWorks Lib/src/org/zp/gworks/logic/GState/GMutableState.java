@@ -1,5 +1,6 @@
 package org.zp.gworks.logic.GState;
 
+import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GTickListener;
 
@@ -7,10 +8,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 //Mutable GState
 public abstract class GMutableState implements GState {
+	protected GCanvas canvas;
 	private CopyOnWriteArrayList<GTickListener> tickListeners;
 	private CopyOnWriteArrayList<GRenderListener> renderStrategies;
 
-	protected GMutableState() {
+	protected GMutableState(GCanvas canvas) {
+		this.canvas = canvas;
 		this.tickListeners = new CopyOnWriteArrayList<GTickListener>();
 		this.renderStrategies = new CopyOnWriteArrayList<GRenderListener>();
 	}
@@ -21,6 +24,12 @@ public abstract class GMutableState implements GState {
 
 	public GRenderListener[] getRenderStrategies() {
 		return renderStrategies.toArray(new GRenderListener[renderStrategies.size()]);
+	}
+
+	public void onAddGState() {
+	}
+
+	public void onRemoveGState() {
 	}
 
 	public boolean addGTickListener(final GTickListener tickListener) {
@@ -37,5 +46,9 @@ public abstract class GMutableState implements GState {
 
 	public boolean removeGRenderListener(final GRenderListener renderStrategy) {
 		return renderStrategies.remove(renderStrategy);
+	}
+
+	public GCanvas getCanvas() {
+		return canvas;
 	}
 }

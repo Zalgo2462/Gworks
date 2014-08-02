@@ -20,6 +20,18 @@ public abstract class Sprite {
 		rotation = new Rotation();
 	}
 
+	public Renderer getRenderer() {
+		return renderer;
+	}
+
+	public Movement getMovement() {
+		return movement;
+	}
+
+	public Rotation getRotation() {
+		return rotation;
+	}
+
 	public class Movement {
 		private Point currentLocation;
 		private double angle;
@@ -386,17 +398,5 @@ public abstract class Sprite {
 			trans.translate(movement.currentLocation.getX(), movement.currentLocation.getY());
 			return trans.createTransformedShape(s);
 		}
-	}
-
-	public Renderer getRenderer() {
-		return renderer;
-	}
-
-	public Movement getMovement() {
-		return movement;
-	}
-
-	public Rotation getRotation() {
-		return rotation;
 	}
 }

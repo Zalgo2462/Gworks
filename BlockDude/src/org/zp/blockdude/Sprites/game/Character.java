@@ -39,7 +39,9 @@ public abstract class Character extends Sprite {
 		g.setColor(color);
 		g.fillRect(0, 0, size, size);
 		g.setColor(Color.BLACK);
+		g.drawLine(size / 2, size / 2 - 1, size, size / 2 - 1);
 		g.drawLine(size / 2, size / 2, size, size / 2);
+		g.drawLine(size / 2, size / 2 + 1, size, size / 2 + 1);
 		g.dispose();
 		return image;
 	}

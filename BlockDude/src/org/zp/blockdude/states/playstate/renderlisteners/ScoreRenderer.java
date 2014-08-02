@@ -1,5 +1,6 @@
 package org.zp.blockdude.states.playstate.renderlisteners;
 
+import org.zp.blockdude.ColorScheme;
 import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.blockdude.states.playstate.PlayState.UI_CONSTANTS;
 import org.zp.gworks.gui.canvas.GCanvas;
@@ -34,7 +35,7 @@ public class ScoreRenderer implements GRenderListener {
 				displayedScore = playState.getScore();
 			}
 		}
-		graphics.setColor(Color.BLACK);
+		graphics.setColor(ColorScheme.DARKER_GREEN.getColor());
 		graphics.setFont(graphics.getFont().deriveFont((float) UI_CONSTANTS.INFO_AREA_HEIGHT));
 		graphics.drawString(
 				Integer.toString(displayedScore),

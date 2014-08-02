@@ -1,6 +1,7 @@
 package org.zp.blockdude.states.gameover;
 
 import org.zp.blockdude.states.gameover.renderlisteners.GameOverRenderer;
+import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GImmutableState;
 
@@ -11,7 +12,8 @@ import org.zp.gworks.logic.GState.GImmutableState;
 public class GameOverState extends GImmutableState {
 	private int score;
 
-	public GameOverState(int score) {
+	public GameOverState(GCanvas canvas, int score) {
+		super(canvas);
 		this.score = score;
 		setRenderStrategies(new GRenderListener[]{new GameOverRenderer(this)});
 	}

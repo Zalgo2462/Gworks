@@ -43,11 +43,12 @@ public class EnemyMissiles implements GTickListener {
 					missile.getMovement().getXMovement() * missile.getMovement().getSpeed() * delta / 1000000000F,
 					missile.getMovement().getYMovement() * missile.getMovement().getSpeed() * delta / 1000000000F
 			);
-			SpriteManager.PLAY_AREA_EDGE canvasEdge = spriteManager.checkForEdgeCollision(missile);
-			if (canvasEdge != SpriteManager.PLAY_AREA_EDGE.NONE) {
+			SpriteManager.PlayAreaEdge canvasEdge = spriteManager.checkForEdgeCollision(missile);
+			if (canvasEdge != SpriteManager.PlayAreaEdge.NONE) {
 				missile.getRenderer().setRendered(false);
 				spriteManager.unregisterSprite(missile);
 				iterator.remove();
+				return;
 			}
 			if (spriteManager.checkForCollision(missile, playState.getPlayer())) {
 				missile.getRenderer().setRendered(false);

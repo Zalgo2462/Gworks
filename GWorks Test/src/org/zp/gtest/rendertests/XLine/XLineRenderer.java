@@ -19,6 +19,11 @@ public class XLineRenderer implements GRenderListener {
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
 		graphics.setColor(Color.BLACK);
-		graphics.drawLine(state.getX(), 0, state.getX(), canvas.getHeight());
+		graphics.drawLine(
+				Math.round(Math.round(state.getX())),
+				0,
+				Math.round(Math.round(state.getX())),
+				canvas.getHeight()
+		);
 	}
 }

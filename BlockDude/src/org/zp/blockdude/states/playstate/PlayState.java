@@ -5,9 +5,11 @@ import org.zp.blockdude.Level;
 import org.zp.blockdude.sprites.Sprite;
 import org.zp.blockdude.sprites.game.Enemy;
 import org.zp.blockdude.sprites.game.Player;
+import org.zp.blockdude.states.playstate.renderlisteners.BackgroundRenderer;
 import org.zp.blockdude.states.playstate.renderlisteners.InfoAreaRenderer;
 import org.zp.blockdude.states.playstate.renderlisteners.ScoreRenderer;
 import org.zp.blockdude.states.playstate.ticklisteners.LevelAdvancement;
+import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.logic.GState.GMutableState;
 
 import java.util.LinkedList;
@@ -17,6 +19,7 @@ import static org.zp.blockdude.GameFrame.DIMENSION;
 
 public class PlayState extends GMutableState {
 	private Level currentLevel;
+	private BackgroundRenderer backgroundRenderer;
 	private InfoAreaRenderer infoAreaRenderer;
 	private LevelAdvancement levelAdvancer;
 	private int score;
@@ -25,11 +28,14 @@ public class PlayState extends GMutableState {
 	private Player player;
 	private LinkedList<Sprite> enemies;
 
-	public PlayState() {
+	public PlayState(GCanvas canvas) {
+		super(canvas);
 		spriteManager = new SpriteManager(this);
 
 		player = new Player(this);
 		enemies = new LinkedList<Sprite>();
+
+		backgroundRenderer = new BackgroundRenderer();
 
 		infoAreaRenderer = new InfoAreaRenderer(this);
 
@@ -37,6 +43,19 @@ public class PlayState extends GMutableState {
 
 		score = 0;
 		scoreRenderer = new ScoreRenderer(this);
+	}
+
+	public void onAddGState() {
+		initBackground();
+		initScoreboard();
+	}
+
+	public void onRemoveGState() {
+		if (currentLevel == null) {
+			uninitLevel();
+		}
+		uninitBackground();
+		uninitScoreboard();
 	}
 
 	public Level getCurrentLevel() {
@@ -50,15 +69,14 @@ public class PlayState extends GMutableState {
 		currentLevel = level;
 		initPlayer();
 		initEnemies(level);
-		initScoreboard();
 		addGTickListener(levelAdvancer);
 	}
 
 	public void uninitLevel() {
 		uninitPlayer();
 		uninitEnemies();
-		uninitScoreboard();
 		removeGTickListener(levelAdvancer);
+		currentLevel = null;
 	}
 
 	private void initPlayer() {
@@ -107,6 +125,14 @@ public class PlayState extends GMutableState {
 			removeGTickListener(enemy.getEnemyDeath());
 			e.getRenderer().setRendered(false);
 		}
+	}
+
+	private void initBackground() {
+		addGRenderListener(backgroundRenderer);
+	}
+
+	private void uninitBackground() {
+		removeGRenderListener(backgroundRenderer);
 	}
 
 	private void initScoreboard() {
