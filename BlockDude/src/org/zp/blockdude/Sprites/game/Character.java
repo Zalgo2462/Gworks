@@ -48,7 +48,7 @@ public abstract class Character extends Sprite {
 		return missiles;
 	}
 
-	public Missile fireMissile() {
+	public Missile fireMissile(double theta) {
 		Missile missile = new Missile(color);
 		double x0 = (renderer.getBounds().getBounds().getX() + renderer.getBounds().getBounds().getWidth() / 2) -
 				(missile.getRenderer().getBounds().getBounds().getWidth() / 2);
@@ -56,7 +56,7 @@ public abstract class Character extends Sprite {
 				(missile.getRenderer().getBounds().getBounds().getHeight() / 2);
 		double x1 = x0 + 35;
 		double y1 = y0 - (missile.getRenderer().getBounds().getBounds().getHeight() / 2);
-		Point rotatedPoint = getRotation().rotatePoint(x1, y1, x0, y0, getRotation().getCurrentOrientation());
+		Point rotatedPoint = getRotation().rotatePoint(x1, y1, x0, y0, theta);
 		missile.getMovement().setCurrentLocation(rotatedPoint.getX(), rotatedPoint.getY());
 		missile.getRotation().setCurrentOrientation(getRotation().getCurrentOrientation());
 		missile.getMovement().setAngle(missile.getRotation().getCurrentOrientation());

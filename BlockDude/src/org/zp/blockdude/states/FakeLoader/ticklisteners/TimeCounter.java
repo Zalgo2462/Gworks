@@ -21,7 +21,7 @@ public class TimeCounter implements GTickListener {
 		state.setProgress((double) time / MAX_TIME);
 		if (time > MAX_TIME) {
 			PlayState playState = new PlayState();
-			playState.initLevel(Level.THREE);
+			playState.initLevel(Level.ONE);
 			canvas.removeGState(state);
 			canvas.addGState(playState);
 		}

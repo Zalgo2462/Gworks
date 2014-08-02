@@ -22,12 +22,12 @@ public class PlayerMovement implements GTickListener {
 		this.playState = playState;
 		this.player = player;
 		this.keyListener = GameFrame.getCanvas().getGKeyListener();
-		this.blockInputTime = System.nanoTime();
+		this.blockInputTime = System.currentTimeMillis();
 	}
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		if (System.nanoTime() > blockInputTime) {
+		if (System.currentTimeMillis() > blockInputTime) {
 			for (Integer keyCode : keyListener.getPressedKeyCodes()) {
 				switch (keyCode) {
 					case KeyEvent.VK_W:
@@ -43,8 +43,8 @@ public class PlayerMovement implements GTickListener {
 						break;
 					case KeyEvent.VK_S:
 					case KeyEvent.VK_DOWN:
-						player.getMovement().setAngle(player.getRotation().getCurrentOrientation() + Math.PI);
-						player.getMovement().accelerate(delta);
+						//player.getMovement().setAngle(player.getRotation().getCurrentOrientation() + Math.PI);
+						player.getMovement().decelerate(delta);
 						break;
 					case KeyEvent.VK_A:
 					case KeyEvent.VK_LEFT:
@@ -60,7 +60,7 @@ public class PlayerMovement implements GTickListener {
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_DOWN) &&
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_W) &&
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_S)) {
-			player.getMovement().decelerate(delta);
+			player.getMovement().decelerateToZero(delta);
 		}
 
 		if (!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_LEFT) &&
@@ -73,13 +73,13 @@ public class PlayerMovement implements GTickListener {
 		Sprite collided = playState.getSpriteManager().checkForCollision(player, playState.getEnemies());
 		if (collided != null) {
 			Enemy e = (Enemy) collided;
-			e.damage(1);
-			player.damage(1);
 			Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
 			player.getMovement().setAngle(theta + Math.PI);
 			e.getMovement().setAngle(theta);
 			player.getMovement().setSpeed(300);
 			e.getMovement().setSpeed(300);
+			blockInput(100);
+			e.getEnemyMovement().blockRotation(100);
 		}
 
 		SpriteManager.PLAY_AREA_EDGE canvasEdge = playState.getSpriteManager().checkForEdgeCollision(player);
@@ -92,7 +92,7 @@ public class PlayerMovement implements GTickListener {
 				if (player.getMovement().getSpeed() < 100) {
 					player.getMovement().setSpeed(100);
 				}
-
+				blockInput(100);
 				break;
 			case RIGHT:
 			case LEFT:
@@ -102,6 +102,8 @@ public class PlayerMovement implements GTickListener {
 				if (player.getMovement().getSpeed() < 100) {
 					player.getMovement().setSpeed(100);
 				}
+				blockInput(100);
+				break;
 		}
 
 		player.getMovement().move(
@@ -116,5 +118,10 @@ public class PlayerMovement implements GTickListener {
 			}
 			player.getRotation().rotate(dTheta);
 		}
+	}
+
+	public void blockInput(int milliseconds) {
+		player.getRotation().setMoving(false);
+		blockInputTime = System.currentTimeMillis() + milliseconds;
 	}
 }

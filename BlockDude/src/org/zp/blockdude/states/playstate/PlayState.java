@@ -36,6 +36,7 @@ public class PlayState extends GMutableState {
 		public static final int INFO_AREA_RIGHT = GameFrame.DIMENSION.width - 15;
 		public static final int HEALTH_BAR_START = INFO_AREA_RIGHT - 200;
 		public static final int LIVES_BAR_END = HEALTH_BAR_START - 15;
+		public static final int LEVEL_BAR_START = INFO_AREA_LEFT + 150;
 	}
 
 	public PlayState() {
@@ -44,7 +45,7 @@ public class PlayState extends GMutableState {
 		player = new Player(this);
 		enemies = new LinkedList<Sprite>();
 
-		infoAreaRenderer = new InfoAreaRenderer();
+		infoAreaRenderer = new InfoAreaRenderer(this);
 
 		levelAdvancer = new LevelAdvancement(this);
 
@@ -99,7 +100,8 @@ public class PlayState extends GMutableState {
 
 	private void initEnemies(Level level) {
 		for(int iii = 0; iii < level.getEnemies(); iii++) {
-			Enemy e = new Enemy(this, level.getEnemySize(), level.getEnemySpeed());
+			Enemy e = new Enemy(this, level.getEnemySize(), level.getEnemySpeed(),
+					level.getPlayerAttraction(), level.getEnemyRepulsion(), level.getRandomness());
 			enemies.add(e);
 			spriteManager.registerSprite(e);
 			placeEnemy(e);

@@ -32,7 +32,7 @@ public class EnemyMissiles implements GTickListener {
 		final Point p = playState.getPlayer().getMovement().getLocation();
 		final double angleToPlayer = Math.abs(enemy.getRotation().getAngleTo(p.getX(), p.getY()));
 		if (angleToPlayer < Math.PI / 16D && enemy.canFireMissile()) {
-			Missile missile = enemy.fireMissile();
+			Missile missile = enemy.fireMissile(enemy.getRotation().getCurrentOrientation());
 			spriteManager.registerSprite(missile);
 			missile.getRenderer().setRendered(true);
 		}
@@ -57,7 +57,6 @@ public class EnemyMissiles implements GTickListener {
 			}
 		}
 		if (stop && enemy.getMissiles().size() == 0) {
-			System.out.println("Called");
 			playState.removeGTickListener(this);
 		}
 	}

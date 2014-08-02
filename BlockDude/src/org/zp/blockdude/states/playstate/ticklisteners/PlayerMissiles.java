@@ -34,7 +34,7 @@ public class PlayerMissiles implements GTickListener {
 	@Override
 	public void tick(GCanvas canvas, long delta) {
 		if (keyListener.getPressedKeyCodes().contains(KeyEvent.VK_SPACE) && player.canFireMissile()) {
-			Missile missile = player.fireMissile();
+			Missile missile = player.fireMissile(player.getRotation().getCurrentOrientation());
 			spriteManager.registerSprite(missile);
 			missile.getRenderer().setRendered(true);
 		}

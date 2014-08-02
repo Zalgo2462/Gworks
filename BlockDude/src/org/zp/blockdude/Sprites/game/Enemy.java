@@ -12,8 +12,11 @@ public class Enemy extends Character {
 	private EnemyMissiles enemyMissiles;
 	private EnemyMovement enemyMovement;
 	private EnemyDeath enemyDeath;
+	private double playerAttraction, enemyRepulsion;
+	private int randomness;
 
-	public Enemy(final PlayState playState, final int size, final int speed) {
+	public Enemy(final PlayState playState, final int size, final int speed,
+	             final double playerAttraction, final double enemyRepulsion, final int randomness) {
 		super(size, Color.RED);
 		getMovement().setMaxSpeed(speed);
 		getRotation().setSpeed(Math.PI);
@@ -21,6 +24,9 @@ public class Enemy extends Character {
 		this.enemyMissiles = new EnemyMissiles(playState, this);
 		this.enemyMovement = new EnemyMovement(playState, this);
 		this.enemyDeath = new EnemyDeath(playState, this);
+		this.playerAttraction = playerAttraction;
+		this.enemyRepulsion = enemyRepulsion;
+		this.randomness = randomness;
 	}
 
 	public EnemyMissiles getEnemyMissiles() {
@@ -33,5 +39,17 @@ public class Enemy extends Character {
 
 	public EnemyDeath getEnemyDeath() {
 		return enemyDeath;
+	}
+
+	public double getPlayerAttraction() {
+		return playerAttraction;
+	}
+
+	public double getEnemyRepulsion() {
+		return enemyRepulsion;
+	}
+
+	public int getRandomness() {
+		return randomness;
 	}
 }
