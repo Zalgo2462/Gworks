@@ -129,10 +129,28 @@ public abstract class Sprite {
 
 		public void decelerate(final long delta) {
 			double dSpeed = deceleration * delta / 1000000000D;
-			if (speed + dSpeed >= 0) {
+			if (speed + dSpeed >= -maxSpeed) {
 				speed += dSpeed;
 			} else {
-				speed = 0;
+				speed = -maxSpeed;
+			}
+		}
+
+		public void decelerateToZero(final long delta) {
+			if (speed > 0) {
+				double dSpeed = deceleration * delta / 1000000000D;
+				if (speed + dSpeed >= 0) {
+					speed += dSpeed;
+				} else {
+					speed = 0;
+				}
+			} else if (speed < 0) {
+				double dSpeed = acceleration * delta / 1000000000D;
+				if (speed + dSpeed <= 0) {
+					speed += dSpeed;
+				} else {
+					speed = 0;
+				}
 			}
 		}
 

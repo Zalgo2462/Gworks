@@ -76,10 +76,16 @@ public class PlayerMovement implements GTickListener {
 			Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
 			player.getMovement().setAngle(theta + Math.PI);
 			e.getMovement().setAngle(theta);
-			player.getMovement().setSpeed(300);
-			e.getMovement().setSpeed(300);
-			blockInput(100);
-			e.getEnemyMovement().blockRotation(100);
+			if (player.getMovement().getSpeed() < 100) {
+				player.getMovement().setSpeed(100);
+			}
+			if (e.getMovement().getSpeed() < 100) {
+				player.getMovement().setSpeed(100);
+			}
+			player.damage(1);
+			e.damage(1);
+			blockInput(150);
+			e.getEnemyMovement().blockRotation(150);
 		}
 
 		SpriteManager.PLAY_AREA_EDGE canvasEdge = playState.getSpriteManager().checkForEdgeCollision(player);
@@ -92,7 +98,7 @@ public class PlayerMovement implements GTickListener {
 				if (player.getMovement().getSpeed() < 100) {
 					player.getMovement().setSpeed(100);
 				}
-				blockInput(100);
+				blockInput(150);
 				break;
 			case RIGHT:
 			case LEFT:
@@ -102,7 +108,7 @@ public class PlayerMovement implements GTickListener {
 				if (player.getMovement().getSpeed() < 100) {
 					player.getMovement().setSpeed(100);
 				}
-				blockInput(100);
+				blockInput(150);
 				break;
 		}
 

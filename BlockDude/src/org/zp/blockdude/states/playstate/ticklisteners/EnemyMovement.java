@@ -50,16 +50,16 @@ public class EnemyMovement implements GTickListener {
 
 			}
 			if (enemy.getMovement().getLocation().getX() < 200) {
-				x += 10;
+				x += 20;
 			}
 			if (GameFrame.getCanvas().getWidth() - enemy.getMovement().getLocation().getX() < 200) {
-				x -= 10;
+				x -= 20;
 			}
 			if (enemy.getMovement().getLocation().getY() < 200) {
-				y += 10;
+				y += 20;
 			}
 			if (GameFrame.getCanvas().getHeight() - enemy.getMovement().getLocation().getY() < 200) {
-				y -= 10;
+				y -= 20;
 			}
 			if (playState.getPlayer().getMovement().getLocation().getX() > enemy.getMovement().getLocation().getX()) {
 				x += .5;
@@ -100,10 +100,16 @@ public class EnemyMovement implements GTickListener {
 			Double theta = playState.getSpriteManager().getAngleIfCollision(enemy, e);
 			enemy.getMovement().setAngle(theta + Math.PI);
 			e.getMovement().setAngle(theta);
-			enemy.getMovement().setSpeed(300);
-			e.getMovement().setSpeed(300);
-			blockRotation(100);
-			e.getEnemyMovement().blockRotation(100);
+			if (enemy.getMovement().getSpeed() < 100) {
+				enemy.getMovement().setSpeed(100);
+			}
+			if (e.getMovement().getSpeed() < 100) {
+				e.getMovement().setSpeed(100);
+			}
+			enemy.damage(1);
+			e.damage(1);
+			blockRotation(150);
+			e.getEnemyMovement().blockRotation(150);
 		}
 
 		SpriteManager.PLAY_AREA_EDGE canvasEdge = playState.getSpriteManager().checkForEdgeCollision(enemy);
@@ -113,14 +119,14 @@ public class EnemyMovement implements GTickListener {
 				enemy.getMovement().setAngle(
 						-playState.getSpriteManager().getAngleIfCollisionWithEdge(enemy, canvasEdge)
 				);
-				blockRotation(100);
+				blockRotation(150);
 				break;
 			case RIGHT:
 			case LEFT:
 				enemy.getMovement().setAngle(
 						Math.PI - playState.getSpriteManager().getAngleIfCollisionWithEdge(enemy, canvasEdge)
 				);
-				blockRotation(100);
+				blockRotation(150);
 				break;
 		}
 

@@ -28,9 +28,9 @@ public class SpriteManager {
 	public enum PLAY_AREA_EDGE {
 		TOP(
 				PlayState.UI_CONSTANTS.PLAY_AREA_LEFT,
-				PlayState.UI_CONSTANTS.PLAY_AREA_TOP - 1,
+				0,
 				PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT,
-				1
+				PlayState.UI_CONSTANTS.PLAY_AREA_TOP
 		),
 		RIGHT(
 				PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT,
@@ -88,7 +88,7 @@ public class SpriteManager {
 	}
 
 	public Double getAngleIfCollision(Sprite sprite, Collection<Sprite> sprites) {
-		for(Sprite s : sprites) {
+		for (Sprite s : sprites) {
 			if (!s.equals(sprite)) {
 				Double theta = getAngleIfCollision(sprite, s);
 				if (theta != null) {
@@ -122,7 +122,7 @@ public class SpriteManager {
 	}
 
 	public Sprite checkForCollision(Sprite sprite, Collection<Sprite> sprites) {
-		for(Sprite s : sprites) {
+		for (Sprite s : sprites) {
 			if (!s.equals(sprite) && testIntersection(sprite, s)) {
 				return s;
 			}
