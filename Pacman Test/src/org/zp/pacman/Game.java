@@ -37,7 +37,7 @@ public class Game extends Frame {
 			}
 		});
 		canvas = new GCanvas(GAME_SIZE, FPS, BUFFERS);
-		canvas.addGState(new PacmanState(canvas));
+		canvas.addState(new PacmanState(canvas));
 		add(canvas);
 	}
 }

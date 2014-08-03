@@ -34,8 +34,8 @@ public class PlayerDeath implements GTickListener {
 				);
 			} else {
 				playState.uninitLevel();
-				canvas.removeGState(playState);
-				canvas.addGState(new GameOverState(playState.getCanvas(), playState.getScore()));
+				canvas.removeState(playState);
+				canvas.addState(new GameOverState(playState.getCanvas(), playState.getScore()));
 			}
 		}
 	}

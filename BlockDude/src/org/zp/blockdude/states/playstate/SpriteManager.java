@@ -19,13 +19,13 @@ public class SpriteManager {
 
 	public boolean registerSprite(Sprite sprite) {
 		boolean toReturn = sprites.add(sprite);
-		toReturn = state.addGRenderListener(sprite.getRenderer()) && toReturn;
+		toReturn = state.addRenderListener(sprite.getRenderer()) && toReturn;
 		return toReturn;
 	}
 
 	public boolean unregisterSprite(Sprite sprite) {
 		boolean toReturn = sprites.remove(sprite);
-		toReturn = state.removeGRenderListener(sprite.getRenderer()) && toReturn;
+		toReturn = state.removeRenderListener(sprite.getRenderer()) && toReturn;
 		return toReturn;
 	}
 

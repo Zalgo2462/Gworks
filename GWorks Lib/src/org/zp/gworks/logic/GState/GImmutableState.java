@@ -21,19 +21,19 @@ public abstract class GImmutableState implements GState {
 		this.tickListeners = tickListeners;
 	}
 
-	public GRenderListener[] getRenderStrategies() {
+	public GRenderListener[] getRenderListeners() {
 		return renderStrategies;
 	}
 
-	protected void setRenderStrategies(GRenderListener[] renderStrategies) {
+	protected void setRenderListeners(GRenderListener[] renderStrategies) {
 		this.renderStrategies = renderStrategies;
 	}
 
-	public void onAddGState() {
+	public void onAddState() {
 
 	}
 
-	public void onRemoveGState() {
+	public void onRemoveState() {
 
 	}
 

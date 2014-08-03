@@ -55,8 +55,8 @@ public class MainMenu {
 			@Override
 			public void run() {
 				PlayState playState = new PlayState(menuState.getCanvas());
-				menuState.getCanvas().removeGState(menuState);
-				menuState.getCanvas().addGState(playState);
+				menuState.getCanvas().removeState(menuState);
+				menuState.getCanvas().addState(playState);
 				playState.initLevel(Level.ONE);
 			}
 		});
@@ -78,13 +78,13 @@ public class MainMenu {
 		testButton.addRunnable(new Runnable() {
 			@Override
 			public void run() {
-				menuState.getCanvas().removeGState(menuState);
-				menuState.getCanvas().addGState(new ColorChangerState(menuState.getCanvas()));
-				menuState.getCanvas().addGState(new XLineState(menuState.getCanvas()));
-				menuState.getCanvas().addGState(new YLineState(menuState.getCanvas()));
-				menuState.getCanvas().addGState(new FramerateState(menuState.getCanvas()));
-				menuState.getCanvas().addGState(new KeyboardState(menuState.getCanvas()));
-				menuState.getCanvas().addGState(new MouseState(menuState.getCanvas()));
+				menuState.getCanvas().removeState(menuState);
+				menuState.getCanvas().addState(new ColorChangerState(menuState.getCanvas()));
+				menuState.getCanvas().addState(new XLineState(menuState.getCanvas()));
+				menuState.getCanvas().addState(new YLineState(menuState.getCanvas()));
+				menuState.getCanvas().addState(new FramerateState(menuState.getCanvas()));
+				menuState.getCanvas().addState(new KeyboardState(menuState.getCanvas()));
+				menuState.getCanvas().addState(new MouseState(menuState.getCanvas()));
 			}
 		});
 		return testButton;

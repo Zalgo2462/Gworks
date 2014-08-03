@@ -11,6 +11,6 @@ import org.zp.gworks.logic.GState.GImmutableState;
 public class FramerateState extends GImmutableState {
 	public FramerateState(final GCanvas canvas) {
 		super(canvas);
-		setRenderStrategies(new GRenderListener[]{new FramerateRenderer()});
+		setRenderListeners(new GRenderListener[]{new FramerateRenderer()});
 	}
 }

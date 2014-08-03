@@ -13,7 +13,7 @@ public class MouseState extends GImmutableState {
 	public MouseState(final GCanvas canvas) {
 		super(canvas);
 		setTickListeners(new GTickListener[]{new MouseController(this)});
-		setRenderStrategies(new GRenderListener[]{new MouseRenderer(this)});
+		setRenderListeners(new GRenderListener[]{new MouseRenderer(this)});
 	}
 
 	public Point getCurrentPoint() {

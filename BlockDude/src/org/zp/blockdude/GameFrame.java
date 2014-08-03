@@ -36,7 +36,7 @@ public class GameFrame extends Frame {
 			}
 		});
 		canvas = new GCanvas(DIMENSION, 60, 2);
-		canvas.addGState(MainMenu.getMenuState(canvas));
+		canvas.addState(MainMenu.getMenuState(canvas));
 		add(canvas);
 	}
 }

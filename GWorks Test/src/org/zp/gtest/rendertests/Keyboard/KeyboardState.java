@@ -11,7 +11,7 @@ public class KeyboardState extends GImmutableState {
 	public KeyboardState(GCanvas canvas) {
 		super(canvas);
 		setTickListeners(new GTickListener[]{new KeyboardController(this)});
-		setRenderStrategies(new GRenderListener[]{new KeyboardRenderer(this)});
+		setRenderListeners(new GRenderListener[]{new KeyboardRenderer(this)});
 	}
 
 	public String getString() {

@@ -14,7 +14,7 @@ public class XLineState extends GImmutableState {
 		x = start;
 		backwards = false;
 		setTickListeners(new GTickListener[]{new XLineController(this)});
-		setRenderStrategies(new GRenderListener[]{new XLineRenderer(this)});
+		setRenderListeners(new GRenderListener[]{new XLineRenderer(this)});
 	}
 
 	public XLineState(final GCanvas canvas) {

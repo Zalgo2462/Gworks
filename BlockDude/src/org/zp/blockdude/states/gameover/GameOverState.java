@@ -36,15 +36,15 @@ public class GameOverState extends GMenuState {
 		continueButton.addRunnable(new Runnable() {
 			@Override
 			public void run() {
-				state.getCanvas().removeGState(state);
-				state.getCanvas().addGState(MainMenu.getMenuState(state.getCanvas()));
+				state.getCanvas().removeState(state);
+				state.getCanvas().addState(MainMenu.getMenuState(state.getCanvas()));
 			}
 		});
 
 		addGButton(continueButton);
-		canvas.addGState(this);
+		canvas.addState(this);
 
-		addGRenderListener(new GameOverRenderer(this));
+		addRenderListener(new GameOverRenderer(this));
 
 	}
 

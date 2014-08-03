@@ -25,8 +25,8 @@ public class GRenderer implements GTickListener {
 	public void tick(GCanvas canvas, long delta) {
 		graphics = this.canvas.getBufferStrategy().getDrawGraphics();
 		drawStrategies(delta, clearStrategy);
-		for (GState state : this.canvas.getGStates()) {
-			drawStrategies(delta, state.getRenderStrategies());
+		for (GState state : this.canvas.getStates()) {
+			drawStrategies(delta, state.getRenderListeners());
 		}
 		canvas.getBufferStrategy().show();
 		Toolkit.getDefaultToolkit().sync();

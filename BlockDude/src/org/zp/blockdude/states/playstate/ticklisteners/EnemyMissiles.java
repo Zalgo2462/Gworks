@@ -58,7 +58,7 @@ public class EnemyMissiles implements GTickListener {
 			}
 		}
 		if (stop && enemy.getMissiles().size() == 0) {
-			playState.removeGTickListener(this);
+			playState.removeTickListener(this);
 		}
 	}
 

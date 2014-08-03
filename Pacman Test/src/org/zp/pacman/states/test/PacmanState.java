@@ -23,7 +23,7 @@ public class PacmanState extends GImmutableState implements GTickListener, GRend
 	public PacmanState(GCanvas canvas) {
 		super(canvas);
 		setTickListeners(new GTickListener[]{this});
-		setRenderStrategies(new GRenderListener[]{this});
+		setRenderListeners(new GRenderListener[]{this});
 	}
 
 	@Override

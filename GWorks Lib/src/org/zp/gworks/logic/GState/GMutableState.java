@@ -22,29 +22,29 @@ public abstract class GMutableState implements GState {
 		return tickListeners.toArray(new GTickListener[tickListeners.size()]);
 	}
 
-	public GRenderListener[] getRenderStrategies() {
+	public GRenderListener[] getRenderListeners() {
 		return renderStrategies.toArray(new GRenderListener[renderStrategies.size()]);
 	}
 
-	public void onAddGState() {
+	public void onAddState() {
 	}
 
-	public void onRemoveGState() {
+	public void onRemoveState() {
 	}
 
-	public boolean addGTickListener(final GTickListener tickListener) {
+	public boolean addTickListener(final GTickListener tickListener) {
 		return tickListeners.add(tickListener);
 	}
 
-	public boolean addGRenderListener(final GRenderListener renderStrategy) {
+	public boolean addRenderListener(final GRenderListener renderStrategy) {
 		return renderStrategies.add(renderStrategy);
 	}
 
-	public boolean removeGTickListener(final GTickListener tickListener) {
+	public boolean removeTickListener(final GTickListener tickListener) {
 		return tickListeners.remove(tickListener);
 	}
 
-	public boolean removeGRenderListener(final GRenderListener renderStrategy) {
+	public boolean removeRenderListener(final GRenderListener renderStrategy) {
 		return renderStrategies.remove(renderStrategy);
 	}
 

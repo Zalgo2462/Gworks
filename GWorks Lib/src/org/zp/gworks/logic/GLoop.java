@@ -26,8 +26,8 @@ public final class GLoop implements Runnable {
 			long newTime = System.nanoTime();
 			long delta = newTime - currentTime;
 			currentTime = newTime;
-			for(GState state : canvas.getGStates()) {
-				for(GTickListener listener : state.getTickListeners()) {
+			for (GState state : canvas.getStates()) {
+				for (GTickListener listener : state.getTickListeners()) {
 					listener.tick(canvas, delta);
 				}
 			}
@@ -44,7 +44,7 @@ public final class GLoop implements Runnable {
 		try {
 			Thread.sleep((Math.max(0, currentTime + canvas.FRAME_DELAY - System.nanoTime()) / 1000000));
 			frameTimes.offer(System.nanoTime());
-			if(frameTimes.size() > canvas.FPS) {
+			if (frameTimes.size() > canvas.FPS) {
 				frameTimes.poll();
 			}
 		} catch (InterruptedException e) {
@@ -53,8 +53,8 @@ public final class GLoop implements Runnable {
 	}
 
 	public double getActualFramerate() {
-		if(frameTimes.size() > 1) {
-			double runningAvg = frameTimes.get(1) - frameTimes.get(0) ;
+		if (frameTimes.size() > 1) {
+			double runningAvg = frameTimes.get(1) - frameTimes.get(0);
 			for (int i = 1; i < frameTimes.size(); i++) {
 				double nextInterval = frameTimes.get(i) - frameTimes.get(i - 1);
 				runningAvg += nextInterval;

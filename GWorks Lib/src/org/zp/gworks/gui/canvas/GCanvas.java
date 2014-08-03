@@ -35,7 +35,7 @@ public final class GCanvas extends Canvas {
 		setPreferredSize(dimension);
 		setMaximumSize(dimension);
 		createTimerAccuracyThread();
-		createGLoop();
+		createLoop();
 		createRenderer();
 		createGameThread();
 		registerEventListeners();
@@ -67,7 +67,7 @@ public final class GCanvas extends Canvas {
 		}
 	}
 
-	private void createGLoop() {
+	private void createLoop() {
 		if (loop == null)
 			this.loop = new GLoop(this);
 	}
@@ -112,17 +112,17 @@ public final class GCanvas extends Canvas {
 		return gameThread;
 	}
 
-	public boolean addGState(final GState gState) {
-		gState.onAddGState();
-		return gStates.add(gState);
+	public boolean addState(final GState state) {
+		state.onAddState();
+		return gStates.add(state);
 	}
 
-	public boolean removeGState(final GState gState) {
-		gState.onRemoveGState();
-		return gStates.remove(gState);
+	public boolean removeState(final GState state) {
+		state.onRemoveState();
+		return gStates.remove(state);
 	}
 
-	public CopyOnWriteArrayList<GState> getGStates() {
+	public CopyOnWriteArrayList<GState> getStates() {
 		return gStates;
 	}
 
@@ -140,7 +140,7 @@ public final class GCanvas extends Canvas {
 
 	public void dispose() {
 		for (GState gState : gStates) {
-			removeGState(gState);
+			removeState(gState);
 		}
 		loop.setIsRunning(false);
 		gameThread.interrupt();

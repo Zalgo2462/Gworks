@@ -6,9 +6,9 @@ import org.zp.gworks.logic.GTickListener;
 public interface GState {
 	public GTickListener[] getTickListeners();
 
-	public GRenderListener[] getRenderStrategies();
+	public GRenderListener[] getRenderListeners();
 
-	public void onAddGState();
+	public void onAddState();
 
-	public void onRemoveGState();
+	public void onRemoveState();
 }

@@ -19,7 +19,7 @@ public class ImageViewerState extends GImmutableState {
 		super(canvas);
 		this.image = image;
 		setTickListeners(new GTickListener[]{new ImageViewerController(this)});
-		setRenderStrategies(new GRenderListener[]{new ImageViewerRenderer(this)});
+		setRenderListeners(new GRenderListener[]{new ImageViewerRenderer(this)});
 	}
 
 	public BufferedImage getImage() {

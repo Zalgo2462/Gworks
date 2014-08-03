@@ -45,12 +45,12 @@ public class PlayState extends GMutableState {
 		scoreRenderer = new ScoreRenderer(this);
 	}
 
-	public void onAddGState() {
+	public void onAddState() {
 		initBackground();
 		initScoreboard();
 	}
 
-	public void onRemoveGState() {
+	public void onRemoveState() {
 		if (currentLevel == null) {
 			uninitLevel();
 		}
@@ -69,13 +69,13 @@ public class PlayState extends GMutableState {
 		currentLevel = level;
 		initPlayer();
 		initEnemies(level);
-		addGTickListener(levelAdvancer);
+		addTickListener(levelAdvancer);
 	}
 
 	public void uninitLevel() {
 		uninitPlayer();
 		uninitEnemies();
-		removeGTickListener(levelAdvancer);
+		removeTickListener(levelAdvancer);
 		currentLevel = null;
 	}
 
@@ -85,19 +85,19 @@ public class PlayState extends GMutableState {
 				DIMENSION.height / 2 - player.getRenderer().getSprite().getHeight() / 2);
 		player.setHealth(100);
 		player.setLives(3);
-		addGRenderListener(player.getHealthRenderer());
-		addGTickListener(player.getPlayerMovement());
-		addGTickListener(player.getPlayerMissiles());
-		addGTickListener(player.getPlayerDeath());
+		addRenderListener(player.getHealthRenderer());
+		addTickListener(player.getPlayerMovement());
+		addTickListener(player.getPlayerMissiles());
+		addTickListener(player.getPlayerDeath());
 		spriteManager.registerSprite(player);
 		player.getRenderer().setRendered(true);
 	}
 
 	private void uninitPlayer() {
-		removeGRenderListener(player.getHealthRenderer());
-		removeGTickListener(player.getPlayerMovement());
-		removeGTickListener(player.getPlayerMissiles());
-		removeGTickListener(player.getPlayerDeath());
+		removeRenderListener(player.getHealthRenderer());
+		removeTickListener(player.getPlayerMovement());
+		removeTickListener(player.getPlayerMissiles());
+		removeTickListener(player.getPlayerDeath());
 		spriteManager.unregisterSprite(player);
 		player.getRenderer().setRendered(false);
 	}
@@ -109,9 +109,9 @@ public class PlayState extends GMutableState {
 			enemies.add(e);
 			spriteManager.registerSprite(e);
 			placeEnemy(e);
-			addGTickListener(e.getEnemyMovement());
-			addGTickListener(e.getEnemyMissiles());
-			addGTickListener(e.getEnemyDeath());
+			addTickListener(e.getEnemyMovement());
+			addTickListener(e.getEnemyMissiles());
+			addTickListener(e.getEnemyDeath());
 			e.getRenderer().setRendered(true);
 		}
 	}
@@ -120,29 +120,29 @@ public class PlayState extends GMutableState {
 		for (Sprite e : enemies) {
 			Enemy enemy = (Enemy) e;
 			spriteManager.unregisterSprite(e);
-			removeGTickListener(enemy.getEnemyMovement());
-			removeGTickListener(enemy.getEnemyMissiles());
-			removeGTickListener(enemy.getEnemyDeath());
+			removeTickListener(enemy.getEnemyMovement());
+			removeTickListener(enemy.getEnemyMissiles());
+			removeTickListener(enemy.getEnemyDeath());
 			e.getRenderer().setRendered(false);
 		}
 	}
 
 	private void initBackground() {
-		addGRenderListener(backgroundRenderer);
+		addRenderListener(backgroundRenderer);
 	}
 
 	private void uninitBackground() {
-		removeGRenderListener(backgroundRenderer);
+		removeRenderListener(backgroundRenderer);
 	}
 
 	private void initScoreboard() {
-		addGRenderListener(infoAreaRenderer);
-		addGRenderListener(scoreRenderer);
+		addRenderListener(infoAreaRenderer);
+		addRenderListener(scoreRenderer);
 	}
 
 	private void uninitScoreboard() {
-		removeGRenderListener(infoAreaRenderer);
-		removeGRenderListener(scoreRenderer);
+		removeRenderListener(infoAreaRenderer);
+		removeRenderListener(scoreRenderer);
 	}
 
 	private void placeEnemy(Enemy enemy) {

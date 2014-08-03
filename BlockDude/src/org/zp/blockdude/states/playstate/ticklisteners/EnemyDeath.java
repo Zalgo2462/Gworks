@@ -23,9 +23,9 @@ public class EnemyDeath implements GTickListener {
 	public void tick(GCanvas canvas, long delta) {
 		if (enemy.getHealth() <= 0) {
 			enemy.getRenderer().setRendered(false);
-			playState.removeGTickListener(enemy.getEnemyMovement());
+			playState.removeTickListener(enemy.getEnemyMovement());
 			enemy.getEnemyMissiles().notifyRemove();
-			playState.removeGTickListener(enemy.getEnemyDeath());
+			playState.removeTickListener(enemy.getEnemyDeath());
 			playState.getSpriteManager().unregisterSprite(enemy);
 			playState.getEnemies().remove(enemy);
 		}

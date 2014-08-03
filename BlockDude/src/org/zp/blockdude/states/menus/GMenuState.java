@@ -26,19 +26,19 @@ public class GMenuState extends GMutableState {
 		this.bounds = new Rectangle(x, y, width, height);
 		this.buttons = new LinkedList<GButton>();
 		this.mouseListener = new GMenuMouseListener();
-		addGRenderListener(new GMenuRenderer());
+		addRenderListener(new GMenuRenderer());
 	}
 
 	public void addGButton(GButton button) {
 		buttons.offer(button);
-		addGRenderListener(button);
-		addGTickListener(button);
+		addRenderListener(button);
+		addTickListener(button);
 	}
 
 	public boolean removeGButton(GButton button) {
 		boolean toReturn = buttons.remove(button);
-		toReturn = removeGRenderListener(button) && toReturn;
-		toReturn = removeGTickListener(button) && toReturn;
+		toReturn = removeRenderListener(button) && toReturn;
+		toReturn = removeTickListener(button) && toReturn;
 		return toReturn;
 	}
 
@@ -47,12 +47,12 @@ public class GMenuState extends GMutableState {
 	}
 
 	@Override
-	public void onAddGState() {
+	public void onAddState() {
 		canvas.addMouseListener(mouseListener);
 	}
 
 	@Override
-	public void onRemoveGState() {
+	public void onRemoveState() {
 		canvas.removeMouseListener(mouseListener);
 	}
 

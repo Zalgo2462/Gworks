@@ -22,12 +22,12 @@ public class Game extends Frame {
 		setVisible(true);
 		//setResizable(false);
 		canvas.requestFocus();
-		canvas.addGState(new ColorChangerState(canvas));
-		canvas.addGState(new XLineState(canvas));
-		canvas.addGState(new YLineState(canvas));
-		canvas.addGState(new FramerateState(canvas));
-		canvas.addGState(new KeyboardState(canvas));
-		canvas.addGState(new MouseState(canvas));
+		canvas.addState(new ColorChangerState(canvas));
+		canvas.addState(new XLineState(canvas));
+		canvas.addState(new YLineState(canvas));
+		canvas.addState(new FramerateState(canvas));
+		canvas.addState(new KeyboardState(canvas));
+		canvas.addState(new MouseState(canvas));
 	}
 
 	public static void main(String[] args) {

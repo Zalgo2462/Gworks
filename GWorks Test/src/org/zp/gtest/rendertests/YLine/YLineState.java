@@ -18,7 +18,7 @@ public class YLineState extends GImmutableState implements GTickListener, GRende
 		this.y = start;
 		this.backwards = false;
 		setTickListeners(new GTickListener[]{this});
-		setRenderStrategies(new GRenderListener[]{this});
+		setRenderListeners(new GRenderListener[]{this});
 	}
 
 	public YLineState(final GCanvas canvas) {

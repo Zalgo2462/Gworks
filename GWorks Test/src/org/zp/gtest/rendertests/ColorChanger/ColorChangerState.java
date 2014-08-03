@@ -11,6 +11,6 @@ import org.zp.gworks.logic.GState.GImmutableState;
 public class ColorChangerState extends GImmutableState {
 	public ColorChangerState(GCanvas canvas) {
 		super(canvas);
-		setRenderStrategies(new GRenderListener[]{new ColorChangerRenderer()});
+		setRenderListeners(new GRenderListener[]{new ColorChangerRenderer()});
 	}
 }
