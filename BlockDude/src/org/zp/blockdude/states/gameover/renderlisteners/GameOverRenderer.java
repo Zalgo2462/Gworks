@@ -21,8 +21,6 @@ public class GameOverRenderer implements GRenderListener {
 
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
-		graphics.setColor(ColorScheme.MENU_BACKGROUND.getColor());
-		graphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		graphics.setColor(ColorScheme.DARKER_GREEN.getColor());
 		graphics.setFont(new Font("BatmanForeverOutline", Font.BOLD, 50));
 		FontMetrics fontMetrics = graphics.getFontMetrics();
@@ -40,6 +38,5 @@ public class GameOverRenderer implements GRenderListener {
 		x = (int) (canvas.getWidth() / 2 - bounds2.getCenterX());
 		y += bounds2.getHeight();
 		graphics.drawString("FINAL SCORE: " + gameOverState.getScore(), x, y);
-
 	}
 }
