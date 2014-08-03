@@ -16,7 +16,6 @@ public abstract class Character extends Sprite {
 	private final Color color;
 	protected double lastMissileFiredTime;
 	protected double missilesPerSecond;
-	protected int missileDamage;
 	protected int health;
 	private BufferedImage image;
 
@@ -31,7 +30,6 @@ public abstract class Character extends Sprite {
 		missiles = new LinkedList<Missile>();
 		lastMissileFiredTime = System.nanoTime();
 		missilesPerSecond = 3;
-		missileDamage = 25;
 		health = 100;
 	}
 
@@ -52,7 +50,7 @@ public abstract class Character extends Sprite {
 	}
 
 	public Missile fireMissile(double theta) {
-		Missile missile = new Missile(color);
+		Missile missile = new Missile(color, 25);
 		double x0 = (renderer.getBounds().getBounds().getX() + renderer.getBounds().getBounds().getWidth() / 2) -
 				(missile.getRenderer().getBounds().getBounds().getWidth() / 2);
 		double y0 = renderer.getBounds().getBounds().getY() + renderer.getBounds().getBounds().getHeight() / 2 -
@@ -60,7 +58,7 @@ public abstract class Character extends Sprite {
 		double x1 = x0 + 35;
 		double y1 = y0 - (missile.getRenderer().getBounds().getBounds().getHeight() / 2);
 		Point rotatedPoint = getRotation().rotatePoint(x1, y1, x0, y0, theta);
-		missile.getMovement().setCurrentLocation(rotatedPoint.getX(), rotatedPoint.getY());
+		missile.getMovement().setLocation(rotatedPoint.getX(), rotatedPoint.getY());
 		missile.getRotation().setCurrentOrientation(getRotation().getCurrentOrientation());
 		missile.getMovement().setAngle(missile.getRotation().getCurrentOrientation());
 		missile.getMovement().setSpeed(missile.getMovement().getMaxSpeed());
@@ -71,14 +69,6 @@ public abstract class Character extends Sprite {
 
 	public boolean canFireMissile() {
 		return lastMissileFiredTime + (1D / missilesPerSecond * 1000000000D) < System.nanoTime() && health > 0;
-	}
-
-	public int getMissileDamage() {
-		return missileDamage;
-	}
-
-	public void setMissileDamage(int missileDamage) {
-		this.missileDamage = missileDamage;
 	}
 
 	public int getHealth() {

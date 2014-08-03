@@ -56,7 +56,7 @@ public abstract class Sprite {
 			return currentLocation;
 		}
 
-		public void setCurrentLocation(final double x, final double y) {
+		public void setLocation(final double x, final double y) {
 			currentLocation.setLocation(x, y);
 		}
 
@@ -321,6 +321,7 @@ public abstract class Sprite {
 		private double lastRenderedOrientation = 0;
 		private double xOffset = 0, yOffset = 0;
 		private boolean rendered;
+		private float opacity = 1F;
 		private BufferedImage spriteBacker;
 		private VolatileImage sprite;
 		private VolatileImage squareSprite;
@@ -329,6 +330,12 @@ public abstract class Sprite {
 
 		@Override
 		public void paint(GCanvas canvas, Graphics graphics, long delta) {
+			if (animation != null && animation.isRunning()) {
+				BufferedImage image = animation.getSprite(delta);
+				if (!image.equals(spriteBacker)) {
+					setSprite(image);
+				}
+			}
 			if (sprite.contentsLost()) {
 				restoreSprite();
 			}
@@ -339,6 +346,8 @@ public abstract class Sprite {
 				updateRotatedSprite();
 			}
 			if (rendered) {
+				((Graphics2D) graphics).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+				((Graphics2D) graphics).fill(getBounds());
 				graphics.drawImage(
 						rotatedSprite,
 						Math.round(Math.round(movement.getLocation().getX() - xOffset)),
@@ -346,14 +355,6 @@ public abstract class Sprite {
 						null
 				);
 			}
-		}
-
-		public boolean shouldRender() {
-			return rendered;
-		}
-
-		public void setRendered(boolean rendered) {
-			this.rendered = rendered;
 		}
 
 		public BufferedImage getSprite() {
@@ -447,6 +448,22 @@ public abstract class Sprite {
 					getDefaultScreenDevice().
 					getDefaultConfiguration().createCompatibleVolatileImage(
 					width, height, VolatileImage.TRANSLUCENT);
+		}
+
+		public boolean shouldRender() {
+			return rendered;
+		}
+
+		public void setRendered(boolean rendered) {
+			this.rendered = rendered;
+		}
+
+		public float getOpacity() {
+			return opacity;
+		}
+
+		public void setOpacity(float opacity) {
+			this.opacity = opacity;
 		}
 
 		public Animation getAnimation() {
