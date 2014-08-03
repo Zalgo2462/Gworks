@@ -12,6 +12,7 @@ import org.zp.blockdude.states.playstate.ticklisteners.LevelAdvancement;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.logic.GState.GMutableState;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -46,12 +47,16 @@ public class PlayState extends GMutableState {
 	}
 
 	public void onAddState() {
+		initBackground();
+		initScoreboard();
 		if (currentLevel == null) {
 			initLevel(Level.ONE);
 		}
 	}
 
 	public void onRemoveState() {
+		uninitBackground();
+		uninitScoreboard();
 		if (currentLevel == null) {
 			uninitLevel();
 		}
@@ -66,28 +71,24 @@ public class PlayState extends GMutableState {
 			uninitLevel();
 		}
 		currentLevel = level;
-		initBackground();
-		initScoreboard();
 		initPlayer();
 		initEnemies(level);
 		addTickListener(levelAdvancer);
 	}
 
 	public void uninitLevel() {
-		uninitBackground();
-		uninitScoreboard();
+		removeTickListener(levelAdvancer);
 		uninitPlayer();
 		uninitEnemies();
-		removeTickListener(levelAdvancer);
 		currentLevel = null;
 	}
 
 	private void initPlayer() {
-		player.getMovement().setCurrentLocation(
+		player.getMovement().setLocation(
 				DIMENSION.width / 2 - player.getRenderer().getSprite().getWidth() / 2,
 				DIMENSION.height / 2 - player.getRenderer().getSprite().getHeight() / 2);
 		player.setHealth(100);
-		player.setLives(3);
+		player.setLives(1);
 		addRenderListener(player.getHealthRenderer());
 		addTickListener(player.getPlayerMovement());
 		addTickListener(player.getPlayerMissiles());
@@ -120,13 +121,15 @@ public class PlayState extends GMutableState {
 	}
 
 	private void uninitEnemies() {
-		for (Sprite e : enemies) {
+		for (Iterator<Sprite> iterator = enemies.iterator(); iterator.hasNext(); ) {
+			Sprite e = iterator.next();
 			Enemy enemy = (Enemy) e;
 			spriteManager.unregisterSprite(e);
 			removeTickListener(enemy.getEnemyMovement());
 			removeTickListener(enemy.getEnemyMissiles());
 			removeTickListener(enemy.getEnemyDeath());
 			e.getRenderer().setRendered(false);
+			iterator.remove();
 		}
 	}
 
@@ -154,7 +157,7 @@ public class PlayState extends GMutableState {
 		int minY = UI_CONSTANTS.PLAY_AREA_TOP;
 		int maxY = UI_CONSTANTS.PLAY_AREA_BOTTOM - enemy.getRenderer().getBounds().getBounds().height;
 		while (true) {
-			enemy.getMovement().setCurrentLocation(rand.nextInt(maxX), rand.nextInt(maxY - minY + 1) + minY);
+			enemy.getMovement().setLocation(rand.nextInt(maxX), rand.nextInt(maxY - minY + 1) + minY);
 			if (spriteManager.checkForCollision(enemy) == null)
 				break;
 		}

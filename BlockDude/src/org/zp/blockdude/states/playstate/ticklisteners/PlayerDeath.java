@@ -28,12 +28,11 @@ public class PlayerDeath implements GTickListener {
 			player.setLives(player.getLives() - 1);
 			if (player.getLives() > 0) {
 				player.setHealth(100);
-				player.getMovement().setCurrentLocation(
+				player.getMovement().setLocation(
 						DIMENSION.width / 2 - player.getRenderer().getSprite().getWidth() / 2,
 						DIMENSION.height / 2 - player.getRenderer().getSprite().getHeight() / 2
 				);
 			} else {
-				playState.uninitLevel();
 				canvas.removeState(playState);
 				canvas.addState(new GameOverState(playState.getCanvas(), playState.getScore()));
 			}

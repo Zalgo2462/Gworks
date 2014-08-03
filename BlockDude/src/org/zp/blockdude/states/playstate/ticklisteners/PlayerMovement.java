@@ -69,48 +69,6 @@ public class PlayerMovement implements GTickListener {
 			player.getRotation().setMoving(false);
 		}
 
-		Sprite collided = playState.getSpriteManager().checkForCollision(player, playState.getEnemies());
-		if (collided != null) {
-			Enemy e = (Enemy) collided;
-			Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
-			player.getMovement().setAngle(theta + Math.PI);
-			e.getMovement().setAngle(theta);
-			if (player.getMovement().getSpeed() < 100) {
-				player.getMovement().setSpeed(100);
-			}
-			if (e.getMovement().getSpeed() < 100) {
-				player.getMovement().setSpeed(100);
-			}
-			player.damage(1);
-			e.damage(1);
-			blockInput(150);
-			e.getEnemyMovement().blockRotation(150);
-		}
-
-		SpriteManager.PlayAreaEdge canvasEdge = playState.getSpriteManager().checkForEdgeCollision(player);
-		switch (canvasEdge) {
-			case TOP:
-			case BOTTOM:
-				player.getMovement().setAngle(
-						-playState.getSpriteManager().getAngleIfCollisionWithEdge(player, canvasEdge)
-				);
-				if (player.getMovement().getSpeed() < 100) {
-					player.getMovement().setSpeed(100);
-				}
-				blockInput(150);
-				break;
-			case RIGHT:
-			case LEFT:
-				player.getMovement().setAngle(
-						Math.PI - playState.getSpriteManager().getAngleIfCollisionWithEdge(player, canvasEdge)
-				);
-				if (player.getMovement().getSpeed() < 100) {
-					player.getMovement().setSpeed(100);
-				}
-				blockInput(150);
-				break;
-		}
-
 		player.getMovement().move(
 				player.getMovement().getXMovement() * player.getMovement().getSpeed() * delta / 1000000000D,
 				player.getMovement().getYMovement() * player.getMovement().getSpeed() * delta / 1000000000D
@@ -122,6 +80,56 @@ public class PlayerMovement implements GTickListener {
 				dTheta *= -1;
 			}
 			player.getRotation().rotate(dTheta);
+		}
+
+		Sprite collided = playState.getSpriteManager().checkForCollision(player, playState.getEnemies());
+		if (collided != null) {
+			Enemy e = (Enemy) collided;
+			Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
+			player.getMovement().setAngle(theta + Math.PI);
+			e.getMovement().setAngle(theta);
+			if (player.getMovement().getSpeed() < 20) {
+				player.getMovement().setSpeed(20);
+			}
+			if (e.getMovement().getSpeed() < 20) {
+				player.getMovement().setSpeed(20);
+			}
+			player.damage(1);
+			e.damage(1);
+			blockInput(150);
+			e.getEnemyMovement().blockRotation(150);
+		}
+
+		SpriteManager.PlayAreaEdge canvasEdge = playState.getSpriteManager().checkForEdgeCollision(player);
+		switch (canvasEdge) {
+			case TOP:
+				player.getMovement().setLocation(
+						player.getMovement().getLocation().getX(),
+						PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM -
+								player.getRenderer().getBounds().getBounds().getHeight()
+				);
+				break;
+			case BOTTOM:
+				player.getMovement().setLocation(
+						player.getMovement().getLocation().getX(),
+						PlayState.UI_CONSTANTS.PLAY_AREA_TOP +
+								player.getRenderer().getBounds().getBounds().getHeight()
+				);
+				break;
+			case RIGHT:
+				player.getMovement().setLocation(
+						PlayState.UI_CONSTANTS.PLAY_AREA_LEFT +
+								player.getRenderer().getBounds().getBounds().getWidth(),
+						player.getMovement().getLocation().getY()
+				);
+				break;
+			case LEFT:
+				player.getMovement().setLocation(
+						PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT -
+								player.getRenderer().getBounds().getBounds().getWidth(),
+						player.getMovement().getLocation().getY()
+				);
+				break;
 		}
 	}
 

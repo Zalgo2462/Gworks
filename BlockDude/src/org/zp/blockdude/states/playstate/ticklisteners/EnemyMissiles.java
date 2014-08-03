@@ -38,23 +38,59 @@ public class EnemyMissiles implements GTickListener {
 		}
 		for (Iterator<Missile> iterator = enemy.getMissiles().iterator(); iterator.hasNext(); ) {
 			Missile missile = iterator.next();
+
+			missile.age(delta);
+			if (missile.checkDecay()) {
+				missile.getRenderer().setRendered(false);
+				spriteManager.unregisterSprite(missile);
+				iterator.remove();
+				continue;
+			}
+
+
 			missile.getMovement().accelerate(delta);
 			missile.getMovement().move(
 					missile.getMovement().getXMovement() * missile.getMovement().getSpeed() * delta / 1000000000F,
 					missile.getMovement().getYMovement() * missile.getMovement().getSpeed() * delta / 1000000000F
 			);
+
 			SpriteManager.PlayAreaEdge canvasEdge = spriteManager.checkForEdgeCollision(missile);
-			if (canvasEdge != SpriteManager.PlayAreaEdge.NONE) {
-				missile.getRenderer().setRendered(false);
-				spriteManager.unregisterSprite(missile);
-				iterator.remove();
-				return;
+			switch (canvasEdge) {
+				case TOP:
+					missile.getMovement().setLocation(
+							missile.getMovement().getLocation().getX(),
+							PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM -
+									missile.getRenderer().getBounds().getBounds().getHeight()
+					);
+					break;
+				case BOTTOM:
+					missile.getMovement().setLocation(
+							missile.getMovement().getLocation().getX(),
+							PlayState.UI_CONSTANTS.PLAY_AREA_TOP +
+									missile.getRenderer().getBounds().getBounds().getHeight()
+					);
+					break;
+				case RIGHT:
+					missile.getMovement().setLocation(
+							PlayState.UI_CONSTANTS.PLAY_AREA_LEFT +
+									missile.getRenderer().getBounds().getBounds().getWidth(),
+							missile.getMovement().getLocation().getY()
+					);
+					break;
+				case LEFT:
+					missile.getMovement().setLocation(
+							PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT -
+									missile.getRenderer().getBounds().getBounds().getWidth(),
+							missile.getMovement().getLocation().getY()
+					);
+					break;
 			}
+
 			if (spriteManager.checkForCollision(missile, playState.getPlayer())) {
 				missile.getRenderer().setRendered(false);
 				spriteManager.unregisterSprite(missile);
 				iterator.remove();
-				playState.getPlayer().damage(enemy.getMissileDamage());
+				playState.getPlayer().damage(Math.round(Math.round(missile.getDamage())));
 			}
 		}
 		if (stop && enemy.getMissiles().size() == 0) {
