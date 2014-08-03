@@ -39,19 +39,17 @@ public abstract class GButton implements GTickListener, GRenderListener {
 
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
-		graphics.setColor(
-				pressed ? bgColor.darker().darker() : bgColor
-		);
+		graphics.setColor(bgColor);
 		graphics.fillRect(location.x, location.y, buttonBounds.width, buttonBounds.height);
-		graphics.setColor(
-				pressed ? fgColor.darker().darker() : fgColor
-		);
+		graphics.setColor(fgColor);
 		paintContents(canvas, graphics, delta);
 		if (outlined) {
-			graphics.setColor(
-					pressed ? fgColor.darker().darker() : fgColor
-			);
+			graphics.setColor(fgColor);
 			graphics.drawRect(location.x, location.y, buttonBounds.width, buttonBounds.height);
+		}
+		if (pressed) {
+			graphics.setColor(new Color(0, 0, 0, 32));
+			graphics.fillRect(location.x, location.y, buttonBounds.width, buttonBounds.height);
 		}
 	}
 
