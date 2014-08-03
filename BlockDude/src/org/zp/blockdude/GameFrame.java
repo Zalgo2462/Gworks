@@ -14,7 +14,7 @@ public class GameFrame extends Frame {
 	private MainMenu mainMenu;
 
 	public GameFrame() {
-		setResizable(true);
+		setResizable(false);
 		init();
 		pack();
 		setTitle("BlockDude");

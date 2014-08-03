@@ -46,16 +46,15 @@ public class PlayState extends GMutableState {
 	}
 
 	public void onAddState() {
-		initBackground();
-		initScoreboard();
+		if (currentLevel == null) {
+			initLevel(Level.ONE);
+		}
 	}
 
 	public void onRemoveState() {
 		if (currentLevel == null) {
 			uninitLevel();
 		}
-		uninitBackground();
-		uninitScoreboard();
 	}
 
 	public Level getCurrentLevel() {
@@ -67,12 +66,16 @@ public class PlayState extends GMutableState {
 			uninitLevel();
 		}
 		currentLevel = level;
+		initBackground();
+		initScoreboard();
 		initPlayer();
 		initEnemies(level);
 		addTickListener(levelAdvancer);
 	}
 
 	public void uninitLevel() {
+		uninitBackground();
+		uninitScoreboard();
 		uninitPlayer();
 		uninitEnemies();
 		removeTickListener(levelAdvancer);

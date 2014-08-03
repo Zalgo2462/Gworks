@@ -30,7 +30,7 @@ public class SpriteManager {
 	}
 
 	public Double getAngleIfCollisionWithEdge(Sprite sprite, PlayAreaEdge edge) {
-		Area area1 = new Area(sprite.getRenderer().getBounds());
+		Area area1 = new Area(sprite.getRotation().getRotatedCollisionArea());
 		Area area2 = edge.getArea();
 		area1.intersect(area2);
 		if (area1.isEmpty()) {
@@ -106,8 +106,8 @@ public class SpriteManager {
 	}
 
 	private Area intersectSprites(Sprite sprite1, Sprite sprite2) {
-		Area areaA = new Area(sprite1.getRenderer().getBounds());
-		areaA.intersect(new Area(sprite2.getRenderer().getBounds()));
+		Area areaA = new Area(sprite1.getRotation().getRotatedCollisionArea());
+		areaA.intersect(new Area(sprite2.getRotation().getRotatedCollisionArea()));
 		return areaA;
 	}
 
