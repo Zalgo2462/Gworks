@@ -11,21 +11,22 @@ import java.awt.image.BufferedImage;
  */
 public class Missile extends Sprite {
 	private final Color color;
+	private BufferedImage image;
 
 	public Missile(final Color color) {
 		this.color = color;
-		renderer.setSprite(createSprite());
+		createSprite();
+		renderer.setSprite(image);
 		movement.setAcceleration(200);
 		movement.setMaxSpeed(300);
 		movement.setDeceleration(-200);
 	}
 
-	private BufferedImage createSprite() {
-		BufferedImage image = new BufferedImage(20, 5, BufferedImage.TYPE_INT_ARGB);
+	private void createSprite() {
+		image = new BufferedImage(20, 5, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = image.getGraphics();
 		g.setColor(color);
 		g.fillRect(0, 0, 20, 5);
 		g.dispose();
-		return image;
 	}
 }

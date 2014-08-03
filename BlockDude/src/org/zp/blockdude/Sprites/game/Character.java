@@ -18,14 +18,16 @@ public abstract class Character extends Sprite {
 	protected double missilesPerSecond;
 	protected int missileDamage;
 	protected int health;
+	private BufferedImage image;
 
 	public Character(int size, Color color) {
 		this.color = color;
-		getMovement().setAcceleration(200);
-		getMovement().setMaxSpeed(250);
-		getMovement().setDeceleration(-200);
-		getRotation().setSpeed(Math.PI);
-		renderer.setSprite(createSprite(size));
+		createSprite(size);
+		movement.setAcceleration(200);
+		movement.setMaxSpeed(250);
+		movement.setDeceleration(-200);
+		rotation.setSpeed(Math.PI);
+		renderer.setSprite(image);
 		missiles = new LinkedList<Missile>();
 		lastMissileFiredTime = System.nanoTime();
 		missilesPerSecond = 3;
@@ -33,8 +35,8 @@ public abstract class Character extends Sprite {
 		health = 100;
 	}
 
-	private BufferedImage createSprite(int size) {
-		BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+	private void createSprite(int size) {
+		image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = image.getGraphics();
 		g.setColor(color);
 		g.fillRect(0, 0, size, size);
@@ -43,7 +45,6 @@ public abstract class Character extends Sprite {
 		g.drawLine(size / 2, size / 2, size, size / 2);
 		g.drawLine(size / 2, size / 2 + 1, size, size / 2 + 1);
 		g.dispose();
-		return image;
 	}
 
 	public Collection<Missile> getMissiles() {

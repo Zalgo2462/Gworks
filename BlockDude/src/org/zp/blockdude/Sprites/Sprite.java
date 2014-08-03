@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
 
 public abstract class Sprite {
 	protected Movement movement;
@@ -39,6 +40,7 @@ public abstract class Sprite {
 		private double deceleration;
 		private double speed;
 		private double maxSpeed;
+		private Shape collisionArea;
 
 		//Speed in pixels per second
 		public Movement() {
@@ -169,6 +171,19 @@ public abstract class Sprite {
 		public void move(final double x, final double y) {
 			currentLocation.setLocation(currentLocation.getX() + x, currentLocation.getY() + y);
 		}
+
+		public Shape getCollisionArea() {
+			if (collisionArea == null) {
+				collisionArea = new Rectangle(renderer.getSprite().getWidth(), renderer.getSprite().getHeight());
+			}
+			AffineTransform trans = new AffineTransform();
+			trans.translate(currentLocation.getX(), currentLocation.getY());
+			return trans.createTransformedShape(collisionArea);
+		}
+
+		public void setCollisionArea(Shape collisionArea) {
+			this.collisionArea = collisionArea;
+		}
 	}
 
 	public class Rotation {
@@ -278,60 +293,58 @@ public abstract class Sprite {
 			}
 			return mResult;
 		}
+
+		public Shape getRotatedCollisionArea() {
+			Shape collArea = movement.collisionArea;
+
+			if (collArea == null) {
+				movement.setCollisionArea(
+						new Rectangle(renderer.getSprite().getWidth(),
+								renderer.getSprite().getHeight())
+				);
+				collArea = movement.collisionArea;
+			}
+			AffineTransform trans = new AffineTransform();
+			trans.rotate(
+					currentOrientation,
+					collArea.getBounds().width / 2,
+					collArea.getBounds().height / 2
+			);
+			Shape s = trans.createTransformedShape(collArea);
+			trans = new AffineTransform();
+			trans.translate(movement.getLocation().getX(), movement.getLocation().getY());
+			return trans.createTransformedShape(s);
+		}
 	}
 
 	public class Renderer implements GRenderListener {
 		private double lastRenderedOrientation = 0;
-		private int xOffset = 0, yOffset = 0;
+		private double xOffset = 0, yOffset = 0;
 		private boolean rendered;
-		private BufferedImage sprite;
-		private BufferedImage squareSprite;
-		private BufferedImage rotatedSprite;
+		private BufferedImage spriteBacker;
+		private VolatileImage sprite;
+		private VolatileImage squareSprite;
+		private VolatileImage rotatedSprite;
 		private Animation animation;
 
 		@Override
 		public void paint(GCanvas canvas, Graphics graphics, long delta) {
-			if (rotation.getCurrentOrientation() != lastRenderedOrientation) {
-				rotateSprite();
+			if (sprite.contentsLost()) {
+				restoreSprite();
 			}
-			if (rotatedSprite == null) {
-				rotatedSprite = squareSprite;
+			if (squareSprite.contentsLost()) {
+				restoreSquareSprite();
+			}
+			if (rotatedSprite.contentsLost() || rotation.getCurrentOrientation() != lastRenderedOrientation) {
+				updateRotatedSprite();
 			}
 			if (rendered) {
 				graphics.drawImage(
 						rotatedSprite,
-						movement.getLocation().x - xOffset,
-						movement.getLocation().y - yOffset,
+						Math.round(Math.round(movement.getLocation().getX() - xOffset)),
+						Math.round(Math.round(movement.getLocation().getY() - yOffset)),
 						null
 				);
-				//((Graphics2D) graphics).draw(getBounds());
-				//((Graphics2D) graphics).draw(getBounds().getBounds());
-				/*Area area1 = new Area(getBounds());
-				graphics.setColor(Color.BLUE);
-				((Graphics2D) graphics).fill(area1);
-				Area area2 = SpriteManager.CANVAS_EDGE.RIGHT.getArea();
-				graphics.setColor(Color.GREEN);
-				((Graphics2D) graphics).fill(area2);
-				area1.intersect(area2);
-				if(!area1.isEmpty()) {
-					double x = area1.getBounds().getX();
-					double width = area1.getBounds().getWidth();
-					double y = area1.getBounds().getY();
-					double height = area1.getBounds().getHeight();
-					int x0 = (int) (x + width / 2);
-					int y0 = (int) (y + height / 2);
-
-					graphics.setColor(Color.RED);
-					((Graphics2D) graphics).drawLine(
-							getBounds().getBounds().x + getBounds().getBounds().width / 2,
-							getBounds().getBounds().y + getBounds().getBounds().height / 2,
-							x0,
-							y0
-					);
-					System.out.println(movement.getAngleTo(x0, y0));
-				}
-				graphics.setColor(Color.BLACK);  */
-
 			}
 		}
 
@@ -344,12 +357,96 @@ public abstract class Sprite {
 		}
 
 		public BufferedImage getSprite() {
-			return sprite;
+			return spriteBacker;
 		}
 
 		public void setSprite(BufferedImage sprite) {
-			this.sprite = sprite;
+			this.spriteBacker = sprite;
+			makeSprite();
 			makeSpriteSquare();
+			makeRotatedSprite();
+		}
+
+		private void makeSprite() {
+			sprite = createVolatileImage(spriteBacker.getWidth(), spriteBacker.getHeight());
+			restoreSprite();
+		}
+
+		private void restoreSprite() {
+			Graphics2D g = sprite.createGraphics();
+			g.setComposite(AlphaComposite.DstOut);
+			g.fillRect(0, 0, sprite.getWidth(), sprite.getHeight());
+			g.setComposite(AlphaComposite.SrcOver);
+			g.drawImage(spriteBacker, 0, 0, null);
+			g.dispose();
+		}
+
+		private void makeSpriteSquare() {
+			double size = Math.sqrt(Math.pow(sprite.getWidth(), 2) + Math.pow(sprite.getHeight(), 2));
+			xOffset = (size - sprite.getWidth()) / 2;
+			yOffset = (size - sprite.getHeight()) / 2;
+			squareSprite = createVolatileImage(Math.round(Math.round(size)), Math.round(Math.round(size)));
+			restoreSquareSprite();
+		}
+
+		private void restoreSquareSprite() {
+			if (sprite.contentsLost()) {
+				restoreSprite();
+			}
+			AffineTransform transform = new AffineTransform();
+			transform.translate(xOffset, yOffset);
+			Graphics2D g = squareSprite.createGraphics();
+			g.setComposite(AlphaComposite.DstOut);
+			g.fillRect(0, 0, squareSprite.getWidth(), squareSprite.getHeight());
+			g.setComposite(AlphaComposite.SrcOver);
+			g.drawImage(sprite, transform, null);
+			g.dispose();
+		}
+
+		private void makeRotatedSprite() {
+			AffineTransform transform = AffineTransform.getRotateInstance(
+					rotation.getCurrentOrientation(), squareSprite.getWidth() / 2, squareSprite.getHeight() / 2
+			);
+			AffineTransformOp transformOp = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+			if (sprite.contentsLost()) {
+				restoreSprite();
+			}
+			if (squareSprite.contentsLost()) {
+				restoreSquareSprite();
+			}
+			BufferedImage boundsHolder = transformOp.createCompatibleDestImage(
+					squareSprite.getSnapshot(),
+					squareSprite.getSnapshot().getColorModel()
+			);
+			rotatedSprite = createVolatileImage(boundsHolder.getWidth(), boundsHolder.getHeight());
+			updateRotatedSprite();
+		}
+
+		private void updateRotatedSprite() {
+			AffineTransform transform = AffineTransform.getRotateInstance(
+					rotation.getCurrentOrientation(), squareSprite.getWidth() / 2, squareSprite.getHeight() / 2
+			);
+			if (sprite.contentsLost()) {
+				restoreSprite();
+			}
+			if (squareSprite.contentsLost()) {
+				restoreSquareSprite();
+			}
+			Graphics2D g = rotatedSprite.createGraphics();
+			g.setComposite(AlphaComposite.DstOut);
+			g.fillRect(0, 0, rotatedSprite.getWidth(), rotatedSprite.getHeight());
+			g.setComposite(AlphaComposite.SrcOver);
+			g.drawImage(squareSprite, transform, null);
+			g.dispose();
+			lastRenderedOrientation = rotation.currentOrientation;
+		}
+
+		private VolatileImage createVolatileImage(int width, int height) {
+			return GraphicsEnvironment.
+					getLocalGraphicsEnvironment().
+					getDefaultScreenDevice().
+					getDefaultConfiguration().createCompatibleVolatileImage(
+					width, height, VolatileImage.TRANSLUCENT);
 		}
 
 		public Animation getAnimation() {
@@ -358,27 +455,6 @@ public abstract class Sprite {
 
 		public void setAnimation(Animation animation) {
 			this.animation = animation;
-		}
-
-		private void makeSpriteSquare() {
-			double size = Math.sqrt(Math.pow(sprite.getWidth(), 2) + Math.pow(sprite.getHeight(), 2));
-			xOffset = (int) Math.ceil(size / 2 - sprite.getWidth() / 2);
-			yOffset = (int) Math.ceil(size / 2 - sprite.getHeight() / 2);
-			AffineTransform transform = new AffineTransform();
-			transform.translate(xOffset, yOffset);
-			AffineTransformOp transformOp = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-			squareSprite = new BufferedImage((int) Math.ceil(size), (int) Math.ceil(size), sprite.getType());
-			transformOp.filter(sprite, squareSprite);
-		}
-
-		private void rotateSprite() {
-			AffineTransform transform = AffineTransform.getRotateInstance(
-					rotation.getCurrentOrientation(), squareSprite.getWidth() / 2, squareSprite.getHeight() / 2
-			);
-			AffineTransformOp transformOp = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-			rotatedSprite = transformOp.createCompatibleDestImage(squareSprite, squareSprite.getColorModel());
-			transformOp.filter(squareSprite, rotatedSprite);
-			lastRenderedOrientation = rotation.currentOrientation;
 		}
 
 		public Shape getBounds() {
@@ -395,7 +471,7 @@ public abstract class Sprite {
 					sprite.getWidth(), sprite.getHeight());
 			Shape s = trans.createTransformedShape(r);
 			trans = new AffineTransform();
-			trans.translate(movement.currentLocation.getX(), movement.currentLocation.getY());
+			trans.translate(movement.getLocation().getX(), movement.getLocation().getY());
 			return trans.createTransformedShape(s);
 		}
 	}

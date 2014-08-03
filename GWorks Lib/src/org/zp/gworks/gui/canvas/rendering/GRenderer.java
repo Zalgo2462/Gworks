@@ -24,6 +24,8 @@ public class GRenderer implements GTickListener {
 	@Override
 	public void tick(GCanvas canvas, long delta) {
 		graphics = this.canvas.getBufferStrategy().getDrawGraphics();
+		((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		drawStrategies(delta, clearStrategy);
 		for (GState state : this.canvas.getStates()) {
 			drawStrategies(delta, state.getRenderListeners());
