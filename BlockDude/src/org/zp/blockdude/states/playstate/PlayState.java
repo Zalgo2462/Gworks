@@ -70,12 +70,12 @@ public class PlayState extends GMutableState {
         initPlayer();
 		initEnemies(level);
         initScoreboard();
-        //addTickListener(levelAdvancer);
+        addTickListener(levelAdvancer);
 	}
 
 	public void uninitLevel() {
         currentLevel = null;
-        //removeTickListener(levelAdvancer);
+        removeTickListener(levelAdvancer);
         uninitPlayer();
 		uninitEnemies();
         uninitScoreboard();
