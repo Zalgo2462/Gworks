@@ -28,7 +28,9 @@ public final class GLoop implements Runnable {
 			currentTime = newTime;
 			for (GState state : canvas.getStates()) {
 				for (GTickListener listener : state.getTickListeners()) {
-					listener.tick(canvas, delta);
+                    if(canvas.getStates().contains(state)) {
+                        listener.tick(canvas, delta);
+                    }
 				}
 			}
 			canvas.getRenderer().tick(canvas, delta);

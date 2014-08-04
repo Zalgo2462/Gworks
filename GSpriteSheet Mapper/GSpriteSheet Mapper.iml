@@ -8,7 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="GWorks Lib" />
-    <orderEntry type="module" module-name="GWorks Test" />
   </component>
 </module>
 

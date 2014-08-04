@@ -6,7 +6,7 @@ import org.zp.blockdude.sprites.Sprite;
 import org.zp.blockdude.sprites.game.Enemy;
 import org.zp.blockdude.sprites.game.Player;
 import org.zp.blockdude.states.playstate.renderlisteners.BackgroundRenderer;
-import org.zp.blockdude.states.playstate.renderlisteners.InfoAreaRenderer;
+import org.zp.blockdude.states.playstate.renderlisteners.CurrentLevelRenderer;
 import org.zp.blockdude.states.playstate.renderlisteners.ScoreRenderer;
 import org.zp.blockdude.states.playstate.ticklisteners.LevelAdvancement;
 import org.zp.gworks.gui.canvas.GCanvas;
@@ -19,45 +19,41 @@ import java.util.Random;
 import static org.zp.blockdude.GameFrame.DIMENSION;
 
 public class PlayState extends GMutableState {
-	private Level currentLevel;
-	private BackgroundRenderer backgroundRenderer;
-	private InfoAreaRenderer infoAreaRenderer;
+    private SpriteManager spriteManager;
+    private Player player;
+    private LinkedList<Sprite> enemies;
+
+    private BackgroundRenderer backgroundRenderer;
+
+    private Level currentLevel;
+	private CurrentLevelRenderer currentLevelRenderer;
 	private LevelAdvancement levelAdvancer;
+
 	private int score;
 	private ScoreRenderer scoreRenderer;
-	private SpriteManager spriteManager;
-	private Player player;
-	private LinkedList<Sprite> enemies;
 
 	public PlayState(GCanvas canvas) {
 		super(canvas);
 		spriteManager = new SpriteManager(this);
-
 		player = new Player(this);
 		enemies = new LinkedList<Sprite>();
 
 		backgroundRenderer = new BackgroundRenderer();
 
-		infoAreaRenderer = new InfoAreaRenderer(this);
-
+        currentLevelRenderer = new CurrentLevelRenderer(this);
 		levelAdvancer = new LevelAdvancement(this);
 
 		score = 0;
 		scoreRenderer = new ScoreRenderer(this);
 	}
 
-	public void onAddState() {
-		initBackground();
-		initScoreboard();
-		if (currentLevel == null) {
-			initLevel(Level.ONE);
-		}
-	}
+    public void onAddState() {
+        initBackground();
+    }
 
 	public void onRemoveState() {
 		uninitBackground();
-		uninitScoreboard();
-		if (currentLevel == null) {
+		if (currentLevel != null) {
 			uninitLevel();
 		}
 	}
@@ -71,16 +67,18 @@ public class PlayState extends GMutableState {
 			uninitLevel();
 		}
 		currentLevel = level;
-		initPlayer();
+        initPlayer();
 		initEnemies(level);
-		addTickListener(levelAdvancer);
+        initScoreboard();
+        //addTickListener(levelAdvancer);
 	}
 
 	public void uninitLevel() {
-		removeTickListener(levelAdvancer);
-		uninitPlayer();
+        currentLevel = null;
+        //removeTickListener(levelAdvancer);
+        uninitPlayer();
 		uninitEnemies();
-		currentLevel = null;
+        uninitScoreboard();
 	}
 
 	private void initPlayer() {
@@ -88,17 +86,15 @@ public class PlayState extends GMutableState {
 				DIMENSION.width / 2 - player.getRenderer().getSprite().getWidth() / 2,
 				DIMENSION.height / 2 - player.getRenderer().getSprite().getHeight() / 2);
 		player.setHealth(100);
-		player.setLives(1);
-		addRenderListener(player.getHealthRenderer());
+		player.setLives(3);
 		addTickListener(player.getPlayerMovement());
 		addTickListener(player.getPlayerMissiles());
 		addTickListener(player.getPlayerDeath());
-		spriteManager.registerSprite(player);
+        spriteManager.registerSprite(player);
 		player.getRenderer().setRendered(true);
 	}
 
 	private void uninitPlayer() {
-		removeRenderListener(player.getHealthRenderer());
 		removeTickListener(player.getPlayerMovement());
 		removeTickListener(player.getPlayerMissiles());
 		removeTickListener(player.getPlayerDeath());
@@ -142,14 +138,16 @@ public class PlayState extends GMutableState {
 	}
 
 	private void initScoreboard() {
-		addRenderListener(infoAreaRenderer);
 		addRenderListener(scoreRenderer);
-	}
+        addRenderListener(currentLevelRenderer);
+        addRenderListener(player.getHealthRenderer());
+    }
 
 	private void uninitScoreboard() {
-		removeRenderListener(infoAreaRenderer);
 		removeRenderListener(scoreRenderer);
-	}
+        removeRenderListener(currentLevelRenderer);
+        removeRenderListener(player.getHealthRenderer());
+    }
 
 	private void placeEnemy(Enemy enemy) {
 		Random rand = new Random();

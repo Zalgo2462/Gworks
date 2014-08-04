@@ -46,7 +46,7 @@ public class MainMenu {
 		playButton.setFont(new Font("BatmanForeverOutline", Font.BOLD, 32));
 		playButton.setHorizontalMargin((width - playButton.getBounds().width) / 2);
 		int x = (int) (menuState.getBounds().getCenterX() - playButton.getBounds().getCenterX());
-		int y = playButton.getBounds().height * 4;
+		int y = playButton.getBounds().height * 3;
 		final Point p = new Point(x, y);
 		playButton.setLocation(p);
 
@@ -70,7 +70,7 @@ public class MainMenu {
 		testButton.setFont(new Font("BatmanForeverOutline", Font.BOLD, 32));
 		testButton.setHorizontalMargin((width - testButton.getBounds().width) / 2);
 		int x = (int) (menuState.getBounds().getCenterX() - testButton.getBounds().getCenterX());
-		int y = testButton.getBounds().height * 6;
+		int y = testButton.getBounds().height * 5;
 		Point p = new Point(x, y);
 		testButton.setLocation(p);
 

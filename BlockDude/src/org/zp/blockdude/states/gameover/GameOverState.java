@@ -42,10 +42,7 @@ public class GameOverState extends GMenuState {
 		});
 
 		addGButton(continueButton);
-		canvas.addState(this);
-
 		addRenderListener(new GameOverRenderer(this));
-
 	}
 
 	public int getScore() {
