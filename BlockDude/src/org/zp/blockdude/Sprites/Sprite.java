@@ -38,6 +38,7 @@ public abstract class Sprite {
 		private double angle;
 		private double acceleration;
 		private double deceleration;
+		private double naturalDeceleration;
 		private double speed;
 		private double maxSpeed;
 		private Shape collisionArea;
@@ -48,6 +49,7 @@ public abstract class Sprite {
 			this.angle = 0;
 			this.acceleration = 0;
 			this.deceleration = 0;
+			this.naturalDeceleration = 0;
 			this.speed = 0;
 			this.maxSpeed = 0;
 		}
@@ -98,8 +100,16 @@ public abstract class Sprite {
 			return deceleration;
 		}
 
-		public void setDeceleration(double deceleration) {
+		public void setDeceleration(int deceleration) {
 			this.deceleration = deceleration;
+		}
+
+		public double getNaturalDeceleration() {
+			return naturalDeceleration;
+		}
+
+		public void setNaturalDeceleration(double naturalDeceleration) {
+			this.naturalDeceleration = naturalDeceleration;
 		}
 
 		public double getSpeed() {
@@ -157,16 +167,16 @@ public abstract class Sprite {
 			}
 		}
 
-		public void decelerateToZero(final long delta) {
+		public void naturallyDecelerate(final long delta) {
 			if (speed > 0) {
-				double dSpeed = deceleration * delta / 1000000000D;
+				double dSpeed = naturalDeceleration * delta / 1000000000D;
 				if (speed + dSpeed >= 0) {
 					speed += dSpeed;
 				} else {
 					speed = 0;
 				}
 			} else if (speed < 0) {
-				double dSpeed = acceleration * delta / 1000000000D;
+				double dSpeed = -naturalDeceleration * delta / 1000000000D;
 				if (speed + dSpeed <= 0) {
 					speed += dSpeed;
 				} else {

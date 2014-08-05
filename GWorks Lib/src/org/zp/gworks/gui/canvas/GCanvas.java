@@ -8,7 +8,6 @@ import org.zp.gworks.logic.GState.GState;
 import sun.java2d.pipe.hw.ExtendedBufferCapabilities;
 
 import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class GCanvas extends Canvas {
@@ -75,7 +74,7 @@ public final class GCanvas extends Canvas {
 
 	private void createRenderer() {
 		if (renderer == null)
-			this.renderer = new GRenderer(this);
+			this.renderer = new GRenderer();
 	}
 
 	private void createTimerAccuracyThread() {

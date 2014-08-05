@@ -24,7 +24,7 @@ public class Missile extends Sprite {
 		renderer.setSprite(image);
 		movement.setAcceleration(200);
 		movement.setMaxSpeed(325);
-		movement.setDeceleration(-200);
+		movement.setNaturalDeceleration(-200);
 	}
 
 	private void createSprite() {
