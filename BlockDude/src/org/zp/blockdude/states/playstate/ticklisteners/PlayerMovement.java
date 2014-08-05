@@ -42,7 +42,7 @@ public class PlayerMovement implements GTickListener {
 						break;
 					case KeyEvent.VK_S:
 					case KeyEvent.VK_DOWN:
-						//player.getMovement().setAngle(player.getRotation().getCurrentOrientation() + Math.PI);
+						player.getMovement().setAngle(player.getRotation().getCurrentOrientation());
 						player.getMovement().decelerate(delta);
 						break;
 					case KeyEvent.VK_A:
@@ -59,7 +59,7 @@ public class PlayerMovement implements GTickListener {
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_DOWN) &&
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_W) &&
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_S)) {
-			player.getMovement().decelerateToZero(delta);
+			player.getMovement().naturallyDecelerate(delta);
 		}
 
 		if (!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_LEFT) &&
@@ -88,11 +88,11 @@ public class PlayerMovement implements GTickListener {
 			Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
 			player.getMovement().setAngle(theta + Math.PI);
 			e.getMovement().setAngle(theta);
-			if (player.getMovement().getSpeed() < 50) {
-				player.getMovement().setSpeed(50);
+			if (player.getMovement().getSpeed() < 10) {
+				player.getMovement().setSpeed(10);
 			}
-			if (e.getMovement().getSpeed() < 50) {
-				player.getMovement().setSpeed(50);
+			if (e.getMovement().getSpeed() < 10) {
+				player.getMovement().setSpeed(10);
 			}
 			player.damage(1);
 			e.damage(1);

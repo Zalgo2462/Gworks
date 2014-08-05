@@ -26,7 +26,7 @@ public class GRenderer implements GTickListener {
 		graphics = this.canvas.getBufferStrategy().getDrawGraphics();
 		((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		drawStrategies(delta, clearStrategy);
+		clearStrategy.paint(canvas, graphics, delta);
 		for (GState state : this.canvas.getStates()) {
             for (GRenderListener renderStrategy : state.getRenderListeners()) {
                 if(canvas.getStates().contains(state)) {
@@ -38,9 +38,5 @@ public class GRenderer implements GTickListener {
 		Toolkit.getDefaultToolkit().sync();
 		if (graphics != null)
 			graphics.dispose();
-	}
-
-	public void drawStrategies(final long delta, final GRenderListener... renderStrategies) {
-
 	}
 }

@@ -31,12 +31,16 @@ public class EnemyMovement implements GTickListener {
 		if (enemy.getMovement().distanceTo(
 				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
 				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY()
-		) < 150 && Math.abs(enemy.getRotation().angleTo(
+		) < 300 && Math.abs(enemy.getRotation().angleTo(
 						playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
 						playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY())
-		) < Math.PI / 32
+		) < Math.PI / 50
 				) {
-			enemy.getMovement().decelerateToZero(delta);
+			if (enemy.getMovement().getSpeed() > 0) {
+				enemy.getMovement().decelerate(delta);
+			} else if (enemy.getMovement().getSpeed() < 0) {
+				enemy.getMovement().accelerate(delta);
+			}
 			enemy.getRotation().setMoving(false);
 		} else if (System.currentTimeMillis() > blockRotationTime) {
 			double x = 0;
@@ -86,7 +90,7 @@ public class EnemyMovement implements GTickListener {
 			enemy.getMovement().setAngle(enemy.getRotation().getCurrentOrientation());
 			enemy.getMovement().accelerate(delta);
 		} else {
-			enemy.getMovement().decelerateToZero(delta);
+			enemy.getMovement().naturallyDecelerate(delta);
 		}
 
 		enemy.getMovement().move(
@@ -108,11 +112,11 @@ public class EnemyMovement implements GTickListener {
 			Double theta = playState.getSpriteManager().getAngleIfCollision(enemy, e);
 			enemy.getMovement().setAngle(theta + Math.PI);
 			e.getMovement().setAngle(theta);
-			if (enemy.getMovement().getSpeed() < 50) {
-				enemy.getMovement().setSpeed(50);
+			if (enemy.getMovement().getSpeed() < 10) {
+				enemy.getMovement().setSpeed(10);
 			}
-			if (e.getMovement().getSpeed() < 50) {
-				e.getMovement().setSpeed(50);
+			if (e.getMovement().getSpeed() < 10) {
+				e.getMovement().setSpeed(10);
 			}
 			enemy.damage(1);
 			e.damage(1);
