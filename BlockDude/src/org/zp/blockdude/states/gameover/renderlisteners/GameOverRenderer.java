@@ -1,6 +1,7 @@
 package org.zp.blockdude.states.gameover.renderlisteners;
 
 import org.zp.blockdude.ColorScheme;
+import org.zp.blockdude.Fonts;
 import org.zp.blockdude.states.gameover.GameOverState;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
@@ -22,7 +23,7 @@ public class GameOverRenderer implements GRenderListener {
 	@Override
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
 		graphics.setColor(ColorScheme.DARKER_GREEN.getColor());
-		graphics.setFont(new Font("BatmanForeverOutline", Font.BOLD, 50));
+		graphics.setFont(Fonts.BFO.getFont().deriveFont(Font.BOLD, 50));
 		FontMetrics fontMetrics = graphics.getFontMetrics();
 		Rectangle2D bounds1 = fontMetrics.getStringBounds("GAME OVER", graphics);
 		Rectangle2D bounds2 = fontMetrics.getStringBounds("FINAL SCORE: " + gameOverState.getScore(), graphics);

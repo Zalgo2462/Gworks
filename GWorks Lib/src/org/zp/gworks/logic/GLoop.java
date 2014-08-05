@@ -22,7 +22,7 @@ public final class GLoop implements Runnable {
 	@Override
 	public void run() {
 		currentTime = System.nanoTime();
-		while (isRunning) {
+		while (isRunning && !Thread.interrupted()) {
 			long newTime = System.nanoTime();
 			long delta = newTime - currentTime;
 			currentTime = newTime;

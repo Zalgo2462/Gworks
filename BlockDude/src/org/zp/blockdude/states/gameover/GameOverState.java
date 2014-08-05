@@ -1,6 +1,7 @@
 package org.zp.blockdude.states.gameover;
 
 import org.zp.blockdude.ColorScheme;
+import org.zp.blockdude.Fonts;
 import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.states.gameover.renderlisteners.GameOverRenderer;
 import org.zp.blockdude.states.menus.GMenuState;
@@ -24,7 +25,7 @@ public class GameOverState extends GMenuState {
 		GTextButton continueButton = new GTextButton("Continue");
 		continueButton.setBgColor(ColorScheme.BUTTON_BACKGROUND.getColor());
 		continueButton.setFgColor(ColorScheme.DARKER_GREEN.getColor());
-		continueButton.setFont(new Font("BatmanForeverOutline", Font.BOLD, 32));
+		continueButton.setFont(Fonts.BFO.getFont().deriveFont(Font.BOLD, 32));
 		continueButton.setHorizontalMargin((300 - continueButton.getBounds().width) / 2);
 		int x = (int) (getBounds().getCenterX() - continueButton.getBounds().getCenterX());
 		int y = continueButton.getBounds().height * 8;

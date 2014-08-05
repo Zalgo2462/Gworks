@@ -8,6 +8,7 @@ import org.zp.gworks.logic.GState.GState;
 import sun.java2d.pipe.hw.ExtendedBufferCapabilities;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class GCanvas extends Canvas {
@@ -139,11 +140,28 @@ public final class GCanvas extends Canvas {
 	}
 
 	public void dispose() {
-		for (GState gState : gStates) {
-			removeState(gState);
-		}
-		loop.setIsRunning(false);
-		gameThread.interrupt();
-		timerAccuracyThread.interrupt();
-	}
+        if(EventQueue.isDispatchThread()) {
+            for (GState gState : gStates) {
+                removeState(gState);
+            }
+            loop.setIsRunning(false);
+            gameThread.interrupt();
+            timerAccuracyThread.interrupt();
+        } else {
+            EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    for (GState gState : gStates) {
+                        removeState(gState);
+                    }
+                    loop.setIsRunning(false);
+                    gameThread.interrupt();
+                    timerAccuracyThread.interrupt();
+                    System.out.println(Thread.currentThread().isInterrupted());
+                    System.out.println(gameThread.isInterrupted());
+                    System.out.println(timerAccuracyThread.isInterrupted());
+                }
+            });
+        }
+    }
 }

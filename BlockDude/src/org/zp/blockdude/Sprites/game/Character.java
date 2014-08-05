@@ -31,7 +31,7 @@ public abstract class Character extends Sprite {
 		missiles = new LinkedList<Missile>();
 		lastMissileFiredTime = System.nanoTime();
 		missilesPerSecond = 3;
-        missileDamage = 25;
+        missileDamage = 100;
 		health = 100;
 	}
 

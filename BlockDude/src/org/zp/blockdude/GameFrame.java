@@ -11,7 +11,7 @@ import java.awt.event.WindowEvent;
 public class GameFrame extends Frame {
 	public static final Dimension DIMENSION = new Dimension(800, 600);
 	private static GCanvas canvas;
-	private MainMenu mainMenu;
+    private static GameFrame gameFrame;
 
 	public GameFrame() {
 		setResizable(false);
@@ -24,19 +24,37 @@ public class GameFrame extends Frame {
 	}
 
 	public static void main(String[] args) {
-		new GameFrame();
+		gameFrame = new GameFrame();
 	}
 
 	public void init() {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				canvas.dispose();
 				dispose();
-				System.exit(0);
 			}
 		});
 		canvas = new GCanvas(DIMENSION, 60, 2);
 		canvas.addState(MainMenu.getMenuState(canvas));
 		add(canvas);
 	}
+
+    public void dispose() {
+        if(EventQueue.isDispatchThread()) {
+            canvas.dispose();
+            super.dispose();
+        } else {
+            final Window w = this;
+            EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    canvas.dispose();
+                    w.dispose();
+                }
+            });
+        }
+    }
+
+    public static void exit() {
+        gameFrame.dispose();
+    }
 }

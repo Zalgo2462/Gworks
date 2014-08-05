@@ -1,6 +1,7 @@
 package org.zp.blockdude.states.menus.main;
 
 import org.zp.blockdude.ColorScheme;
+import org.zp.blockdude.Fonts;
 import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.Level;
 import org.zp.blockdude.states.menus.GMenuState;
@@ -35,6 +36,8 @@ public class MainMenu {
 			menuState.addGButton(playButton);
 			GTextButton testButton = createTestButton(menuState, 400);
 			menuState.addGButton(testButton);
+            GTextButton exitButton = createExitButton(menuState, 400);
+            menuState.addGButton(exitButton);
 		}
 		return menuState;
 	}
@@ -43,7 +46,7 @@ public class MainMenu {
 		GTextButton playButton = new GTextButton("Play Game");
 		playButton.setBgColor(ColorScheme.BUTTON_BACKGROUND.getColor());
 		playButton.setFgColor(ColorScheme.DARKER_GREEN.getColor());
-		playButton.setFont(new Font("BatmanForeverOutline", Font.BOLD, 32));
+		playButton.setFont(Fonts.BFO.getFont().deriveFont(Font.BOLD, 32));
 		playButton.setHorizontalMargin((width - playButton.getBounds().width) / 2);
 		int x = (int) (menuState.getBounds().getCenterX() - playButton.getBounds().getCenterX());
 		int y = playButton.getBounds().height * 3;
@@ -67,7 +70,7 @@ public class MainMenu {
 		GTextButton testButton = new GTextButton("Display Tests");
 		testButton.setBgColor(ColorScheme.BUTTON_BACKGROUND.getColor());
 		testButton.setFgColor(ColorScheme.DARKER_GREEN.getColor());
-		testButton.setFont(new Font("BatmanForeverOutline", Font.BOLD, 32));
+		testButton.setFont(Fonts.BFO.getFont().deriveFont(Font.BOLD, 32));
 		testButton.setHorizontalMargin((width - testButton.getBounds().width) / 2);
 		int x = (int) (menuState.getBounds().getCenterX() - testButton.getBounds().getCenterX());
 		int y = testButton.getBounds().height * 5;
@@ -89,4 +92,25 @@ public class MainMenu {
 		});
 		return testButton;
 	}
+
+    private static GTextButton createExitButton(final GMenuState menuState, int width) {
+        GTextButton exitButton = new GTextButton("Exit");
+        exitButton.setBgColor(ColorScheme.BUTTON_BACKGROUND.getColor());
+        exitButton.setFgColor(ColorScheme.DARKER_GREEN.getColor());
+        exitButton.setFont(Fonts.BFO.getFont().deriveFont(Font.BOLD, 32));
+        exitButton.setHorizontalMargin((width - exitButton.getBounds().width) / 2);
+        int x = (int) (menuState.getBounds().getCenterX() - exitButton.getBounds().getCenterX());
+        int y = exitButton.getBounds().height * 7;
+        final Point p = new Point(x, y);
+        exitButton.setLocation(p);
+
+        exitButton.setOutlined(true);
+        exitButton.addRunnable(new Runnable() {
+            @Override
+            public void run() {
+                GameFrame.exit();
+            }
+        });
+        return exitButton;
+    }
 }
