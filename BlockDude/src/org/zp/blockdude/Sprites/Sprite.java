@@ -1,6 +1,7 @@
 package org.zp.blockdude.sprites;
 
 
+import org.zp.blockdude.sprites.animations.Animation;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 
@@ -351,6 +352,10 @@ public abstract class Sprite {
 				BufferedImage image = animation.getSprite(delta);
 				if (!image.equals(spriteBacker)) {
 					setSprite(image);
+				}
+				Shape collArea = animation.getBounds(delta);
+				if (!collArea.equals(movement.getCollisionArea())) {
+					movement.setCollisionArea(collArea);
 				}
 			}
 			if (sprite.contentsLost()) {

@@ -1,5 +1,6 @@
-package org.zp.blockdude.sprites;
+package org.zp.blockdude.sprites.animations;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
@@ -7,7 +8,7 @@ import java.awt.image.BufferedImage;
  * Time: 2:05 PM
  */
 public abstract class Animation {
-	private boolean running;
+	protected boolean running;
 
 	public boolean isRunning() {
 		return running;
@@ -18,4 +19,6 @@ public abstract class Animation {
 	}
 
 	public abstract BufferedImage getSprite(long delta);
+
+	public abstract Shape getBounds(long delta);
 }
