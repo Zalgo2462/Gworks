@@ -88,11 +88,11 @@ public class PlayerMovement implements GTickListener {
 			Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
 			player.getMovement().setAngle(theta + Math.PI);
 			e.getMovement().setAngle(theta);
-			if (player.getMovement().getSpeed() < 20) {
-				player.getMovement().setSpeed(20);
+			if (player.getMovement().getSpeed() < 50) {
+				player.getMovement().setSpeed(50);
 			}
-			if (e.getMovement().getSpeed() < 20) {
-				player.getMovement().setSpeed(20);
+			if (e.getMovement().getSpeed() < 50) {
+				player.getMovement().setSpeed(50);
 			}
 			player.damage(1);
 			e.damage(1);

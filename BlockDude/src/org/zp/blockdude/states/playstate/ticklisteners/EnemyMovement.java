@@ -99,11 +99,11 @@ public class EnemyMovement implements GTickListener {
 			Double theta = playState.getSpriteManager().getAngleIfCollision(enemy, e);
 			enemy.getMovement().setAngle(theta + Math.PI);
 			e.getMovement().setAngle(theta);
-			if (enemy.getMovement().getSpeed() < 20) {
-				enemy.getMovement().setSpeed(20);
+			if (enemy.getMovement().getSpeed() < 50) {
+				enemy.getMovement().setSpeed(50);
 			}
-			if (e.getMovement().getSpeed() < 20) {
-				e.getMovement().setSpeed(20);
+			if (e.getMovement().getSpeed() < 50) {
+				e.getMovement().setSpeed(50);
 			}
 			enemy.damage(1);
 			e.damage(1);
