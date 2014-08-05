@@ -126,10 +126,17 @@ public abstract class Sprite {
 			return Math.sin(angle);
 		}
 
-		public double getAngleTo(final double x, final double y) {
+		public double angleTo(final double x, final double y) {
 			double dx = x - (renderer.getBounds().getBounds().x + renderer.getBounds().getBounds().width / 2);
 			double dy = y - (renderer.getBounds().getBounds().y + renderer.getBounds().getBounds().height / 2);
 			return Math.atan2(dy, dx);
+		}
+
+		public double distanceTo(double x, double y) {
+			x = Math.abs(x - currentLocation.getX());
+			y = Math.abs(y - currentLocation.getY());
+
+			return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 		}
 
 		public void accelerate(final long delta) {
@@ -232,8 +239,8 @@ public abstract class Sprite {
 			this.moving = moving;
 		}
 
-		public double getAngleTo(final double x, final double y) {
-			double dTheta = movement.getAngleTo(x, y) - currentOrientation;
+		public double angleTo(final double x, final double y) {
+			double dTheta = movement.angleTo(x, y) - currentOrientation;
 			if (dTheta > 0) {
 				while (dTheta > Math.PI * 2) {
 					dTheta -= Math.PI * 2;

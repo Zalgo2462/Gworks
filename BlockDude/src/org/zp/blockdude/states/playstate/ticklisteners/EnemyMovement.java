@@ -28,7 +28,17 @@ public class EnemyMovement implements GTickListener {
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		if (System.currentTimeMillis() > blockRotationTime) {
+		if (enemy.getMovement().distanceTo(
+				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
+				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY()
+		) < 150 && Math.abs(enemy.getRotation().angleTo(
+						playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
+						playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY())
+		) < Math.PI / 32
+				) {
+			enemy.getMovement().decelerateToZero(delta);
+			enemy.getRotation().setMoving(false);
+		} else if (System.currentTimeMillis() > blockRotationTime) {
 			double x = 0;
 			double y = 0;
 			for (Sprite e : playState.getEnemies()) {
@@ -46,7 +56,6 @@ public class EnemyMovement implements GTickListener {
 				if (yDiff < 0 && yDiff > -500) {
 					y -= enemy.getEnemyRepulsion();
 				}
-
 			}
 			if (playState.getPlayer().getMovement().getLocation().getX() > enemy.getMovement().getLocation().getX()) {
 				x += enemy.getPlayerAttraction();
@@ -145,7 +154,7 @@ public class EnemyMovement implements GTickListener {
 	}
 
 	private void turnTo(double x, double y) {
-		double angle = enemy.getRotation().getAngleTo(x, y);
+		double angle = enemy.getRotation().angleTo(x, y);
 		if (angle > 0) {
 			enemy.getRotation().setClockwise(true);
 		} else {

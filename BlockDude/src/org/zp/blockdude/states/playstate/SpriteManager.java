@@ -42,7 +42,7 @@ public class SpriteManager {
 		double y = area1.getBounds().getY();
 		double height = area1.getBounds().getHeight();
 
-		return sprite.getMovement().getAngleTo(x + width / 2, y + height / 2);
+		return sprite.getMovement().angleTo(x + width / 2, y + height / 2);
 	}
 
 	public PlayAreaEdge checkForEdgeCollision(Sprite sprite) {
@@ -81,7 +81,7 @@ public class SpriteManager {
 		double y = area.getBounds().getY();
 		double height = area.getBounds().getHeight();
 
-		return sprite1.getMovement().getAngleTo(x + width / 2, y + height / 2);
+		return sprite1.getMovement().angleTo(x + width / 2, y + height / 2);
 	}
 
 	public Sprite checkForCollision(Sprite sprite) {
