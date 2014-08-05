@@ -1,4 +1,4 @@
-package org.zp.blockdude.states.menus.ui;
+package org.zp.blockdude.states.menus.ui.labels;
 
 import org.zp.gworks.gui.canvas.GCanvas;
 
@@ -9,10 +9,10 @@ import java.awt.image.BufferedImage;
  * Date: 8/2/2014
  * Time: 1:31 PM
  */
-public class GImageButton extends GButton {
+public class GImageLabel extends GLabel {
 	BufferedImage image;
 
-	public GImageButton(BufferedImage image) {
+	public GImageLabel(BufferedImage image) {
 		this.image = image;
 		updateButtonBounds();
 	}
@@ -21,8 +21,8 @@ public class GImageButton extends GButton {
 	protected void paintContents(GCanvas canvas, Graphics graphics, long delta) {
 		graphics.drawImage(
 				image,
-				(buttonBounds.width - image.getWidth()) / 2 + location.x,
-				(buttonBounds.height - image.getHeight()) / 2 + location.y,
+				(labelBounds.width - image.getWidth()) / 2 + location.x,
+				(labelBounds.height - image.getHeight()) / 2 + location.y,
 				null
 		);
 	}

@@ -1,6 +1,7 @@
 package org.zp.blockdude.states.menus;
 
-import org.zp.blockdude.states.menus.ui.GButton;
+import org.zp.blockdude.states.menus.ui.buttons.GButton;
+import org.zp.blockdude.states.menus.ui.labels.GLabel;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 import org.zp.gworks.logic.GState.GMutableState;
@@ -18,6 +19,7 @@ public class GMenuState extends GMutableState {
 	private Color bgColor;
 	private Rectangle bounds;
 	private LinkedList<GButton> buttons;
+	private LinkedList<GLabel> labels;
 	private GMenuMouseListener mouseListener;
 
 	public GMenuState(GCanvas canvas, Color bgColor, int x, int y, int width, int height) {
@@ -25,8 +27,19 @@ public class GMenuState extends GMutableState {
 		this.bgColor = bgColor;
 		this.bounds = new Rectangle(x, y, width, height);
 		this.buttons = new LinkedList<GButton>();
+		this.labels = new LinkedList<GLabel>();
 		this.mouseListener = new GMenuMouseListener();
 		addRenderListener(new GMenuRenderer());
+	}
+
+	public void addGLabel(GLabel label) {
+		labels.offer(label);
+		addRenderListener(label);
+	}
+
+	public boolean removeGLabel(GLabel label) {
+		boolean toReturn = labels.remove(label);
+		return removeRenderListener(label) && toReturn;
 	}
 
 	public void addGButton(GButton button) {

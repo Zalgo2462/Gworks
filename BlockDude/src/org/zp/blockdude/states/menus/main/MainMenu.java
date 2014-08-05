@@ -5,7 +5,7 @@ import org.zp.blockdude.Fonts;
 import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.Level;
 import org.zp.blockdude.states.menus.GMenuState;
-import org.zp.blockdude.states.menus.ui.GTextButton;
+import org.zp.blockdude.states.menus.ui.buttons.GTextButton;
 import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.gtest.rendertests.ColorChanger.ColorChangerState;
 import org.zp.gtest.rendertests.Framerate.FramerateState;
@@ -36,8 +36,8 @@ public class MainMenu {
 			menuState.addGButton(playButton);
 			GTextButton testButton = createTestButton(menuState, 400);
 			menuState.addGButton(testButton);
-            GTextButton exitButton = createExitButton(menuState, 400);
-            menuState.addGButton(exitButton);
+			GTextButton exitButton = createExitButton(menuState, 400);
+			menuState.addGButton(exitButton);
 		}
 		return menuState;
 	}
@@ -93,24 +93,24 @@ public class MainMenu {
 		return testButton;
 	}
 
-    private static GTextButton createExitButton(final GMenuState menuState, int width) {
-        GTextButton exitButton = new GTextButton("Exit");
-        exitButton.setBgColor(ColorScheme.BUTTON_BACKGROUND.getColor());
-        exitButton.setFgColor(ColorScheme.DARKER_GREEN.getColor());
-        exitButton.setFont(Fonts.BFO.getFont().deriveFont(Font.BOLD, 32));
-        exitButton.setHorizontalMargin((width - exitButton.getBounds().width) / 2);
-        int x = (int) (menuState.getBounds().getCenterX() - exitButton.getBounds().getCenterX());
-        int y = exitButton.getBounds().height * 7;
-        final Point p = new Point(x, y);
-        exitButton.setLocation(p);
+	private static GTextButton createExitButton(final GMenuState menuState, int width) {
+		GTextButton exitButton = new GTextButton("Exit");
+		exitButton.setBgColor(ColorScheme.BUTTON_BACKGROUND.getColor());
+		exitButton.setFgColor(ColorScheme.DARKER_GREEN.getColor());
+		exitButton.setFont(Fonts.BFO.getFont().deriveFont(Font.BOLD, 32));
+		exitButton.setHorizontalMargin((width - exitButton.getBounds().width) / 2);
+		int x = (int) (menuState.getBounds().getCenterX() - exitButton.getBounds().getCenterX());
+		int y = exitButton.getBounds().height * 7;
+		final Point p = new Point(x, y);
+		exitButton.setLocation(p);
 
-        exitButton.setOutlined(true);
-        exitButton.addRunnable(new Runnable() {
-            @Override
-            public void run() {
-                GameFrame.exit();
-            }
-        });
-        return exitButton;
-    }
+		exitButton.setOutlined(true);
+		exitButton.addRunnable(new Runnable() {
+			@Override
+			public void run() {
+				GameFrame.exit();
+			}
+		});
+		return exitButton;
+	}
 }
