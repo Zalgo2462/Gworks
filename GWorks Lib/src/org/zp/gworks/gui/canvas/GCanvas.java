@@ -58,7 +58,7 @@ public final class GCanvas extends Canvas {
 				getDefaultScreenDevice().getDefaultConfiguration();
 		final ExtendedBufferCapabilities ebc = new ExtendedBufferCapabilities(
 				gc.getBufferCapabilities(),
-				ExtendedBufferCapabilities.VSyncType.VSYNC_ON);
+				ExtendedBufferCapabilities.VSyncType.VSYNC_OFF);
 		try {
 			super.createBufferStrategy(buffers, ebc);
 		} catch (AWTException e) {
@@ -139,28 +139,12 @@ public final class GCanvas extends Canvas {
 	}
 
 	public void dispose() {
-        if(EventQueue.isDispatchThread()) {
-            for (GState gState : gStates) {
-                removeState(gState);
-            }
-            loop.setIsRunning(false);
-            gameThread.interrupt();
-            timerAccuracyThread.interrupt();
-        } else {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    for (GState gState : gStates) {
-                        removeState(gState);
-                    }
-                    loop.setIsRunning(false);
-                    gameThread.interrupt();
-                    timerAccuracyThread.interrupt();
-                    System.out.println(Thread.currentThread().isInterrupted());
-                    System.out.println(gameThread.isInterrupted());
-                    System.out.println(timerAccuracyThread.isInterrupted());
-                }
-            });
-        }
-    }
+		for (GState gState : gStates) {
+			removeState(gState);
+		}
+		loop.setIsRunning(false);
+		gameThread.interrupt();
+		timerAccuracyThread.interrupt();
+		getBufferStrategy().dispose();
+	}
 }

@@ -20,7 +20,6 @@ public class Game extends Frame {
 		pack();
 		setTitle("GTest");
 		setVisible(true);
-		//setResizable(false);
 		canvas.requestFocus();
 		canvas.addState(new ColorChangerState(canvas));
 		canvas.addState(new XLineState(canvas));

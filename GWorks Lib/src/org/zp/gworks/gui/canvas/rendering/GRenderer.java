@@ -16,19 +16,23 @@ public class GRenderer implements GTickListener {
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		Graphics graphics = canvas.getBufferStrategy().getDrawGraphics();
-		((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		clearStrategy.paint(canvas, graphics, delta);
-		for (GState state : canvas.getStates()) {
-			for (GRenderListener renderStrategy : state.getRenderListeners()) {
-                if(canvas.getStates().contains(state)) {
-                    renderStrategy.paint(canvas, graphics, delta);
-                }
-            }
+		if (canvas.getLoop().isRunning() && !Thread.interrupted()) {
+			Graphics graphics = canvas.getBufferStrategy().getDrawGraphics();
+			((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+			clearStrategy.paint(canvas, graphics, delta);
+			for (GState state : canvas.getStates()) {
+				for (GRenderListener renderStrategy : state.getRenderListeners()) {
+					if (canvas.getStates().contains(state) && canvas.getLoop().isRunning() && !Thread.interrupted()) {
+						renderStrategy.paint(canvas, graphics, delta);
+					}
+				}
+			}
+			if (canvas.getLoop().isRunning() && !Thread.interrupted()) {
+				canvas.getBufferStrategy().show();
+				Toolkit.getDefaultToolkit().sync();
+			}
+			graphics.dispose();
 		}
-		canvas.getBufferStrategy().show();
-		Toolkit.getDefaultToolkit().sync();
-		graphics.dispose();
 	}
 }

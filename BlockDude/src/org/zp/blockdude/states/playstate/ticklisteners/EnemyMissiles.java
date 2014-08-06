@@ -29,8 +29,8 @@ public class EnemyMissiles implements GTickListener {
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		final Point p = playState.getPlayer().getRenderer().getBounds().getBounds().getLocation();
-		final double angleToPlayer = Math.abs(enemy.getRotation().angleTo(p.getX(), p.getY()));
+		final Rectangle r = playState.getPlayer().getRenderer().getBounds().getBounds();
+		final double angleToPlayer = Math.abs(enemy.getRotation().angleTo(r.getCenterX(), r.getCenterY()));
 		if (angleToPlayer < Math.PI / 16D && enemy.canFireMissile()) {
 			Missile missile = enemy.fireMissile(enemy.getRotation().getCurrentOrientation());
 			spriteManager.registerSprite(missile);

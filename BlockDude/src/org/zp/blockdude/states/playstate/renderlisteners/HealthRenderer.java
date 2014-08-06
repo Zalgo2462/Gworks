@@ -27,8 +27,14 @@ public class HealthRenderer implements GRenderListener {
 		graphics.setColor(ColorScheme.GREEN.getColor());
 		double dHealth = HEALTH_SPEED * delta / 1000000000D;
 		if (player.getHealth() - displayedHealth < 0) {
+			if (displayedHealth - Math.ceil(dHealth) < player.getHealth()) {
+				dHealth = displayedHealth - player.getHealth();
+			}
 			displayedHealth -= Math.ceil(dHealth);
 		} else if (player.getHealth() - displayedHealth > 0) {
+			if (displayedHealth + Math.ceil(dHealth) > player.getHealth()) {
+				dHealth = player.getHealth() - displayedHealth;
+			}
 			displayedHealth += Math.ceil(dHealth);
 		}
 

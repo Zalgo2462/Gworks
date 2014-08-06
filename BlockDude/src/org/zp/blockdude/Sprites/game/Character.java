@@ -3,6 +3,7 @@ package org.zp.blockdude.sprites.game;
 import org.zp.blockdude.sprites.Sprite;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -60,7 +61,7 @@ public abstract class Character extends Sprite {
 				(missile.getRenderer().getBounds().getBounds().getHeight() / 2);
 		double x1 = x0 + 35;
 		double y1 = y0 - (missile.getRenderer().getBounds().getBounds().getHeight() / 2);
-		Point rotatedPoint = getRotation().rotatePoint(x1, y1, x0, y0, theta);
+		Point2D rotatedPoint = getRotation().rotatePoint(x1, y1, x0, y0, theta);
 		missile.getMovement().setLocation(rotatedPoint.getX(), rotatedPoint.getY());
 		missile.getRotation().setCurrentOrientation(getRotation().getCurrentOrientation());
 		missile.getMovement().setAngle(missile.getRotation().getCurrentOrientation());

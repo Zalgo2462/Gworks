@@ -28,14 +28,18 @@ public final class GLoop implements Runnable {
 			currentTime = newTime;
 			for (GState state : canvas.getStates()) {
 				for (GTickListener listener : state.getTickListeners()) {
-                    if(canvas.getStates().contains(state)) {
-                        listener.tick(canvas, delta);
-                    }
+					if (canvas.getStates().contains(state) && isRunning && !Thread.interrupted()) {
+						listener.tick(canvas, delta);
+					}
 				}
 			}
 			canvas.getRenderer().tick(canvas, delta);
 			syncFramerate();
 		}
+	}
+
+	public boolean isRunning() {
+		return isRunning;
 	}
 
 	public void setIsRunning(final boolean running) {
@@ -44,7 +48,14 @@ public final class GLoop implements Runnable {
 
 	private void syncFramerate() {
 		try {
-			Thread.sleep((Math.max(0, currentTime + canvas.FRAME_DELAY - System.nanoTime()) / 1000000));
+			Thread.sleep(
+					Math.max(
+							0,
+							Math.round(
+									(currentTime + canvas.FRAME_DELAY - System.nanoTime()) / 1000000D
+							)
+					)
+			);
 			frameTimes.offer(System.nanoTime());
 			if (frameTimes.size() > canvas.FPS) {
 				frameTimes.poll();

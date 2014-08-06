@@ -17,113 +17,145 @@ public class EnemyMovement implements GTickListener {
 	private final PlayState playState;
 	private final Enemy enemy;
 	private final Random random;
-	private long blockRotationTime;
 
 	public EnemyMovement(final PlayState playState, final Enemy enemy) {
 		this.playState = playState;
 		this.enemy = enemy;
 		this.random = new Random();
-		this.blockRotationTime = System.currentTimeMillis();
 	}
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		if (enemy.getMovement().distanceTo(
+		double distanceToPlayer = enemy.getMovement().distanceTo(
 				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
 				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY()
-		) < 300 && Math.abs(enemy.getRotation().angleTo(
-						playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
-						playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY())
-		) < Math.PI / 50
-				) {
-			if (enemy.getMovement().getSpeed() > 0) {
-				enemy.getMovement().decelerate(delta);
-			} else if (enemy.getMovement().getSpeed() < 0) {
-				enemy.getMovement().accelerate(delta);
-			}
-			enemy.getRotation().setMoving(false);
-		} else if (System.currentTimeMillis() > blockRotationTime) {
-			double x = 0;
-			double y = 0;
-			for (Sprite e : playState.getEnemies()) {
-				double xDiff = enemy.getMovement().getLocation().getX() - e.getMovement().getLocation().getX();
-				double yDiff = enemy.getMovement().getLocation().getY() - e.getMovement().getLocation().getY();
-				if (xDiff > 0 && xDiff < 500) {
-					x += enemy.getEnemyRepulsion();
-				}
-				if (xDiff < 0 && xDiff > -500) {
-					x -= enemy.getEnemyRepulsion();
-				}
-				if (yDiff > 0 && yDiff < 500) {
-					y += enemy.getEnemyRepulsion();
-				}
-				if (yDiff < 0 && yDiff > -500) {
-					y -= enemy.getEnemyRepulsion();
-				}
-			}
-			if (playState.getPlayer().getMovement().getLocation().getX() > enemy.getMovement().getLocation().getX()) {
-				x += enemy.getPlayerAttraction();
-			} else {
-				x -= enemy.getPlayerAttraction();
-			}
-			if (playState.getPlayer().getMovement().getLocation().getY() > enemy.getMovement().getLocation().getY()) {
-				y += enemy.getPlayerAttraction();
-			} else {
-				y -= enemy.getPlayerAttraction();
-			}
-			for (int iii = 0; iii < random.nextInt(enemy.getRandomness()); iii++) {
-				if (random.nextBoolean()) {
-					x++;
-				} else {
-					x--;
-				}
-				if (random.nextBoolean()) {
-					y++;
-				} else {
-					y--;
-				}
-			}
-			x *= 100;
-			y *= 100;
-			enemy.getRotation().setMoving(true);
-			turnTo(enemy.getMovement().getLocation().getX() + x, enemy.getMovement().getLocation().getY() + y);
-			enemy.getMovement().setAngle(enemy.getRotation().getCurrentOrientation());
-			enemy.getMovement().accelerate(delta);
-		} else {
-			enemy.getMovement().naturallyDecelerate(delta);
-		}
-
-		enemy.getMovement().move(
-				enemy.getMovement().getXMovement() * enemy.getMovement().getSpeed() * delta / 1000000000F,
-				enemy.getMovement().getYMovement() * enemy.getMovement().getSpeed() * delta / 1000000000F
+		);
+		double angleToPlayer = enemy.getRotation().angleTo(
+				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
+				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY()
 		);
 
+		if (distanceToPlayer < 75 && Math.abs(angleToPlayer) < Math.PI) {
+			enemy.getMovement().decelerate(delta);
+		} else if (distanceToPlayer < 400 && Math.abs(angleToPlayer) < Math.PI / 55) {
+			lockInOnPlayer(delta);
+		} else {
+			weightedTurn(delta);
+			enemy.getMovement().accelerate(delta);
+		}
+
+		move(delta);
+
+		rotate(delta);
+
+		checkWallCollisions();
+
+		checkEnemyCollisions(delta);
+	}
+
+	private void lockInOnPlayer(long delta) {
+		if (enemy.getMovement().getSpeed() > 0) {
+			enemy.getMovement().decelerate(delta);
+		} else if (enemy.getMovement().getSpeed() < 0) {
+			enemy.getMovement().accelerate(delta);
+		}
+		enemy.getRotation().setMoving(false);
+	}
+
+	private void weightedTurn(long delta) {
+		double x = 0;
+		double y = 0;
+		for (Sprite e : playState.getEnemies()) {
+			double xDiff = enemy.getMovement().getLocation().getX() - e.getMovement().getLocation().getX();
+			double yDiff = enemy.getMovement().getLocation().getY() - e.getMovement().getLocation().getY();
+			if (xDiff > 0 && xDiff < 500) {
+				x += enemy.getEnemyRepulsion();
+			}
+			if (xDiff < 0 && xDiff > -500) {
+				x -= enemy.getEnemyRepulsion();
+			}
+			if (yDiff > 0 && yDiff < 500) {
+				y += enemy.getEnemyRepulsion();
+			}
+			if (yDiff < 0 && yDiff > -500) {
+				y -= enemy.getEnemyRepulsion();
+			}
+		}
+		if (playState.getPlayer().getMovement().getLocation().getX() > enemy.getMovement().getLocation().getX()) {
+			x += enemy.getPlayerAttraction();
+		} else {
+			x -= enemy.getPlayerAttraction();
+		}
+		if (playState.getPlayer().getMovement().getLocation().getY() > enemy.getMovement().getLocation().getY()) {
+			y += enemy.getPlayerAttraction();
+		} else {
+			y -= enemy.getPlayerAttraction();
+		}
+		for (int iii = 0; iii < random.nextInt(enemy.getRandomness()); iii++) {
+			if (random.nextBoolean()) {
+				x++;
+			} else {
+				x--;
+			}
+			if (random.nextBoolean()) {
+				y++;
+			} else {
+				y--;
+			}
+		}
+		x *= 100;
+		y *= 100;
+		enemy.getRotation().setMoving(true);
+		turnTo(enemy.getMovement().getLocation().getX() + x, enemy.getMovement().getLocation().getY() + y);
+	}
+
+	private void move(long delta) {
+		enemy.getMovement().move(
+				enemy.getMovement().getXMovement() * enemy.getMovement().getSpeed() * delta / 1000000000D,
+				enemy.getMovement().getYMovement() * enemy.getMovement().getSpeed() * delta / 1000000000D
+		);
+	}
+
+	private void rotate(long delta) {
 		if (enemy.getRotation().isMoving()) {
 			double dTheta = enemy.getRotation().getSpeed() * delta / 1000000000D;
 			if (!enemy.getRotation().isClockwise()) {
 				dTheta *= -1;
 			}
 			enemy.getRotation().rotate(dTheta);
+			enemy.getMovement().setAngle(enemy.getRotation().getCurrentOrientation());
 		}
+	}
 
+	private void checkEnemyCollisions(long delta) {
 		Sprite collided = playState.getSpriteManager().checkForCollision(enemy, playState.getEnemies());
 		if (collided != null) {
 			Enemy e = (Enemy) collided;
 			Double theta = playState.getSpriteManager().getAngleIfCollision(enemy, e);
-			enemy.getMovement().setAngle(theta + Math.PI);
-			e.getMovement().setAngle(theta);
-			if (enemy.getMovement().getSpeed() < 10) {
-				enemy.getMovement().setSpeed(10);
-			}
-			if (e.getMovement().getSpeed() < 10) {
-				e.getMovement().setSpeed(10);
-			}
+			double oldEnemyAngle = enemy.getMovement().getAngle();
+			double oldEAngle = e.getMovement().getAngle();
 			enemy.damage(1);
 			e.damage(1);
-			blockRotation(150);
-			e.getEnemyMovement().blockRotation(150);
+			do {
+				enemy.getMovement().setAngle(theta + Math.PI);
+				e.getMovement().setAngle(theta);
+				enemy.getMovement().move(
+						enemy.getMovement().getXMovement() * delta / 1000000000D,
+						enemy.getMovement().getYMovement() * delta / 1000000000D
+				);
+				e.getMovement().move(
+						e.getMovement().getXMovement() * delta / 1000000000D,
+						e.getMovement().getYMovement() * delta / 1000000000D
+				);
+				collided = playState.getSpriteManager().checkForCollision(enemy, playState.getEnemies());
+				theta = playState.getSpriteManager().getAngleIfCollision(enemy, e);
+			} while (collided != null);
+			enemy.getMovement().setAngle(oldEnemyAngle);
+			e.getMovement().setAngle(oldEAngle);
 		}
+	}
 
+	private void checkWallCollisions() {
 		SpriteManager.PlayAreaEdge canvasEdge = playState.getSpriteManager().checkForEdgeCollision(enemy);
 		switch (canvasEdge) {
 			case TOP:
@@ -164,10 +196,5 @@ public class EnemyMovement implements GTickListener {
 		} else {
 			enemy.getRotation().setClockwise(false);
 		}
-	}
-
-	public void blockRotation(int milliseconds) {
-		enemy.getRotation().setMoving(false);
-		blockRotationTime = System.currentTimeMillis() + milliseconds;
 	}
 }
