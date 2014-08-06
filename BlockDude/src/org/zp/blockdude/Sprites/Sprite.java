@@ -7,6 +7,7 @@ import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
@@ -35,7 +36,7 @@ public abstract class Sprite {
 	}
 
 	public class Movement {
-		private Point currentLocation;
+		private Point2D currentLocation;
 		private double angle;
 		private double acceleration;
 		private double deceleration;
@@ -46,7 +47,7 @@ public abstract class Sprite {
 
 		//Speed in pixels per second
 		public Movement() {
-			this.currentLocation = new Point(0, 0);
+			this.currentLocation = new Point2D.Double(0, 0);
 			this.angle = 0;
 			this.acceleration = 0;
 			this.deceleration = 0;
@@ -55,7 +56,7 @@ public abstract class Sprite {
 			this.maxSpeed = 0;
 		}
 
-		public Point getLocation() {
+		public Point2D getLocation() {
 			return currentLocation;
 		}
 
@@ -274,15 +275,15 @@ public abstract class Sprite {
 			currentOrientation += theta;
 		}
 
-		public Point rotatePoint(double x, double y, double anchorX, double anchorY, double theta) {
+		public Point2D rotatePoint(double x, double y, double anchorX, double anchorY, double theta) {
 			double dX = x - anchorX;
 			double dY = y - anchorY;
-			Point p = rotatePoint(dX, dY, theta);
+			Point2D p = rotatePoint(dX, dY, theta);
 			p.setLocation(p.getX() + anchorX, p.getY() + anchorY);
 			return p;
 		}
 
-		public Point rotatePoint(double x, double y, double theta) {
+		public Point2D rotatePoint(double x, double y, double theta) {
 			double[][] pointMatrix = {{x},
 					{y}};
 			double sin = Math.sin(theta);
@@ -290,9 +291,7 @@ public abstract class Sprite {
 			double[][] rotationMatrix = {{cos, -sin},
 					{sin, cos}};
 			double[][] result = multiplyByMatrix(rotationMatrix, pointMatrix);
-			Point toReturn = new Point();
-			toReturn.setLocation(result[0][0], result[1][0]);
-			return toReturn;
+			return new Point2D.Double(result[0][0], result[1][0]);
 		}
 
 		private double[][] multiplyByMatrix(double[][] m1, double[][] m2) {

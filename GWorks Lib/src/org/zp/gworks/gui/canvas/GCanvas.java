@@ -58,7 +58,7 @@ public final class GCanvas extends Canvas {
 				getDefaultScreenDevice().getDefaultConfiguration();
 		final ExtendedBufferCapabilities ebc = new ExtendedBufferCapabilities(
 				gc.getBufferCapabilities(),
-				ExtendedBufferCapabilities.VSyncType.VSYNC_OFF);
+				ExtendedBufferCapabilities.VSyncType.VSYNC_ON);
 		try {
 			super.createBufferStrategy(buffers, ebc);
 		} catch (AWTException e) {
