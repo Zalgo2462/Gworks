@@ -2,29 +2,30 @@ package org.zp.blockdude.sprites;
 
 
 import org.zp.blockdude.sprites.animations.Animation;
+import org.zp.blockdude.sprites.filter.AddAlphaFilter;
+import org.zp.blockdude.sprites.filter.Filter;
+import org.zp.blockdude.sprites.filter.RotationFilter;
+import org.zp.blockdude.sprites.filter.SquaringFilter;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.image.AffineTransformOp;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
+import java.util.LinkedList;
 
 public abstract class Sprite {
 	protected Movement movement;
-	protected Rotation rotation;
 	protected Renderer renderer;
+	protected Rotation rotation;
 
 	public Sprite() {
 		renderer = new Renderer();
 		movement = new Movement();
 		rotation = new Rotation();
-	}
-
-	public Renderer getRenderer() {
-		return renderer;
 	}
 
 	public Movement getMovement() {
@@ -33,6 +34,10 @@ public abstract class Sprite {
 
 	public Rotation getRotation() {
 		return rotation;
+	}
+
+	public Renderer getRenderer() {
+		return renderer;
 	}
 
 	public class Movement {
@@ -139,8 +144,8 @@ public abstract class Sprite {
 		}
 
 		public double angleTo(final double x, final double y) {
-			double dx = x - (renderer.getBounds().getBounds().x + renderer.getBounds().getBounds().width / 2);
-			double dy = y - (renderer.getBounds().getBounds().y + renderer.getBounds().getBounds().height / 2);
+			double dx = x - (rotation.getRotatedBounds().getBounds().x + rotation.getRotatedBounds().getBounds().width / 2);
+			double dy = y - (rotation.getRotatedBounds().getBounds().y + rotation.getRotatedBounds().getBounds().height / 2);
 			return Math.atan2(dy, dx);
 		}
 
@@ -169,7 +174,7 @@ public abstract class Sprite {
 			}
 		}
 
-		public void naturallyDecelerate(final long delta) {
+		public void decelerateToZero(final long delta) {
 			if (speed > 0) {
 				double dSpeed = naturalDeceleration * delta / 1000000000D;
 				if (speed + dSpeed >= 0) {
@@ -206,25 +211,25 @@ public abstract class Sprite {
 	}
 
 	public class Rotation {
-		private double currentOrientation;
 		private boolean clockwise;
 		private double speed;
 		private boolean moving;
+		private RotationFilter rotationFilter;
 
 		//Speed in radians per second
 		public Rotation() {
-			this.currentOrientation = 0;
 			this.clockwise = true;
 			this.speed = 0;
 			this.moving = false;
+			this.rotationFilter = new RotationFilter();
 		}
 
 		public double getCurrentOrientation() {
-			return currentOrientation;
+			return rotationFilter.getOrientation();
 		}
 
 		public void setCurrentOrientation(final double currentOrientation) {
-			this.currentOrientation = currentOrientation;
+			rotationFilter.setOrientation(currentOrientation);
 		}
 
 		public boolean isClockwise() {
@@ -252,7 +257,7 @@ public abstract class Sprite {
 		}
 
 		public double angleTo(final double x, final double y) {
-			double dTheta = movement.angleTo(x, y) - currentOrientation;
+			double dTheta = movement.angleTo(x, y) - rotationFilter.getOrientation();
 			if (dTheta > 0) {
 				while (dTheta > Math.PI * 2) {
 					dTheta -= Math.PI * 2;
@@ -271,8 +276,9 @@ public abstract class Sprite {
 			return dTheta;
 		}
 
-		public void rotate(final double theta) {
-			currentOrientation += theta;
+		public void rotate(double theta) {
+			theta = clockwise ? theta : -theta;
+			rotationFilter.setOrientation(rotationFilter.getOrientation() + theta);
 		}
 
 		public Point2D rotatePoint(double x, double y, double anchorX, double anchorY, double theta) {
@@ -311,39 +317,62 @@ public abstract class Sprite {
 			return mResult;
 		}
 
-		public Shape getRotatedCollisionArea() {
-			Shape collArea = movement.collisionArea;
+		private RotationFilter getRotatedFilter() {
+			return rotationFilter;
+		}
 
-			if (collArea == null) {
+		private Shape getRotatedShape(Shape input) {
+			AffineTransform trans = new AffineTransform();
+			trans.rotate(
+					rotationFilter.getOrientation(),
+					input.getBounds().width / 2,
+					input.getBounds().height / 2
+			);
+			return trans.createTransformedShape(input);
+		}
+
+		public Shape getRotatedCollisionArea() {
+			if (movement.collisionArea == null) {
 				movement.setCollisionArea(
 						new Rectangle(renderer.getSprite().getWidth(),
 								renderer.getSprite().getHeight())
 				);
-				collArea = movement.collisionArea;
 			}
+			Shape collArea = movement.collisionArea;
+			Shape rotatedArea = getRotatedShape(collArea);
 			AffineTransform trans = new AffineTransform();
-			trans.rotate(
-					currentOrientation,
-					collArea.getBounds().width / 2,
-					collArea.getBounds().height / 2
-			);
-			Shape s = trans.createTransformedShape(collArea);
-			trans = new AffineTransform();
+			trans.translate(movement.getLocation().getX(), movement.getLocation().getY());
+			return trans.createTransformedShape(rotatedArea);
+		}
+
+		public Shape getRotatedBounds() {
+			if (renderer.sprite == null) {
+				return null;
+			}
+			Rectangle r = new Rectangle(0, 0,
+					renderer.sprite.getWidth(), renderer.sprite.getHeight());
+			Shape s = getRotatedShape(r);
+			AffineTransform trans = new AffineTransform();
 			trans.translate(movement.getLocation().getX(), movement.getLocation().getY());
 			return trans.createTransformedShape(s);
 		}
 	}
 
 	public class Renderer implements GRenderListener {
-		private double lastRenderedOrientation = 0;
-		private double xOffset = 0, yOffset = 0;
 		private boolean rendered;
-		private float opacity = 1F;
+		private float opacity;
 		private BufferedImage spriteBacker;
 		private VolatileImage sprite;
-		private VolatileImage squareSprite;
-		private VolatileImage rotatedSprite;
 		private Animation animation;
+		private AddAlphaFilter addAlphaFilter;
+		private SquaringFilter squaringFilter;
+		private LinkedList<Filter> filters;
+
+		public Renderer() {
+			this.opacity = 1F;
+			this.filters = new LinkedList<Filter>();
+			this.squaringFilter = new SquaringFilter();
+		}
 
 		@Override
 		public void paint(GCanvas canvas, Graphics graphics, long delta) {
@@ -357,22 +386,33 @@ public abstract class Sprite {
 					movement.setCollisionArea(collArea);
 				}
 			}
+
 			if (sprite.contentsLost()) {
-				restoreSprite();
+				makeTranslucentSprite();
 			}
-			if (squareSprite.contentsLost()) {
-				restoreSquareSprite();
+
+			VolatileImage filteredImage = sprite;
+
+			for (int i = 0; i < filters.size(); i++) {
+				if (filteredImage.contentsLost()) {
+					filteredImage = sprite;
+					i = 0;
+					continue;
+				}
+				Filter filter = filters.get(i);
+				filteredImage = filter.getFilteredImage(filteredImage);
 			}
-			if (rotatedSprite.contentsLost() || rotation.getCurrentOrientation() != lastRenderedOrientation) {
-				updateRotatedSprite();
-			}
+
+
+			filteredImage = squaringFilter.getFilteredImage(filteredImage);
+			filteredImage = rotation.getRotatedFilter().getFilteredImage(filteredImage);
+
 			if (rendered) {
 				((Graphics2D) graphics).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
-				((Graphics2D) graphics).fill(getBounds());
 				graphics.drawImage(
-						rotatedSprite,
-						Math.round(Math.round(movement.getLocation().getX() - xOffset)),
-						Math.round(Math.round(movement.getLocation().getY() - yOffset)),
+						filteredImage,
+						Math.round(Math.round(movement.getLocation().getX() - squaringFilter.getxOffset())),
+						Math.round(Math.round(movement.getLocation().getY() - squaringFilter.getyOffset())),
 						null
 				);
 			}
@@ -384,91 +424,20 @@ public abstract class Sprite {
 
 		public void setSprite(BufferedImage sprite) {
 			this.spriteBacker = sprite;
-			makeSprite();
-			makeSpriteSquare();
-			makeRotatedSprite();
+			this.addAlphaFilter = new AddAlphaFilter();
+			makeTranslucentSprite();
 		}
 
-		private void makeSprite() {
-			sprite = createVolatileImage(spriteBacker.getWidth(), spriteBacker.getHeight());
-			restoreSprite();
+		private void makeTranslucentSprite() {
+			this.sprite = addAlphaFilter.getFilteredImage(spriteBacker);
 		}
 
-		private void restoreSprite() {
-			Graphics2D g = sprite.createGraphics();
-			g.setComposite(AlphaComposite.DstOut);
-			g.fillRect(0, 0, sprite.getWidth(), sprite.getHeight());
-			g.setComposite(AlphaComposite.SrcOver);
-			g.drawImage(spriteBacker, 0, 0, null);
-			g.dispose();
-		}
-
-		private void makeSpriteSquare() {
-			double size = Math.sqrt(Math.pow(sprite.getWidth(), 2) + Math.pow(sprite.getHeight(), 2));
-			xOffset = (size - sprite.getWidth()) / 2;
-			yOffset = (size - sprite.getHeight()) / 2;
-			squareSprite = createVolatileImage(Math.round(Math.round(size)), Math.round(Math.round(size)));
-			restoreSquareSprite();
-		}
-
-		private void restoreSquareSprite() {
-			if (sprite.contentsLost()) {
-				restoreSprite();
+		public Rectangle2D.Double getBounds() {
+			if (getSprite() == null) {
+				return null;
 			}
-			AffineTransform transform = new AffineTransform();
-			transform.translate(xOffset, yOffset);
-			Graphics2D g = squareSprite.createGraphics();
-			g.setComposite(AlphaComposite.DstOut);
-			g.fillRect(0, 0, squareSprite.getWidth(), squareSprite.getHeight());
-			g.setComposite(AlphaComposite.SrcOver);
-			g.drawImage(sprite, transform, null);
-			g.dispose();
-		}
-
-		private void makeRotatedSprite() {
-			AffineTransform transform = AffineTransform.getRotateInstance(
-					rotation.getCurrentOrientation(), squareSprite.getWidth() / 2, squareSprite.getHeight() / 2
-			);
-			AffineTransformOp transformOp = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-			if (sprite.contentsLost()) {
-				restoreSprite();
-			}
-			if (squareSprite.contentsLost()) {
-				restoreSquareSprite();
-			}
-			BufferedImage boundsHolder = transformOp.createCompatibleDestImage(
-					squareSprite.getSnapshot(),
-					squareSprite.getSnapshot().getColorModel()
-			);
-			rotatedSprite = createVolatileImage(boundsHolder.getWidth(), boundsHolder.getHeight());
-			updateRotatedSprite();
-		}
-
-		private void updateRotatedSprite() {
-			AffineTransform transform = AffineTransform.getRotateInstance(
-					rotation.getCurrentOrientation(), squareSprite.getWidth() / 2, squareSprite.getHeight() / 2
-			);
-			if (sprite.contentsLost()) {
-				restoreSprite();
-			}
-			if (squareSprite.contentsLost()) {
-				restoreSquareSprite();
-			}
-			Graphics2D g = rotatedSprite.createGraphics();
-			g.setComposite(AlphaComposite.DstOut);
-			g.fillRect(0, 0, rotatedSprite.getWidth(), rotatedSprite.getHeight());
-			g.setComposite(AlphaComposite.SrcOver);
-			g.drawImage(squareSprite, transform, null);
-			g.dispose();
-			lastRenderedOrientation = rotation.currentOrientation;
-		}
-
-		private VolatileImage createVolatileImage(int width, int height) {
-			return GraphicsEnvironment.
-					getLocalGraphicsEnvironment().
-					getDefaultScreenDevice().
-					getDefaultConfiguration().createCompatibleVolatileImage(
-					width, height, VolatileImage.TRANSLUCENT);
+			return new Rectangle2D.Double(movement.getLocation().getX(), movement.getLocation().getY(),
+					sprite.getWidth(), sprite.getHeight());
 		}
 
 		public boolean shouldRender() {
@@ -495,22 +464,12 @@ public abstract class Sprite {
 			this.animation = animation;
 		}
 
-		public Shape getBounds() {
-			if (getSprite() == null) {
-				return null;
-			}
-			AffineTransform trans = new AffineTransform();
-			trans.rotate(
-					lastRenderedOrientation,
-					sprite.getWidth() / 2,
-					sprite.getHeight() / 2
-			);
-			Rectangle r = new Rectangle(0, 0,
-					sprite.getWidth(), sprite.getHeight());
-			Shape s = trans.createTransformedShape(r);
-			trans = new AffineTransform();
-			trans.translate(movement.getLocation().getX(), movement.getLocation().getY());
-			return trans.createTransformedShape(s);
+		public boolean removeFilter(Filter filter) {
+			return filters.remove(filter);
+		}
+
+		public boolean addFilter(Filter filter) {
+			return filters.offer(filter);
 		}
 	}
 }

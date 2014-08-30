@@ -8,7 +8,6 @@ import org.zp.blockdude.states.playstate.ticklisteners.PlayerMissiles;
 import org.zp.blockdude.states.playstate.ticklisteners.PlayerMovement;
 
 public class Player extends Character {
-	private PlayState playState;
 	private PlayerMissiles playerMissiles;
 	private PlayerMovement playerMovement;
 	private PlayerDeath playerDeath;
@@ -17,7 +16,6 @@ public class Player extends Character {
 
 	public Player(final PlayState playState) {
 		super(25, ColorScheme.GREEN.getColor());
-		this.playState = playState;
 		this.playerMissiles = new PlayerMissiles(playState, this);
 		this.playerMovement = new PlayerMovement(playState, this);
 		this.playerDeath = new PlayerDeath(playState, this);
