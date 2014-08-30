@@ -19,13 +19,13 @@ import java.util.Random;
 import static org.zp.blockdude.GameFrame.DIMENSION;
 
 public class PlayState extends GMutableState {
-    private SpriteManager spriteManager;
-    private Player player;
-    private LinkedList<Sprite> enemies;
+	private SpriteManager spriteManager;
+	private Player player;
+	private LinkedList<Sprite> enemies;
 
-    private BackgroundRenderer backgroundRenderer;
+	private BackgroundRenderer backgroundRenderer;
 
-    private Level currentLevel;
+	private Level currentLevel;
 	private CurrentLevelRenderer currentLevelRenderer;
 	private LevelAdvancement levelAdvancer;
 
@@ -40,16 +40,16 @@ public class PlayState extends GMutableState {
 
 		backgroundRenderer = new BackgroundRenderer();
 
-        currentLevelRenderer = new CurrentLevelRenderer(this);
+		currentLevelRenderer = new CurrentLevelRenderer(this);
 		levelAdvancer = new LevelAdvancement(this);
 
 		score = 0;
 		scoreRenderer = new ScoreRenderer(this);
 	}
 
-    public void onAddState() {
-        initBackground();
-    }
+	public void onAddState() {
+		initBackground();
+	}
 
 	public void onRemoveState() {
 		uninitBackground();
@@ -67,18 +67,18 @@ public class PlayState extends GMutableState {
 			uninitLevel();
 		}
 		currentLevel = level;
-        initPlayer();
+		initPlayer();
 		initEnemies(level);
-        initScoreboard();
-        addTickListener(levelAdvancer);
+		initScoreboard();
+		addTickListener(levelAdvancer);
 	}
 
 	public void uninitLevel() {
-        currentLevel = null;
-        removeTickListener(levelAdvancer);
-        uninitPlayer();
+		currentLevel = null;
+		removeTickListener(levelAdvancer);
+		uninitPlayer();
 		uninitEnemies();
-        uninitScoreboard();
+		uninitScoreboard();
 	}
 
 	private void initPlayer() {
@@ -90,7 +90,7 @@ public class PlayState extends GMutableState {
 		addTickListener(player.getPlayerMovement());
 		addTickListener(player.getPlayerMissiles());
 		addTickListener(player.getPlayerDeath());
-        spriteManager.registerSprite(player);
+		spriteManager.registerSprite(player);
 		player.getRenderer().setRendered(true);
 	}
 
@@ -139,21 +139,21 @@ public class PlayState extends GMutableState {
 
 	private void initScoreboard() {
 		addRenderListener(scoreRenderer);
-        addRenderListener(currentLevelRenderer);
-        addRenderListener(player.getHealthRenderer());
-    }
+		addRenderListener(currentLevelRenderer);
+		addRenderListener(player.getHealthRenderer());
+	}
 
 	private void uninitScoreboard() {
 		removeRenderListener(scoreRenderer);
-        removeRenderListener(currentLevelRenderer);
-        removeRenderListener(player.getHealthRenderer());
-    }
+		removeRenderListener(currentLevelRenderer);
+		removeRenderListener(player.getHealthRenderer());
+	}
 
 	private void placeEnemy(Enemy enemy) {
 		Random rand = new Random();
-		int maxX = UI_CONSTANTS.PLAY_AREA_RIGHT - enemy.getRenderer().getBounds().getBounds().width;
+		int maxX = UI_CONSTANTS.PLAY_AREA_RIGHT - enemy.getRotation().getRotatedBounds().getBounds().width;
 		int minY = UI_CONSTANTS.PLAY_AREA_TOP;
-		int maxY = UI_CONSTANTS.PLAY_AREA_BOTTOM - enemy.getRenderer().getBounds().getBounds().height;
+		int maxY = UI_CONSTANTS.PLAY_AREA_BOTTOM - enemy.getRotation().getRotatedBounds().getBounds().height;
 		while (true) {
 			enemy.getMovement().setLocation(rand.nextInt(maxX), rand.nextInt(maxY - minY + 1) + minY);
 			if (spriteManager.checkForCollision(enemy) == null)

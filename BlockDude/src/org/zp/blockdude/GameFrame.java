@@ -27,34 +27,34 @@ public class GameFrame extends Frame {
 		gameFrame = new GameFrame();
 	}
 
+	public static void exit() {
+		gameFrame.dispose();
+	}
+
 	public void init() {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				dispose();
 			}
 		});
-		canvas = new GCanvas(DIMENSION, 60, 2);
+		canvas = new GCanvas(DIMENSION, 240, 2);
 		canvas.addState(MainMenu.getMenuState(canvas));
 		add(canvas);
 	}
 
-    public void dispose() {
-        if(EventQueue.isDispatchThread()) {
-            canvas.dispose();
-            super.dispose();
-        } else {
-            final Window w = this;
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    canvas.dispose();
-                    w.dispose();
-                }
-            });
-        }
-    }
-
-    public static void exit() {
-        gameFrame.dispose();
-    }
+	public void dispose() {
+		if (EventQueue.isDispatchThread()) {
+			canvas.dispose();
+			super.dispose();
+		} else {
+			final Window w = this;
+			EventQueue.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					canvas.dispose();
+					w.dispose();
+				}
+			});
+		}
+	}
 }

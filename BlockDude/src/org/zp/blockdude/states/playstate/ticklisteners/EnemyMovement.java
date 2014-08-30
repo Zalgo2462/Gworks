@@ -27,12 +27,12 @@ public class EnemyMovement implements GTickListener {
 	@Override
 	public void tick(GCanvas canvas, long delta) {
 		double distanceToPlayer = enemy.getMovement().distanceTo(
-				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
-				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY()
+				playState.getPlayer().getRotation().getRotatedBounds().getBounds().getCenterX(),
+				playState.getPlayer().getRotation().getRotatedBounds().getBounds().getCenterY()
 		);
 		double angleToPlayer = enemy.getRotation().angleTo(
-				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterX(),
-				playState.getPlayer().getRenderer().getBounds().getBounds().getCenterY()
+				playState.getPlayer().getRotation().getRotatedBounds().getBounds().getCenterX(),
+				playState.getPlayer().getRotation().getRotatedBounds().getBounds().getCenterY()
 		);
 
 		if (distanceToPlayer < 75 && Math.abs(angleToPlayer) < Math.PI) {
@@ -44,7 +44,7 @@ public class EnemyMovement implements GTickListener {
 			enemy.getMovement().accelerate(delta);
 		}
 
-		move(delta);
+		moveForward(delta);
 
 		rotate(delta);
 
@@ -109,7 +109,7 @@ public class EnemyMovement implements GTickListener {
 		turnTo(enemy.getMovement().getLocation().getX() + x, enemy.getMovement().getLocation().getY() + y);
 	}
 
-	private void move(long delta) {
+	private void moveForward(long delta) {
 		enemy.getMovement().move(
 				enemy.getMovement().getXMovement() * enemy.getMovement().getSpeed() * delta / 1000000000D,
 				enemy.getMovement().getYMovement() * enemy.getMovement().getSpeed() * delta / 1000000000D
@@ -119,9 +119,6 @@ public class EnemyMovement implements GTickListener {
 	private void rotate(long delta) {
 		if (enemy.getRotation().isMoving()) {
 			double dTheta = enemy.getRotation().getSpeed() * delta / 1000000000D;
-			if (!enemy.getRotation().isClockwise()) {
-				dTheta *= -1;
-			}
 			enemy.getRotation().rotate(dTheta);
 			enemy.getMovement().setAngle(enemy.getRotation().getCurrentOrientation());
 		}
@@ -162,27 +159,25 @@ public class EnemyMovement implements GTickListener {
 				enemy.getMovement().setLocation(
 						enemy.getMovement().getLocation().getX(),
 						PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM -
-								enemy.getRenderer().getBounds().getBounds().getHeight()
+								enemy.getRotation().getRotatedBounds().getBounds().getHeight() - 5
 				);
 				break;
 			case BOTTOM:
 				enemy.getMovement().setLocation(
 						enemy.getMovement().getLocation().getX(),
-						PlayState.UI_CONSTANTS.PLAY_AREA_TOP +
-								enemy.getRenderer().getBounds().getBounds().getHeight()
+						PlayState.UI_CONSTANTS.PLAY_AREA_TOP + 5
 				);
 				break;
 			case RIGHT:
 				enemy.getMovement().setLocation(
-						PlayState.UI_CONSTANTS.PLAY_AREA_LEFT +
-								enemy.getRenderer().getBounds().getBounds().getWidth(),
+						PlayState.UI_CONSTANTS.PLAY_AREA_LEFT + 5,
 						enemy.getMovement().getLocation().getY()
 				);
 				break;
 			case LEFT:
 				enemy.getMovement().setLocation(
 						PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT -
-								enemy.getRenderer().getBounds().getBounds().getWidth(),
+								enemy.getRotation().getRotatedBounds().getBounds().getWidth() - 5,
 						enemy.getMovement().getLocation().getY()
 				);
 				break;

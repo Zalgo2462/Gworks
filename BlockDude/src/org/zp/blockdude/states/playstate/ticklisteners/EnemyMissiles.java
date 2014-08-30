@@ -29,7 +29,7 @@ public class EnemyMissiles implements GTickListener {
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		final Rectangle r = playState.getPlayer().getRenderer().getBounds().getBounds();
+		final Rectangle r = playState.getPlayer().getRotation().getRotatedBounds().getBounds();
 		final double angleToPlayer = Math.abs(enemy.getRotation().angleTo(r.getCenterX(), r.getCenterY()));
 		if (angleToPlayer < Math.PI / 16D && enemy.canFireMissile()) {
 			Missile missile = enemy.fireMissile(enemy.getRotation().getCurrentOrientation());
@@ -60,27 +60,25 @@ public class EnemyMissiles implements GTickListener {
 					missile.getMovement().setLocation(
 							missile.getMovement().getLocation().getX(),
 							PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM -
-									missile.getRenderer().getBounds().getBounds().getHeight()
+									missile.getRotation().getRotatedBounds().getBounds().getHeight() - 5
 					);
 					break;
 				case BOTTOM:
 					missile.getMovement().setLocation(
 							missile.getMovement().getLocation().getX(),
-							PlayState.UI_CONSTANTS.PLAY_AREA_TOP +
-									missile.getRenderer().getBounds().getBounds().getHeight()
+							PlayState.UI_CONSTANTS.PLAY_AREA_TOP + 5
 					);
 					break;
 				case RIGHT:
 					missile.getMovement().setLocation(
-							PlayState.UI_CONSTANTS.PLAY_AREA_LEFT +
-									missile.getRenderer().getBounds().getBounds().getWidth(),
+							PlayState.UI_CONSTANTS.PLAY_AREA_LEFT + 5,
 							missile.getMovement().getLocation().getY()
 					);
 					break;
 				case LEFT:
 					missile.getMovement().setLocation(
 							PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT -
-									missile.getRenderer().getBounds().getBounds().getWidth(),
+									missile.getRotation().getRotatedBounds().getBounds().getWidth() - 5,
 							missile.getMovement().getLocation().getY()
 					);
 					break;

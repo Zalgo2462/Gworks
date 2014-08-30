@@ -63,7 +63,7 @@ public class PlayerMovement implements GTickListener {
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_DOWN) &&
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_W) &&
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_S)) {
-			player.getMovement().naturallyDecelerate(delta);
+			player.getMovement().decelerateToZero(delta);
 		}
 
 		if (!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_LEFT) &&
@@ -84,9 +84,6 @@ public class PlayerMovement implements GTickListener {
 	private void rotate(long delta) {
 		if (player.getRotation().isMoving()) {
 			double dTheta = player.getRotation().getSpeed() * delta / 1000000000D;
-			if (!player.getRotation().isClockwise()) {
-				dTheta *= -1;
-			}
 			player.getRotation().rotate(dTheta);
 			player.getMovement().setAngle(player.getRotation().getCurrentOrientation());
 		}
@@ -127,27 +124,25 @@ public class PlayerMovement implements GTickListener {
 				player.getMovement().setLocation(
 						player.getMovement().getLocation().getX(),
 						PlayState.UI_CONSTANTS.PLAY_AREA_BOTTOM -
-								player.getRenderer().getBounds().getBounds().getHeight()
+								player.getRotation().getRotatedBounds().getBounds().getHeight() - 5
 				);
 				break;
 			case BOTTOM:
 				player.getMovement().setLocation(
 						player.getMovement().getLocation().getX(),
-						PlayState.UI_CONSTANTS.PLAY_AREA_TOP +
-								player.getRenderer().getBounds().getBounds().getHeight()
+						PlayState.UI_CONSTANTS.PLAY_AREA_TOP + 5
 				);
 				break;
 			case RIGHT:
 				player.getMovement().setLocation(
-						PlayState.UI_CONSTANTS.PLAY_AREA_LEFT +
-								player.getRenderer().getBounds().getBounds().getWidth(),
+						PlayState.UI_CONSTANTS.PLAY_AREA_LEFT + 5,
 						player.getMovement().getLocation().getY()
 				);
 				break;
 			case LEFT:
 				player.getMovement().setLocation(
 						PlayState.UI_CONSTANTS.PLAY_AREA_RIGHT -
-								player.getRenderer().getBounds().getBounds().getWidth(),
+								player.getRotation().getRotatedBounds().getBounds().getWidth() - 5,
 						player.getMovement().getLocation().getY()
 				);
 				break;

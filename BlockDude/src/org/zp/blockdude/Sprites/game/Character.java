@@ -55,15 +55,15 @@ public abstract class Character extends Sprite {
 
 	public Missile fireMissile(double theta) {
 		Missile missile = new Missile(color, missileDamage);
-		double x0 = (renderer.getBounds().getBounds().getX() + renderer.getBounds().getBounds().getWidth() / 2) -
-				(missile.getRenderer().getBounds().getBounds().getWidth() / 2);
-		double y0 = renderer.getBounds().getBounds().getY() + renderer.getBounds().getBounds().getHeight() / 2 -
-				(missile.getRenderer().getBounds().getBounds().getHeight() / 2);
+		double x0 = (rotation.getRotatedBounds().getBounds().getX() + rotation.getRotatedBounds().getBounds().getWidth() / 2) -
+				(missile.getRotation().getRotatedBounds().getBounds().getWidth() / 2);
+		double y0 = rotation.getRotatedBounds().getBounds().getY() + rotation.getRotatedBounds().getBounds().getHeight() / 2 -
+				(missile.getRotation().getRotatedBounds().getBounds().getHeight() / 2);
 		double x1 = x0 + 35;
-		double y1 = y0 - (missile.getRenderer().getBounds().getBounds().getHeight() / 2);
+		double y1 = y0 - (missile.getRotation().getRotatedBounds().getBounds().getHeight() / 2);
 		Point2D rotatedPoint = getRotation().rotatePoint(x1, y1, x0, y0, theta);
 		missile.getMovement().setLocation(rotatedPoint.getX(), rotatedPoint.getY());
-		missile.getRotation().setCurrentOrientation(getRotation().getCurrentOrientation());
+		missile.getRotation().setCurrentOrientation(rotation.getCurrentOrientation());
 		missile.getMovement().setAngle(missile.getRotation().getCurrentOrientation());
 		missile.getMovement().setSpeed(missile.getMovement().getMaxSpeed());
 		missiles.add(missile);

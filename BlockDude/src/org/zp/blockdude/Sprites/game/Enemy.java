@@ -17,8 +17,8 @@ public class Enemy extends Character {
 	public Enemy(final PlayState playState, final int size, final int speed,
 	             final double playerAttraction, final double enemyRepulsion, final int randomness) {
 		super(size, ColorScheme.LIGHTER_RED.getColor());
-		getMovement().setMaxSpeed(speed);
-		getRotation().setSpeed(Math.PI);
+		movement.setMaxSpeed(speed);
+		rotation.setSpeed(Math.PI);
 		this.playState = playState;
 		this.enemyMissiles = new EnemyMissiles(playState, this);
 		this.enemyMovement = new EnemyMovement(playState, this);
