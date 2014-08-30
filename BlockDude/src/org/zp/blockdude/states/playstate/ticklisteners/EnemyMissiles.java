@@ -1,7 +1,7 @@
 package org.zp.blockdude.states.playstate.ticklisteners;
 
-import org.zp.blockdude.sprites.game.Enemy;
-import org.zp.blockdude.sprites.game.Missile;
+import org.zp.blockdude.sprites.Enemy;
+import org.zp.blockdude.sprites.Missile;
 import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.blockdude.states.playstate.SpriteManager;
 import org.zp.gworks.gui.canvas.GCanvas;

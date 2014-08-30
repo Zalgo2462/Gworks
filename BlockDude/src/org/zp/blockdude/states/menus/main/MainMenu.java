@@ -4,8 +4,6 @@ import org.zp.blockdude.ColorScheme;
 import org.zp.blockdude.Fonts;
 import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.Level;
-import org.zp.blockdude.states.menus.GMenuState;
-import org.zp.blockdude.states.menus.ui.buttons.GTextButton;
 import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.gtest.rendertests.ColorChanger.ColorChangerState;
 import org.zp.gtest.rendertests.Framerate.FramerateState;
@@ -14,6 +12,8 @@ import org.zp.gtest.rendertests.Mouse.MouseState;
 import org.zp.gtest.rendertests.XLine.XLineState;
 import org.zp.gtest.rendertests.YLine.YLineState;
 import org.zp.gworks.gui.canvas.GCanvas;
+import org.zp.gworks.gui.menus.GMenuState;
+import org.zp.gworks.gui.menus.ui.buttons.GTextButton;
 
 import java.awt.*;
 

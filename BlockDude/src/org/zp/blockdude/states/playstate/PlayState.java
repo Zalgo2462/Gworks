@@ -2,14 +2,14 @@ package org.zp.blockdude.states.playstate;
 
 import org.zp.blockdude.GameFrame;
 import org.zp.blockdude.Level;
-import org.zp.blockdude.sprites.Sprite;
-import org.zp.blockdude.sprites.game.Enemy;
-import org.zp.blockdude.sprites.game.Player;
+import org.zp.blockdude.sprites.Enemy;
+import org.zp.blockdude.sprites.Player;
 import org.zp.blockdude.states.playstate.renderlisteners.BackgroundRenderer;
 import org.zp.blockdude.states.playstate.renderlisteners.CurrentLevelRenderer;
 import org.zp.blockdude.states.playstate.renderlisteners.ScoreRenderer;
 import org.zp.blockdude.states.playstate.ticklisteners.LevelAdvancement;
 import org.zp.gworks.gui.canvas.GCanvas;
+import org.zp.gworks.gui.sprites.Sprite;
 import org.zp.gworks.logic.GState.GMutableState;
 
 import java.util.Iterator;

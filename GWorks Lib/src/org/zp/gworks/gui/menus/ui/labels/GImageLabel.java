@@ -1,4 +1,4 @@
-package org.zp.blockdude.states.menus.ui.labels;
+package org.zp.gworks.gui.menus.ui.labels;
 
 import org.zp.gworks.gui.canvas.GCanvas;
 

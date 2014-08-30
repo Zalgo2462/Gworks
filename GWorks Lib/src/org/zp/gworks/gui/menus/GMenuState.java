@@ -1,9 +1,9 @@
-package org.zp.blockdude.states.menus;
+package org.zp.gworks.gui.menus;
 
-import org.zp.blockdude.states.menus.ui.buttons.GButton;
-import org.zp.blockdude.states.menus.ui.labels.GLabel;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
+import org.zp.gworks.gui.menus.ui.buttons.GButton;
+import org.zp.gworks.gui.menus.ui.labels.GLabel;
 import org.zp.gworks.logic.GState.GMutableState;
 
 import java.awt.*;

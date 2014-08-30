@@ -1,4 +1,4 @@
-package org.zp.blockdude.states.menus.ui.buttons;
+package org.zp.gworks.gui.menus.ui.buttons;
 
 import org.zp.gworks.gui.canvas.GCanvas;
 

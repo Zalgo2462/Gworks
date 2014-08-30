@@ -1,7 +1,7 @@
 package org.zp.blockdude.states.playstate.ticklisteners;
 
-import org.zp.blockdude.sprites.game.Player;
-import org.zp.blockdude.states.gameover.GameOverState;
+import org.zp.blockdude.sprites.Player;
+import org.zp.blockdude.states.menus.gameover.GameOverState;
 import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.logic.GTickListener;

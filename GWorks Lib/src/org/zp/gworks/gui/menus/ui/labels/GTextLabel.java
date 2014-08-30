@@ -1,4 +1,4 @@
-package org.zp.blockdude.states.menus.ui.buttons;
+package org.zp.gworks.gui.menus.ui.labels;
 
 import org.zp.gworks.gui.canvas.GCanvas;
 
@@ -9,18 +9,16 @@ import java.awt.font.FontRenderContext;
  * Date: 8/2/2014
  * Time: 1:31 PM
  */
-public class GTextButton extends GButton {
+public class GTextLabel extends GLabel {
 	private Font font;
 	private String text;
 
 	private Rectangle textBounds;
 
-	public GTextButton(String text) {
+	public GTextLabel(String text) {
 		super();
 		this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
 		this.text = text;
-		super.horizontalMargin = 10;
-		super.verticalMargin = 10;
 		updateTextBounds();
 		updateButtonBounds();
 	}
@@ -51,8 +49,8 @@ public class GTextButton extends GButton {
 
 		graphics.drawString(
 				text,
-				(buttonBounds.width - textBounds.width) / 2 + location.x + graphics.getFontMetrics().getLeading(),
-				(buttonBounds.height - textBounds.height) / 2 + location.y + graphics.getFontMetrics().getAscent()
+				(labelBounds.width - textBounds.width) / 2 + location.x + graphics.getFontMetrics().getLeading(),
+				(labelBounds.height - textBounds.height) / 2 + location.y + graphics.getFontMetrics().getAscent()
 		);
 	}
 

@@ -1,6 +1,6 @@
 package org.zp.blockdude.states.playstate;
 
-import org.zp.blockdude.sprites.Sprite;
+import org.zp.gworks.gui.sprites.Sprite;
 import org.zp.gworks.logic.GState.GMutableState;
 
 import java.awt.*;

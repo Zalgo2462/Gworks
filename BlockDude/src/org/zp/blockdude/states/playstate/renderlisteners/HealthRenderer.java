@@ -1,7 +1,7 @@
 package org.zp.blockdude.states.playstate.renderlisteners;
 
 import org.zp.blockdude.ColorScheme;
-import org.zp.blockdude.sprites.game.Player;
+import org.zp.blockdude.sprites.Player;
 import org.zp.blockdude.states.playstate.PlayState.UI_CONSTANTS;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
