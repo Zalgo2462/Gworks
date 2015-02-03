@@ -17,7 +17,7 @@ public abstract class Filter {
 		Image outputImage = filter(inputImage);
 		if (!cache.containsKey(inputImage) ||
 				outputImage.getHeight(null) != cache.get(inputImage).getHeight(null) ||
-				outputImage.getWidth(null) != cache.get(inputImage).getWidth()) {
+				outputImage.getWidth(null) != cache.get(inputImage).getWidth(null)) {
 			cache.put(inputImage, createVolatileImage(outputImage.getWidth(null), outputImage.getHeight(null)));
 		}
 		VolatileImage filteredImage = cache.get(inputImage);

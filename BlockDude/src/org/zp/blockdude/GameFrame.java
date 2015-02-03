@@ -47,12 +47,11 @@ public class GameFrame extends Frame {
 			canvas.dispose();
 			super.dispose();
 		} else {
-			final Window w = this;
+			final GameFrame game = this;
 			EventQueue.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					canvas.dispose();
-					w.dispose();
+					game.dispose();
 				}
 			});
 		}
