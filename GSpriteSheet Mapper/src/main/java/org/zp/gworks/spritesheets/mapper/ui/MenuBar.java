@@ -18,32 +18,6 @@ import java.util.Map;
 public class MenuBar extends JMenuBar{
 	private final GSpriteSheetMapper frame;
 	private File currImgFile;
-	private File currCssFile;
-
-	public MenuBar(GSpriteSheetMapper frame) {
-		this.frame = frame;
-		init();
-	}
-
-	private void init() {
-		JMenu file = new JMenu("File");
-		add(file);
-
-		JMenuItem openIMG = new JMenuItem("Open Image");
-		openIMG.addActionListener(openIMGAction);
-		file.add(openIMG);
-
-		file.addSeparator();
-
-		JMenuItem openCSS = new JMenuItem("Open CSS");
-		openCSS.addActionListener(openCSSAction);
-		file.add(openCSS);
-
-		JMenuItem saveCSS = new JMenuItem("Save CSS");
-		saveCSS.addActionListener(saveCSSAction);
-		file.add(saveCSS);
-	}
-
 	private final ActionListener openIMGAction = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -94,22 +68,21 @@ public class MenuBar extends JMenuBar{
 				String s = f.getName();
 				int i = s.lastIndexOf('.');
 
-				if (i > 0 &&  i < s.length() - 1) {
-					ext = s.substring(i+1).toLowerCase();
+				if (i > 0 && i < s.length() - 1) {
+					ext = s.substring(i + 1).toLowerCase();
 				}
 				return ext;
 			}
 		}
 	};
-
-	private final ActionListener openCSSAction = new ActionListener() {
+	private final ActionListener openJSONAction = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(currImgFile != null) {
+			if (currImgFile != null) {
 				final JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setCurrentDirectory(new File("."));
-				fileChooser.setFileFilter(new CSSFilter());
-				int returnVal = fileChooser.showOpenDialog(frame    );
+				fileChooser.setFileFilter(new JSONFilter());
+				int returnVal = fileChooser.showOpenDialog(frame);
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
 					openFile(file);
@@ -120,7 +93,7 @@ public class MenuBar extends JMenuBar{
 		private void openFile(final File styleFile) {
 			try {
 				final GSpriteSheet spriteSheet = new GSpriteSheet(currImgFile, styleFile);
-				for(Map.Entry<String, Rectangle> e : spriteSheet.getAllSprites().entrySet()) {
+				for (Map.Entry<String, Rectangle> e : spriteSheet.getAllSprites().entrySet()) {
 					frame.getSpriteArea().addSprite(e.getKey(), e.getValue());
 				}
 				frame.getSpriteArea().revalidate();
@@ -130,7 +103,7 @@ public class MenuBar extends JMenuBar{
 			}
 		}
 
-		class CSSFilter extends FileFilter {
+		class JSONFilter extends FileFilter {
 			@Override
 			public boolean accept(File f) {
 				if (f.isDirectory()) {
@@ -138,14 +111,14 @@ public class MenuBar extends JMenuBar{
 				}
 				String extension = getExtension(f);
 				if (extension != null) {
-					return extension.equals("css");
+					return extension.toLowerCase().equals("json");
 				}
 				return false;
 			}
 
 			@Override
 			public String getDescription() {
-				return "CSS Files";
+				return "Json Files";
 			}
 
 			public String getExtension(File f) {
@@ -153,46 +126,42 @@ public class MenuBar extends JMenuBar{
 				String s = f.getName();
 				int i = s.lastIndexOf('.');
 
-				if (i > 0 &&  i < s.length() - 1) {
-					ext = s.substring(i+1).toLowerCase();
+				if (i > 0 && i < s.length() - 1) {
+					ext = s.substring(i + 1).toLowerCase();
 				}
 				return ext;
 			}
 		}
 	};
-
-	private final ActionListener saveCSSAction = new ActionListener() {
+	private final ActionListener saveJSONAction = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(currImgFile != null) {
-				String name = JOptionPane.showInputDialog(frame, "Sheet Name:");
-				if(name != null) {
-					name = name.replace(" ", "_");
-					final JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setCurrentDirectory(new File("."));
-					fileChooser.setFileFilter(new CSSFilter());
-					int returnVal = fileChooser.showSaveDialog(frame);
-					if(returnVal == JFileChooser.APPROVE_OPTION) {
-						File file = fileChooser.getSelectedFile();
-						saveFile(file, name);
-					}
+			if (currImgFile != null) {
+				final JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File("."));
+				fileChooser.setFileFilter(new JSONFilter());
+				int returnVal = fileChooser.showSaveDialog(frame);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					saveFile(file);
 				}
 			}
 		}
 
-		private void saveFile(final File styleFile, final String sheetName) {
+		private void saveFile(final File styleFile) {
 			try {
 				final HashMap<String, Rectangle> sprites = new HashMap<String, Rectangle>();
-				for(SpriteArea.Sprite sprite : frame.getSpriteArea().getSprites()) {
+				for (SpriteArea.Sprite sprite : frame.getSpriteArea().getSprites()) {
 					sprites.put(sprite.getName(), sprite.getRect());
 				}
-				GSpriteSheet.save(currImgFile, styleFile, sheetName, sprites);
+				//Todo: implement background color selecting
+				GSpriteSheet.save(currImgFile, styleFile, null, sprites);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		class CSSFilter extends FileFilter {
+		class JSONFilter extends FileFilter {
 			@Override
 			public boolean accept(File f) {
 				if (f.isDirectory()) {
@@ -200,14 +169,14 @@ public class MenuBar extends JMenuBar{
 				}
 				String extension = getExtension(f);
 				if (extension != null) {
-					return extension.equals("css");
+					return extension.toLowerCase().equals("json");
 				}
 				return false;
 			}
 
 			@Override
 			public String getDescription() {
-				return "CSS Files";
+				return "JSON Files";
 			}
 
 			public String getExtension(File f) {
@@ -222,4 +191,28 @@ public class MenuBar extends JMenuBar{
 			}
 		}
 	};
+
+	public MenuBar(GSpriteSheetMapper frame) {
+		this.frame = frame;
+		init();
+	}
+
+	private void init() {
+		JMenu file = new JMenu("File");
+		add(file);
+
+		JMenuItem openIMG = new JMenuItem("Open Image");
+		openIMG.addActionListener(openIMGAction);
+		file.add(openIMG);
+
+		file.addSeparator();
+
+		JMenuItem openJSON = new JMenuItem("Open JSON");
+		openJSON.addActionListener(openJSONAction);
+		file.add(openJSON);
+
+		JMenuItem saveJSON = new JMenuItem("Save JSON");
+		saveJSON.addActionListener(saveJSONAction);
+		file.add(saveJSON);
+	}
 }
