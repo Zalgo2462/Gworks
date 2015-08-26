@@ -1,2 +1,31 @@
 A Game Framework for the Java Programming Language
 GWorks is a personal project.
+Built on Java2D and awt, GWorks is a simple gaming library providing support for graphics and (eventually) sound.
+Although built on Java2D, Gworks still provides VSYNC, double (or more) buffering, and hardware acceleration.
+GWorks Lib is the main library for the project.
+  Included:
+    Basics:
+      GCanvas: The game canvas which displays GStates
+      GState: Game states which consist of render listeners and tick listeners
+      GRenderListeners: Updates the canvas using a Java2D graphics object
+      GTickListeners: Updates game state
+    Higher level:
+      Sprite: Hardware accelerated sprite class providing for animations and filters.
+      GMenuState: System for game menus
+      GSpriteSheet: Allows for loading of spritesheets
+    
+GSpriteSheet Mapper provides the ability to map sprites from a sprite sheet into GWorks compatible JSON.
+
+GWorks Test contains a few basic render tests for the Gworks suite.
+
+Finally, BlockDude is a reference implementation and proving ground for GWorks. Slowly pieces of code are being built in BlockDude and moved into Gworks if deemed essential.
+
+The build order for the project is:
+  GWorks Lib
+  GWorks Test
+  GSpriteSheet Mapper
+  BlockDude (Depends on GWorks test)
+
+Eventually a master pom will be built to automate building the project.
+
+GWorks Lib is not currently hosted in maven central.
