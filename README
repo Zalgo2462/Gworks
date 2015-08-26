@@ -25,6 +25,7 @@ The build order for the project is:
   GWorks Test
   GSpriteSheet Mapper
   BlockDude (Depends on GWorks test)
+GWorks Lib and GWorks Test must be installed to your local maven repository.
 
 Eventually a master pom will be built to automate building the project.
 
