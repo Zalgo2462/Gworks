@@ -10,7 +10,13 @@ import java.awt.image.BufferedImage;
  * Time: 12:20 AM
  */
 public class Missile extends Sprite {
-	private final long MAX_AGE = 1250000000L;
+	//TODO: upgradable
+	private static final long MAX_AGE = 5 * 100000000L;
+	private static final int ACCELERATION = 200;
+	private static final int MAX_SPEED = 750;
+	private static final int NATURAL_DECELERATION = -200;
+	private static final int WIDTH = 20;
+	private static final int HEIGHT = 5;
 	private final Color color;
 	private BufferedImage image;
 	private long age;
@@ -22,16 +28,16 @@ public class Missile extends Sprite {
 		this.maxDamage = maxDamage;
 		createSprite();
 		renderer.setSprite(image);
-		movement.setAcceleration(200);
-		movement.setMaxSpeed(325);
-		movement.setNaturalDeceleration(-200);
+		movement.setAcceleration(ACCELERATION);
+		movement.setMaxSpeed(MAX_SPEED);
+		movement.setNaturalDeceleration(NATURAL_DECELERATION);
 	}
 
 	private void createSprite() {
-		image = new BufferedImage(20, 5, BufferedImage.TYPE_INT_ARGB);
+		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = image.getGraphics();
 		g.setColor(color);
-		g.fillRect(0, 0, 20, 5);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
 		g.dispose();
 	}
 

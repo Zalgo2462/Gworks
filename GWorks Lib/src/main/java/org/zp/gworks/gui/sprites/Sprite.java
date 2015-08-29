@@ -18,9 +18,9 @@ import java.awt.image.VolatileImage;
 import java.util.LinkedList;
 
 public abstract class Sprite {
-	protected Movement movement;
-	protected Renderer renderer;
-	protected Rotation rotation;
+	protected final Movement movement;
+	protected final Renderer renderer;
+	protected final Rotation rotation;
 
 	public Sprite() {
 		renderer = new Renderer();

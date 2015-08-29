@@ -112,6 +112,7 @@ public class PlayState extends GMutableState {
 			addTickListener(e.getEnemyMovement());
 			addTickListener(e.getEnemyMissiles());
 			addTickListener(e.getEnemyDeath());
+			addRenderListener(e.getEnemyHealthRenderer());
 			e.getRenderer().setRendered(true);
 		}
 	}
@@ -124,6 +125,7 @@ public class PlayState extends GMutableState {
 			removeTickListener(enemy.getEnemyMovement());
 			removeTickListener(enemy.getEnemyMissiles());
 			removeTickListener(enemy.getEnemyDeath());
+			removeRenderListener(enemy.getEnemyHealthRenderer());
 			e.getRenderer().setRendered(false);
 			iterator.remove();
 		}
@@ -193,5 +195,7 @@ public class PlayState extends GMutableState {
 		public static final int INFO_AREA_RIGHT = GameFrame.DIMENSION.width - 15;
 		public static final int HEALTH_BAR_START = INFO_AREA_RIGHT - 200;
 		public static final int LIVES_BAR_END = HEALTH_BAR_START - 15;
+		public static final int ENEMY_HEALTH_WIDTH = 50;
+		public static final int ENEMY_HEALTH_HEIGHT = 5;
 	}
 }

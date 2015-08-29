@@ -2,6 +2,7 @@ package org.zp.blockdude.sprites;
 
 import org.zp.blockdude.ColorScheme;
 import org.zp.blockdude.states.playstate.PlayState;
+import org.zp.blockdude.states.playstate.renderlisteners.EnemyHealthRenderer;
 import org.zp.blockdude.states.playstate.ticklisteners.EnemyDeath;
 import org.zp.blockdude.states.playstate.ticklisteners.EnemyMissiles;
 import org.zp.blockdude.states.playstate.ticklisteners.EnemyMovement;
@@ -11,6 +12,7 @@ public class Enemy extends Character {
 	private EnemyMissiles enemyMissiles;
 	private EnemyMovement enemyMovement;
 	private EnemyDeath enemyDeath;
+	private EnemyHealthRenderer enemyHealthRenderer;
 	private double playerAttraction, enemyRepulsion;
 	private int randomness;
 
@@ -23,6 +25,7 @@ public class Enemy extends Character {
 		this.enemyMissiles = new EnemyMissiles(playState, this);
 		this.enemyMovement = new EnemyMovement(playState, this);
 		this.enemyDeath = new EnemyDeath(playState, this);
+		this.enemyHealthRenderer = new EnemyHealthRenderer(this);
 		this.playerAttraction = playerAttraction;
 		this.enemyRepulsion = enemyRepulsion;
 		this.randomness = randomness;
@@ -38,6 +41,10 @@ public class Enemy extends Character {
 
 	public EnemyDeath getEnemyDeath() {
 		return enemyDeath;
+	}
+
+	public EnemyHealthRenderer getEnemyHealthRenderer() {
+		return enemyHealthRenderer;
 	}
 
 	public double getPlayerAttraction() {

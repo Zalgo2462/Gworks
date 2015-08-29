@@ -13,7 +13,7 @@ import java.awt.*;
  * Time: 5:48 PM
  */
 public class HealthRenderer implements GRenderListener {
-	private final int HEALTH_SPEED = 50; //health points per second
+	private static final int HEALTH_SPEED = 50; //health points per second
 	private int displayedHealth;
 	private Player player;
 

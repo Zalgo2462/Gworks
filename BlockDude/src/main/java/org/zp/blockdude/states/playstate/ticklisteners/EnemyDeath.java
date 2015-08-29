@@ -26,6 +26,7 @@ public class EnemyDeath implements GTickListener {
 			playState.removeTickListener(enemy.getEnemyMovement());
 			enemy.getEnemyMissiles().notifyRemove();
 			playState.removeTickListener(enemy.getEnemyDeath());
+			playState.removeRenderListener(enemy.getEnemyHealthRenderer());
 			playState.getSpriteManager().unregisterSprite(enemy);
 			playState.getEnemies().remove(enemy);
 		}

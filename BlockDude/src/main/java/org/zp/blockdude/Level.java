@@ -10,7 +10,7 @@ public enum Level {
 	SEVEN(7, 20, 250, 1, 1, 3),
 	EIGHT(8, 15, 250, 1, 1, 3),
 	NINE(9, 10, 250, 1, 1, 2),
-	TEN(10, 10, 250, 1, 1, 0);
+	TEN(10, 10, 250, 1, 1, 1);
 	private final int enemies;
 	private final int enemySize;
 	private final int enemySpeed;
