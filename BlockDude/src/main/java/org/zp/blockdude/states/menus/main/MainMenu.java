@@ -60,7 +60,7 @@ public class MainMenu {
 				PlayState playState = new PlayState(menuState.getCanvas());
 				menuState.getCanvas().removeState(menuState);
 				menuState.getCanvas().addState(playState);
-				playState.initLevel(Level.TEN);
+				playState.initLevel(Level.ONE);
 			}
 		});
 		return playButton;
