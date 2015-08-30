@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * Date: 7/25/2014
  * Time: 12:18 AM
  */
-public abstract class Character extends Sprite {
+public abstract class Actor extends Sprite {
 	protected final LinkedList<Missile> missiles;
 	private final Color color;
 	protected double lastMissileFiredTime;
@@ -21,7 +21,7 @@ public abstract class Character extends Sprite {
 	protected int health;
 	private BufferedImage image;
 
-	public Character(int size, Color color) {
+	public Actor(int size, Color color) {
 		this.color = color;
 		createSprite(size);
 		movement.setAcceleration(200);

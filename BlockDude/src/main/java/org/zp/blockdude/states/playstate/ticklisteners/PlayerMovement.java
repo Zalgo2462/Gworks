@@ -93,12 +93,13 @@ public class PlayerMovement implements GTickListener {
 		Sprite collided = playState.getSpriteManager().checkForCollision(player, playState.getEnemies());
 		if (collided != null) {
 			Enemy e = (Enemy) collided;
-			Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
 			double oldPlayerAngle = player.getMovement().getAngle();
 			double oldEnemyAngle = e.getMovement().getAngle();
 			player.damage(1);
 			e.damage(1);
-			do {
+			while ((collided = playState.getSpriteManager().checkForCollision(player, playState.getEnemies())) != null) {
+				e = (Enemy) collided;
+				Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
 				player.getMovement().setAngle(theta + Math.PI);
 				e.getMovement().setAngle(theta);
 				player.getMovement().move(
@@ -109,9 +110,7 @@ public class PlayerMovement implements GTickListener {
 						e.getMovement().getXMovement() * delta / 1000000000D,
 						e.getMovement().getYMovement() * delta / 1000000000D
 				);
-				collided = playState.getSpriteManager().checkForCollision(player, playState.getEnemies());
-				theta = playState.getSpriteManager().getAngleIfCollision(player, e);
-			} while (collided != null);
+			}
 			player.getMovement().setAngle(oldPlayerAngle);
 			e.getMovement().setAngle(oldEnemyAngle);
 		}

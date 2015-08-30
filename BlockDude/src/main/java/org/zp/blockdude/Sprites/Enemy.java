@@ -7,7 +7,7 @@ import org.zp.blockdude.states.playstate.ticklisteners.EnemyDeath;
 import org.zp.blockdude.states.playstate.ticklisteners.EnemyMissiles;
 import org.zp.blockdude.states.playstate.ticklisteners.EnemyMovement;
 
-public class Enemy extends Character {
+public class Enemy extends Actor {
 	private PlayState playState;
 	private EnemyMissiles enemyMissiles;
 	private EnemyMovement enemyMovement;

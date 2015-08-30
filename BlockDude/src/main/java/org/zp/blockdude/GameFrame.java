@@ -11,7 +11,7 @@ import java.awt.event.WindowEvent;
 public class GameFrame extends Frame {
 	public static final Dimension DIMENSION = new Dimension(800, 600);
 	private static GCanvas canvas;
-    private static GameFrame gameFrame;
+	private static GameFrame gameFrame;
 
 	public GameFrame() {
 		setResizable(false);
@@ -37,7 +37,7 @@ public class GameFrame extends Frame {
 				dispose();
 			}
 		});
-		canvas = new GCanvas(DIMENSION, 240, 2);
+		canvas = new GCanvas(DIMENSION, 60, 2);
 		canvas.addState(MainMenu.getMenuState(canvas));
 		add(canvas);
 	}

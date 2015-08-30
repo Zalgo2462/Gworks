@@ -9,7 +9,6 @@ import org.zp.blockdude.states.playstate.renderlisteners.CurrentLevelRenderer;
 import org.zp.blockdude.states.playstate.renderlisteners.ScoreRenderer;
 import org.zp.blockdude.states.playstate.ticklisteners.LevelAdvancement;
 import org.zp.gworks.gui.canvas.GCanvas;
-import org.zp.gworks.gui.sprites.Sprite;
 import org.zp.gworks.logic.GState.GMutableState;
 
 import java.util.Iterator;
@@ -21,7 +20,7 @@ import static org.zp.blockdude.GameFrame.DIMENSION;
 public class PlayState extends GMutableState {
 	private SpriteManager spriteManager;
 	private Player player;
-	private LinkedList<Sprite> enemies;
+	private LinkedList<Enemy> enemies;
 
 	private BackgroundRenderer backgroundRenderer;
 
@@ -36,7 +35,7 @@ public class PlayState extends GMutableState {
 		super(canvas);
 		spriteManager = new SpriteManager(this);
 		player = new Player(this);
-		enemies = new LinkedList<Sprite>();
+		enemies = new LinkedList<Enemy>();
 
 		backgroundRenderer = new BackgroundRenderer();
 
@@ -118,15 +117,14 @@ public class PlayState extends GMutableState {
 	}
 
 	private void uninitEnemies() {
-		for (Iterator<Sprite> iterator = enemies.iterator(); iterator.hasNext(); ) {
-			Sprite e = iterator.next();
-			Enemy enemy = (Enemy) e;
-			spriteManager.unregisterSprite(e);
+		for (Iterator<Enemy> iterator = enemies.iterator(); iterator.hasNext(); ) {
+			Enemy enemy = iterator.next();
+			spriteManager.unregisterSprite(enemy);
 			removeTickListener(enemy.getEnemyMovement());
 			removeTickListener(enemy.getEnemyMissiles());
 			removeTickListener(enemy.getEnemyDeath());
 			removeRenderListener(enemy.getEnemyHealthRenderer());
-			e.getRenderer().setRendered(false);
+			enemy.getRenderer().setRendered(false);
 			iterator.remove();
 		}
 	}
@@ -163,7 +161,7 @@ public class PlayState extends GMutableState {
 		}
 	}
 
-	public LinkedList<Sprite> getEnemies() {
+	public LinkedList<Enemy> getEnemies() {
 		return enemies;
 	}
 

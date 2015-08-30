@@ -54,7 +54,7 @@ public class SpriteManager {
 		return PlayAreaEdge.NONE;
 	}
 
-	public Double getAngleIfCollision(Sprite sprite, Collection<Sprite> sprites) {
+	public Double getAngleIfCollision(Sprite sprite, Collection<? extends Sprite> sprites) {
 		for (Sprite s : sprites) {
 			if (!s.equals(sprite)) {
 				Double theta = getAngleIfCollision(sprite, s);
@@ -73,6 +73,7 @@ public class SpriteManager {
 
 		Area area = intersectSprites(sprite1, sprite2);
 		if (area.isEmpty()) {
+			//This should never happen but it seems to be happening? wtf?
 			return null;
 		}
 
@@ -88,7 +89,7 @@ public class SpriteManager {
 		return checkForCollision(sprite, sprites);
 	}
 
-	public Sprite checkForCollision(Sprite sprite, Collection<Sprite> sprites) {
+	public Sprite checkForCollision(Sprite sprite, Collection<? extends Sprite> sprites) {
 		for (Sprite s : sprites) {
 			if (!s.equals(sprite) && testIntersection(sprite, s)) {
 				return s;
