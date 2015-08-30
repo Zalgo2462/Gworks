@@ -40,7 +40,7 @@ class Collider {
 		return sprite1.getMovement().angleTo(x + width / 2, y + height / 2);
 	}
 
-	public static Sprite checkForCollision(Sprite sprite, Collection<Sprite> sprites) {
+	public static Sprite getFirstCollision(Sprite sprite, Collection<Sprite> sprites) {
 		for (Sprite s : sprites) {
 			if (!s.equals(sprite) && testIntersection(sprite, s)) {
 				return s;

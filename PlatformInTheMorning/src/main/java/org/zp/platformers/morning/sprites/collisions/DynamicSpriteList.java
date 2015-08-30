@@ -2,6 +2,7 @@ package org.zp.platformers.morning.sprites.collisions;
 
 import org.zp.gworks.gui.sprites.Sprite;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -11,6 +12,10 @@ import java.util.LinkedList;
 public class DynamicSpriteList {
 	private LinkedList<Sprite> sprites;
 
+	public DynamicSpriteList() {
+		this.sprites = new LinkedList<Sprite>();
+	}
+
 	public void addSprite(Sprite s) {
 		sprites.add(s);
 	}
@@ -19,8 +24,17 @@ public class DynamicSpriteList {
 		return sprites.remove(s);
 	}
 
-	public Sprite getCollided(Sprite s) {
-		return Collider.checkForCollision(s, sprites);
+	public Sprite getFirstCollision(Sprite s) {
+		return Collider.getFirstCollision(s, sprites);
+	}
+
+	public Sprite[] getAllCollisions(Sprite s) {
+		ArrayList<Sprite> collisions = new ArrayList<Sprite>(sprites.size() / 4);
+		for (Sprite poss : sprites) {
+			if (Collider.checkForCollision(s, poss))
+				collisions.add(poss);
+		}
+		return collisions.toArray(new Sprite[collisions.size()]);
 	}
 
 	public Double getCollisionAngle(Sprite s1, Sprite s2) {

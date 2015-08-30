@@ -3,6 +3,7 @@ package org.zp.platformers.morning.sprites.collisions;
 import org.zp.gworks.gui.sprites.Sprite;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -15,63 +16,76 @@ public class StaticSpriteTree {
 	private SpriteTreeNode root;
 
 	public StaticSpriteTree() {
-		this.root = new ListNode(0);
+		this.root = new ListNode(null, false);
+	}
+
+	private void traverseToListNode(SpriteTreeNode node, Sprite s, LinkedList<ListNode> nodes) {
+		if (node instanceof ListNode) {
+			nodes.add((ListNode) node);
+		} else {
+			SplitNode split = (SplitNode) node;
+			if (split.traverseLeft(s)) {
+				traverseToListNode(split.getLeft(), s, nodes);
+			}
+			if (split.traverseRight(s)) {
+				traverseToListNode(split.getRight(), s, nodes);
+			}
+		}
+	}
+
+	private LinkedList<ListNode> getListNodes(Sprite s) {
+		LinkedList<ListNode> lists = new LinkedList<ListNode>();
+		traverseToListNode(root, s, lists);
+		return lists;
 	}
 
 	public void addSprite(Sprite s) {
-		SpriteTreeNode parent = null;
-		SpriteTreeNode child = root;
-		boolean left = false;
-		while (child instanceof SplitNode) {
-			left = ((SplitNode) child).lessThanSplit(s);
-			parent = child;
-			if (left)
-				child = ((SplitNode) child).getLeft();
-			else
-				child = ((SplitNode) child).getRight();
-		}
-
-		ListNode listChild = (ListNode) child;
-		listChild.addSprite(s);
-
-		if (listChild.shouldSplit()) {
-			if (listChild.equals(root)) {
-				root = listChild.split();
-			} else if (parent != null) { //should always be true in this case
-				SplitNode newSplit = listChild.split();
-				if (left) {
-					((SplitNode) parent).setLeft(newSplit);
+		LinkedList<ListNode> listNodes = getListNodes(s);
+		for (int i = 0; i < listNodes.size(); i++) {
+			ListNode node = listNodes.get(i);
+			node.addSprite(s);
+			if (node.shouldSplit()) {
+				if (node.equals(root)) {
+					root = node.split();
 				} else {
-					((SplitNode) parent).setRight(newSplit);
+					SplitNode newSplit = node.split();
+					if (node.isLeft()) {
+						node.getParent().setLeft(newSplit);
+					} else {
+						node.getParent().setRight(newSplit);
+					}
 				}
 			}
 		}
 	}
 
 	public void removeSprite(Sprite s) {
-		SpriteTreeNode traverse = root;
-		while (traverse instanceof SplitNode) {
-			boolean left = ((SplitNode) traverse).lessThanSplit(s);
-			if (left)
-				traverse = ((SplitNode) traverse).getLeft();
-			else
-				traverse = ((SplitNode) traverse).getRight();
+		LinkedList<ListNode> listNodes = getListNodes(s);
+		for (ListNode node : listNodes) {
+			node.removeSprite(s);
 		}
-		ListNode listChild = (ListNode) traverse;
-		listChild.removeSprite(s);
 	}
 
-	public Sprite getCollided(Sprite s) {
-		SpriteTreeNode traverse = root;
-		while (traverse instanceof SplitNode) {
-			boolean left = ((SplitNode) traverse).lessThanSplit(s);
-			if (left)
-				traverse = ((SplitNode) traverse).getLeft();
-			else
-				traverse = ((SplitNode) traverse).getRight();
+	public Sprite getFirstCollision(Sprite s) {
+		LinkedList<ListNode> listNodes = getListNodes(s);
+		Sprite collision = null;
+		for (int i = 0; i < listNodes.size() && collision == null; i++) {
+			ListNode list = listNodes.get(i);
+			collision = Collider.getFirstCollision(s, list.sprites); //wrongful access here but meh
 		}
-		ListNode listChild = (ListNode) traverse;
-		return Collider.checkForCollision(s, listChild.sprites); //wrongful access here but meh
+		return collision;
+	}
+
+	public Sprite[] getAllCollisions(Sprite s) {
+		LinkedList<ListNode> listNodes = getListNodes(s);
+		ArrayList<Sprite> collisions = new ArrayList<Sprite>();
+		for (ListNode list : listNodes) {
+			for (Sprite poss : list.sprites) {
+				if (Collider.checkForCollision(s, poss))
+					collisions.add(poss);
+			}
+		}
+		return collisions.toArray(new Sprite[collisions.size()]);
 	}
 
 	public Double getCollisionAngle(Sprite s1, Sprite s2) {
@@ -84,6 +98,10 @@ public class StaticSpriteTree {
 		protected SpriteTreeNode(int depth) {
 			this.depth = depth;
 		}
+
+		protected int getDepth() {
+			return depth;
+		}
 	}
 
 	private class SplitNode extends SpriteTreeNode {
@@ -94,15 +112,24 @@ public class StaticSpriteTree {
 		private SplitNode(int depth, int splitValue) {
 			super(depth);
 			this.split = splitValue;
-			left = new ListNode(depth + 1);
-			right = new ListNode(depth + 1);
+			left = new ListNode(this, true);
+			right = new ListNode(this, false);
 		}
 
-		private boolean lessThanSplit(Sprite sprite) {
+		private boolean traverseLeft(Sprite sprite) {
 			if (depth % 2 == 0) {
 				return sprite.getRotation().getRotatedCollisionArea().getBounds().x < split;
 			} else {
 				return sprite.getRotation().getRotatedCollisionArea().getBounds().y < split;
+			}
+		}
+
+		private boolean traverseRight(Sprite sprite) {
+			Rectangle r = sprite.getRotation().getRotatedCollisionArea().getBounds();
+			if (depth % 2 == 0) {
+				return r.x + r.width >= split;
+			} else {
+				return r.y + r.height >= split;
 			}
 		}
 
@@ -124,12 +151,16 @@ public class StaticSpriteTree {
 	}
 
 	private class ListNode extends SpriteTreeNode {
-		private static final int MAX_SIZE = 10;
+		private static final int MAX_SIZE = 25;
 		private LinkedList<Sprite> sprites;
+		private SplitNode parent;
+		private boolean left;
 
-		private ListNode(int depth) {
-			super(depth);
+		private ListNode(SplitNode parent, boolean left) {
+			super(parent == null ? 0 : parent.getDepth() + 1);
 			this.sprites = new LinkedList<Sprite>();
+			this.parent = parent;
+			this.left = left;
 		}
 
 		private void addSprite(Sprite s) {
@@ -138,6 +169,14 @@ public class StaticSpriteTree {
 
 		private void removeSprite(Sprite s) {
 			sprites.remove(s);
+		}
+
+		private SplitNode getParent() {
+			return parent;
+		}
+
+		private boolean isLeft() {
+			return left;
 		}
 
 		private boolean shouldSplit() {
@@ -193,7 +232,7 @@ public class StaticSpriteTree {
 				public int compare(Sprite s1, Sprite s2) {
 					double diff = s1.getRotation().getRotatedCollisionArea().getBounds().x -
 							s2.getRotation().getRotatedCollisionArea().getBounds().x;
-					if (diff < 0.000001)
+					if (diff > -0.000001 && diff < 0.000001)
 						return 0;
 					if (diff > 0)
 						return (int) Math.ceil(diff);
@@ -209,7 +248,7 @@ public class StaticSpriteTree {
 				public int compare(Sprite s1, Sprite s2) {
 					double diff = s1.getRotation().getRotatedCollisionArea().getBounds().y -
 							s2.getRotation().getRotatedCollisionArea().getBounds().y;
-					if (diff < 0.000001)
+					if (diff > -0.000001 && diff < 0.000001)
 						return 0;
 					if (diff > 0)
 						return (int) Math.ceil(diff);
@@ -218,7 +257,5 @@ public class StaticSpriteTree {
 				}
 			});
 		}
-
-
 	}
 }
