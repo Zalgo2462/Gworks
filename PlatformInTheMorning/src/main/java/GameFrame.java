@@ -1,4 +1,6 @@
 import org.zp.gworks.gui.canvas.GCanvas;
+import org.zp.platformers.morning.levels.LevelOne;
+import org.zp.platformers.morning.states.PlayState;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -8,6 +10,7 @@ public class GameFrame extends Frame {
 	public static final Dimension DIMENSION = new Dimension(800, 600);
 	private static GCanvas canvas;
 	private static GameFrame gameFrame;
+	private static PlayState playState;
 
 	public GameFrame() {
 		setResizable(false);
@@ -39,7 +42,9 @@ public class GameFrame extends Frame {
 			}
 		});
 		canvas = new GCanvas(DIMENSION, 60, 2);
-		//canvas.addState(MainMenu.getMenuState(canvas));
+		playState = new PlayState(canvas);
+		playState.setLevel(new LevelOne(playState));
+		canvas.addState(playState);
 		add(canvas);
 	}
 

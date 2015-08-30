@@ -2,6 +2,7 @@ package org.zp.platformers.morning.states;
 
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.logic.GState.GMutableState;
+import org.zp.platformers.morning.levels.Camera;
 import org.zp.platformers.morning.levels.Level;
 import org.zp.platformers.morning.sprites.Player;
 
@@ -10,27 +11,41 @@ import org.zp.platformers.morning.sprites.Player;
  * Time: 6:21 PM
  */
 public class PlayState extends GMutableState {
-	Player player;
-	Level level;
+	private Player player;
+	private Level level;
+	private Camera camera;
 
 	public PlayState(GCanvas canvas) {
 		super(canvas);
+		this.player = new Player();
+		this.camera = new Camera(this);
 	}
 
-	private void loadLevel(Level level) {
-
+	@Override
+	public void onAddState() {
+		addTickListener(camera);
+		addRenderListener(camera);
 	}
 
-	private void unloadLevel() {
-
+	@Override
+	public void onRemoveState() {
+		removeTickListener(camera);
+		removeRenderListener(camera);
 	}
 
-	private void loadPlayer() {
-
+	public Player getPlayer() {
+		return player;
 	}
 
-	private void unloadPlayer() {
-
+	public Level getLevel() {
+		return level;
 	}
 
+	public void setLevel(Level level) {
+		if (this.level != null)
+			this.level.unload();
+
+		this.level = level;
+		this.level.load();
+	}
 }

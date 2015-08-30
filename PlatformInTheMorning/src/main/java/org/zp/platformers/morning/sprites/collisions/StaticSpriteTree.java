@@ -19,28 +19,44 @@ public class StaticSpriteTree {
 		this.root = new ListNode(null, false);
 	}
 
-	private void traverseToListNode(SpriteTreeNode node, Sprite s, LinkedList<ListNode> nodes) {
+	private void traverseToListNodes(SpriteTreeNode node, Shape s, LinkedList<ListNode> nodes) {
 		if (node instanceof ListNode) {
 			nodes.add((ListNode) node);
 		} else {
 			SplitNode split = (SplitNode) node;
 			if (split.traverseLeft(s)) {
-				traverseToListNode(split.getLeft(), s, nodes);
+				traverseToListNodes(split.getLeft(), s, nodes);
 			}
 			if (split.traverseRight(s)) {
-				traverseToListNode(split.getRight(), s, nodes);
+				traverseToListNodes(split.getRight(), s, nodes);
 			}
 		}
 	}
 
-	private LinkedList<ListNode> getListNodes(Sprite s) {
+	private void traverseToListNodes(SpriteTreeNode node, LinkedList<ListNode> nodes) {
+		if (node instanceof ListNode) {
+			nodes.add((ListNode) node);
+		} else {
+			SplitNode split = (SplitNode) node;
+			traverseToListNodes(split.getLeft(), nodes);
+			traverseToListNodes(split.getRight(), nodes);
+		}
+	}
+
+	private LinkedList<ListNode> getListNodes(Shape s) {
 		LinkedList<ListNode> lists = new LinkedList<ListNode>();
-		traverseToListNode(root, s, lists);
+		traverseToListNodes(root, s, lists);
+		return lists;
+	}
+
+	private LinkedList<ListNode> getListNodes() {
+		LinkedList<ListNode> lists = new LinkedList<ListNode>();
+		traverseToListNodes(root, lists);
 		return lists;
 	}
 
 	public void addSprite(Sprite s) {
-		LinkedList<ListNode> listNodes = getListNodes(s);
+		LinkedList<ListNode> listNodes = getListNodes(s.getRotation().getRotatedCollisionArea());
 		for (int i = 0; i < listNodes.size(); i++) {
 			ListNode node = listNodes.get(i);
 			node.addSprite(s);
@@ -60,14 +76,39 @@ public class StaticSpriteTree {
 	}
 
 	public void removeSprite(Sprite s) {
-		LinkedList<ListNode> listNodes = getListNodes(s);
+		LinkedList<ListNode> listNodes = getListNodes(s.getRotation().getRotatedCollisionArea());
 		for (ListNode node : listNodes) {
 			node.removeSprite(s);
 		}
 	}
 
-	public Sprite getFirstCollision(Sprite s) {
+	public void removeAllSprites() {
+		root = new ListNode(null, false); //let JVM take care of GC
+	}
+
+	public Sprite[] getAllSprites() {
+		LinkedList<ListNode> lists = getListNodes();
+		ArrayList<Sprite> arrayList = new ArrayList<Sprite>();
+		for (ListNode l : lists) {
+			arrayList.addAll(l.sprites);
+		}
+		return arrayList.toArray(new Sprite[arrayList.size()]);
+	}
+
+	public Sprite[] getAllSpritesInBounds(Shape s) {
 		LinkedList<ListNode> listNodes = getListNodes(s);
+		ArrayList<Sprite> collisions = new ArrayList<Sprite>();
+		for (ListNode list : listNodes) {
+			for (Sprite poss : list.sprites) {
+				if (Collider.testIntersection(s, poss.getRotation().getRotatedCollisionArea()))
+					collisions.add(poss);
+			}
+		}
+		return collisions.toArray(new Sprite[collisions.size()]);
+	}
+
+	public Sprite getFirstCollision(Sprite s) {
+		LinkedList<ListNode> listNodes = getListNodes(s.getRotation().getRotatedCollisionArea());
 		Sprite collision = null;
 		for (int i = 0; i < listNodes.size() && collision == null; i++) {
 			ListNode list = listNodes.get(i);
@@ -77,7 +118,7 @@ public class StaticSpriteTree {
 	}
 
 	public Sprite[] getAllCollisions(Sprite s) {
-		LinkedList<ListNode> listNodes = getListNodes(s);
+		LinkedList<ListNode> listNodes = getListNodes(s.getRotation().getRotatedCollisionArea());
 		ArrayList<Sprite> collisions = new ArrayList<Sprite>();
 		for (ListNode list : listNodes) {
 			for (Sprite poss : list.sprites) {
@@ -116,16 +157,17 @@ public class StaticSpriteTree {
 			right = new ListNode(this, false);
 		}
 
-		private boolean traverseLeft(Sprite sprite) {
+		private boolean traverseLeft(Shape s) {
+			Rectangle r = s.getBounds();
 			if (depth % 2 == 0) {
-				return sprite.getRotation().getRotatedCollisionArea().getBounds().x < split;
+				return r.x < split;
 			} else {
-				return sprite.getRotation().getRotatedCollisionArea().getBounds().y < split;
+				return r.y < split;
 			}
 		}
 
-		private boolean traverseRight(Sprite sprite) {
-			Rectangle r = sprite.getRotation().getRotatedCollisionArea().getBounds();
+		private boolean traverseRight(Shape s) {
+			Rectangle r = s.getBounds();
 			if (depth % 2 == 0) {
 				return r.x + r.width >= split;
 			} else {

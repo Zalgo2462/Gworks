@@ -1,5 +1,6 @@
 package org.zp.platformers.morning.levels;
 
+import org.zp.platformers.morning.sprites.Platform;
 import org.zp.platformers.morning.states.PlayState;
 
 /**
@@ -15,4 +16,28 @@ public class LevelOne extends Level {
 		setWidth(WIDTH);
 		setHeight(HEIGHT);
 	}
+
+	@Override
+	public void load() {
+		createPlatforms();
+		placePlayer();
+	}
+
+	@Override
+	public void unload() {
+		staticSprites.removeAllSprites();
+		dynamicSprites.removeAllSprites();
+	}
+
+	private void createPlatforms() {
+		Platform ground = new Platform(0, 1900, WIDTH, 100);
+		staticSprites.addSprite(ground);
+	}
+
+
+	private void placePlayer() {
+		playState.getPlayer().getMovement().setLocation(100, 1800);
+		dynamicSprites.addSprite(playState.getPlayer());
+	}
+
 }

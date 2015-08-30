@@ -381,6 +381,7 @@ public abstract class Sprite {
 				if (!image.equals(spriteBacker)) {
 					setSprite(image);
 				}
+				//TODO: move this into ticklistener
 				Shape collArea = animation.getBounds(delta);
 				if (!collArea.equals(movement.getCollisionArea())) {
 					movement.setCollisionArea(collArea);
@@ -404,8 +405,10 @@ public abstract class Sprite {
 			}
 
 
-			filteredImage = squaringFilter.getFilteredImage(filteredImage);
-			filteredImage = rotation.getRotatedFilter().getFilteredImage(filteredImage);
+			if (rotation.getCurrentOrientation() != 0 || rotation.moving) {
+				filteredImage = squaringFilter.getFilteredImage(filteredImage);
+				filteredImage = rotation.getRotatedFilter().getFilteredImage(filteredImage);
+			}
 
 			if (rendered) {
 				((Graphics2D) graphics).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));

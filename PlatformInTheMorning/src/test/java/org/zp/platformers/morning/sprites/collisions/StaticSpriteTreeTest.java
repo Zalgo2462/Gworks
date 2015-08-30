@@ -41,7 +41,6 @@ public class StaticSpriteTreeTest {
 
 	@Test
 	public void testCornerCollision() {
-		System.out.println("test");
 		Sprite s = new TestSprite(98, 0, 10, 10);
 		Sprite[] coll = spriteTree.getAllCollisions(s);
 		assertEquals("Corner collision returned one sprite", coll.length, 1);

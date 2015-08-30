@@ -2,6 +2,7 @@ package org.zp.platformers.morning.sprites.collisions;
 
 import org.zp.gworks.gui.sprites.Sprite;
 
+import java.awt.*;
 import java.awt.geom.Area;
 import java.util.Collection;
 
@@ -57,9 +58,19 @@ class Collider {
 		return !intersectSprites(sprite1, sprite2).isEmpty();
 	}
 
-	public static Area intersectSprites(Sprite sprite1, Sprite sprite2) {
-		Area areaA = new Area(sprite1.getRotation().getRotatedCollisionArea());
-		areaA.intersect(new Area(sprite2.getRotation().getRotatedCollisionArea()));
+	public static boolean testIntersection(Shape s, Shape s2) {
+		return !intersectShapes(s, s2).isEmpty();
+	}
+
+	public static Area intersectShapes(Shape s, Shape s2) {
+		Area areaA = new Area(s);
+		areaA.intersect(new Area(s2));
 		return areaA;
+	}
+
+	public static Area intersectSprites(Sprite sprite1, Sprite sprite2) {
+		return intersectShapes(
+				sprite1.getRotation().getRotatedCollisionArea(),
+				sprite2.getRotation().getRotatedCollisionArea());
 	}
 }
