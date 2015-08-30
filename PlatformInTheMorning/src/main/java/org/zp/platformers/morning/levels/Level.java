@@ -52,4 +52,12 @@ public abstract class Level {
 		System.arraycopy(statics, 0, toReturn, dynamics.length, statics.length);
 		return toReturn;
 	}
+
+	public StaticSpriteTree getStaticSprites() {
+		return staticSprites;
+	}
+
+	public DynamicSpriteList getDynamicSprites() {
+		return dynamicSprites;
+	}
 }

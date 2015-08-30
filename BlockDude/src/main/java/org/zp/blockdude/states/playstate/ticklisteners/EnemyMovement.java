@@ -54,9 +54,9 @@ public class EnemyMovement implements GTickListener {
 	}
 
 	private void lockInOnPlayer(long delta) {
-		if (enemy.getMovement().getSpeed() > 0) {
+		if (enemy.getMovement().getVelocity() > 0) {
 			enemy.getMovement().decelerate(delta);
-		} else if (enemy.getMovement().getSpeed() < 0) {
+		} else if (enemy.getMovement().getVelocity() < 0) {
 			enemy.getMovement().accelerate(delta);
 		}
 		enemy.getRotation().setMoving(false);
@@ -111,14 +111,14 @@ public class EnemyMovement implements GTickListener {
 
 	private void moveForward(long delta) {
 		enemy.getMovement().move(
-				enemy.getMovement().getXMovement() * enemy.getMovement().getSpeed() * delta / 1000000000D,
-				enemy.getMovement().getYMovement() * enemy.getMovement().getSpeed() * delta / 1000000000D
+				enemy.getMovement().getXMovement() * enemy.getMovement().getVelocity() * delta / 1000000000D,
+				enemy.getMovement().getYMovement() * enemy.getMovement().getVelocity() * delta / 1000000000D
 		);
 	}
 
 	private void rotate(long delta) {
 		if (enemy.getRotation().isMoving()) {
-			double dTheta = enemy.getRotation().getSpeed() * delta / 1000000000D;
+			double dTheta = enemy.getRotation().getVelocity() * delta / 1000000000D;
 			enemy.getRotation().rotate(dTheta);
 			enemy.getMovement().setAngle(enemy.getRotation().getCurrentOrientation());
 		}

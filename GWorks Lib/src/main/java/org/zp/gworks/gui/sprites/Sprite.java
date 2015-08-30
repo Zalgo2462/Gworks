@@ -40,14 +40,16 @@ public abstract class Sprite {
 		return renderer;
 	}
 
+	//TODO: separate x and y accelerations
+	//TODO: convert from angle & magnitude to x and y
 	public class Movement {
 		private Point2D currentLocation;
 		private double angle;
 		private double acceleration;
 		private double deceleration;
 		private double naturalDeceleration;
-		private double speed;
-		private double maxSpeed;
+		private double velocity;
+		private double maxVelocity;
 		private Shape collisionArea;
 
 		//Speed in pixels per second
@@ -57,8 +59,8 @@ public abstract class Sprite {
 			this.acceleration = 0;
 			this.deceleration = 0;
 			this.naturalDeceleration = 0;
-			this.speed = 0;
-			this.maxSpeed = 0;
+			this.velocity = 0;
+			this.maxVelocity = 0;
 		}
 
 		public Point2D getLocation() {
@@ -119,20 +121,20 @@ public abstract class Sprite {
 			this.naturalDeceleration = naturalDeceleration;
 		}
 
-		public double getSpeed() {
-			return speed;
+		public double getVelocity() {
+			return velocity;
 		}
 
-		public void setSpeed(final double speed) {
-			this.speed = speed;
+		public void setVelocity(final double velocity) {
+			this.velocity = velocity;
 		}
 
-		public double getMaxSpeed() {
-			return maxSpeed;
+		public double getMaxVelocity() {
+			return maxVelocity;
 		}
 
-		public void setMaxSpeed(double maxSpeed) {
-			this.maxSpeed = maxSpeed;
+		public void setMaxVelocity(double maxVelocity) {
+			this.maxVelocity = maxVelocity;
 		}
 
 		public double getXMovement() {
@@ -156,38 +158,46 @@ public abstract class Sprite {
 			return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 		}
 
-		public void accelerate(final long delta) {
-			double dSpeed = acceleration * delta / 1000000000D;
-			if (speed + dSpeed <= maxSpeed) {
-				speed += dSpeed;
+		public void accelerate(final long delta, final double acceleration) {
+			double dVelocity = acceleration * delta / 1000000000D;
+			if (velocity + dVelocity <= maxVelocity) {
+				velocity += dVelocity;
 			} else {
-				speed = maxSpeed;
+				velocity = maxVelocity;
+			}
+		}
+
+		public void accelerate(final long delta) {
+			accelerate(delta, acceleration);
+		}
+
+		public void decelerate(final long delta, final double deceleration) {
+			double dVelocity = deceleration * delta / 1000000000D;
+			if (velocity + dVelocity >= -maxVelocity) {
+				velocity += dVelocity;
+			} else {
+				velocity = -maxVelocity;
 			}
 		}
 
 		public void decelerate(final long delta) {
-			double dSpeed = deceleration * delta / 1000000000D;
-			if (speed + dSpeed >= -maxSpeed) {
-				speed += dSpeed;
-			} else {
-				speed = -maxSpeed;
-			}
+			decelerate(delta, deceleration);
 		}
 
 		public void decelerateToZero(final long delta) {
-			if (speed > 0) {
-				double dSpeed = naturalDeceleration * delta / 1000000000D;
-				if (speed + dSpeed >= 0) {
-					speed += dSpeed;
+			if (velocity > 0) {
+				double dVelocity = naturalDeceleration * delta / 1000000000D;
+				if (velocity + dVelocity >= 0) {
+					velocity += dVelocity;
 				} else {
-					speed = 0;
+					velocity = 0;
 				}
-			} else if (speed < 0) {
-				double dSpeed = -naturalDeceleration * delta / 1000000000D;
-				if (speed + dSpeed <= 0) {
-					speed += dSpeed;
+			} else if (velocity < 0) {
+				double dVelocity = -naturalDeceleration * delta / 1000000000D;
+				if (velocity + dVelocity <= 0) {
+					velocity += dVelocity;
 				} else {
-					speed = 0;
+					velocity = 0;
 				}
 			}
 		}
@@ -212,14 +222,14 @@ public abstract class Sprite {
 
 	public class Rotation {
 		private boolean clockwise;
-		private double speed;
+		private double velocity;
 		private boolean moving;
 		private RotationFilter rotationFilter;
 
 		//Speed in radians per second
 		public Rotation() {
 			this.clockwise = true;
-			this.speed = 0;
+			this.velocity = 0;
 			this.moving = false;
 			this.rotationFilter = new RotationFilter();
 		}
@@ -240,12 +250,12 @@ public abstract class Sprite {
 			this.clockwise = clockwise;
 		}
 
-		public double getSpeed() {
-			return speed;
+		public double getVelocity() {
+			return velocity;
 		}
 
-		public void setSpeed(final double speed) {
-			this.speed = speed;
+		public void getVelocity(final double velocity) {
+			this.velocity = velocity;
 		}
 
 		public boolean isMoving() {

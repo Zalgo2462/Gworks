@@ -25,10 +25,10 @@ public abstract class Actor extends Sprite {
 		this.color = color;
 		createSprite(size);
 		movement.setAcceleration(200);
-		movement.setMaxSpeed(250);
+		movement.setMaxVelocity(250);
 		movement.setNaturalDeceleration(-75);
 		movement.setDeceleration(-200);
-		rotation.setSpeed(Math.PI);
+		rotation.getVelocity(Math.PI);
 		renderer.setSprite(image);
 		missiles = new LinkedList<Missile>();
 		lastMissileFiredTime = System.nanoTime();
@@ -65,7 +65,7 @@ public abstract class Actor extends Sprite {
 		missile.getMovement().setLocation(rotatedPoint.getX(), rotatedPoint.getY());
 		missile.getRotation().setCurrentOrientation(rotation.getCurrentOrientation());
 		missile.getMovement().setAngle(missile.getRotation().getCurrentOrientation());
-		missile.getMovement().setSpeed(missile.getMovement().getMaxSpeed());
+		missile.getMovement().setVelocity(missile.getMovement().getMaxVelocity());
 		missiles.add(missile);
 		lastMissileFiredTime = System.nanoTime();
 		return missile;

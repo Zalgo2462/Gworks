@@ -76,14 +76,14 @@ public class PlayerMovement implements GTickListener {
 
 	private void move(long delta) {
 		player.getMovement().move(
-				player.getMovement().getXMovement() * player.getMovement().getSpeed() * delta / 1000000000D,
-				player.getMovement().getYMovement() * player.getMovement().getSpeed() * delta / 1000000000D
+				player.getMovement().getXMovement() * player.getMovement().getVelocity() * delta / 1000000000D,
+				player.getMovement().getYMovement() * player.getMovement().getVelocity() * delta / 1000000000D
 		);
 	}
 
 	private void rotate(long delta) {
 		if (player.getRotation().isMoving()) {
-			double dTheta = player.getRotation().getSpeed() * delta / 1000000000D;
+			double dTheta = player.getRotation().getVelocity() * delta / 1000000000D;
 			player.getRotation().rotate(dTheta);
 			player.getMovement().setAngle(player.getRotation().getCurrentOrientation());
 		}

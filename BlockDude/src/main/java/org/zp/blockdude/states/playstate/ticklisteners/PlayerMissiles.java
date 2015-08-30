@@ -50,8 +50,8 @@ public class PlayerMissiles implements GTickListener {
 
 			missile.getMovement().accelerate(delta);
 			missile.getMovement().move(
-					missile.getMovement().getXMovement() * missile.getMovement().getSpeed() * delta / 1000000000F,
-					missile.getMovement().getYMovement() * missile.getMovement().getSpeed() * delta / 1000000000F
+					missile.getMovement().getXMovement() * missile.getMovement().getVelocity() * delta / 1000000000F,
+					missile.getMovement().getYMovement() * missile.getMovement().getVelocity() * delta / 1000000000F
 			);
 
 			SpriteManager.PlayAreaEdge canvasEdge = spriteManager.checkForEdgeCollision(missile);
