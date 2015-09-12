@@ -32,7 +32,7 @@ public class EnemyMissiles implements GTickListener {
 		final Rectangle r = playState.getPlayer().getRotation().getRotatedBounds().getBounds();
 		final double angleToPlayer = Math.abs(enemy.getRotation().angleTo(r.getCenterX(), r.getCenterY()));
 		if (angleToPlayer < Math.PI / 16D && enemy.canFireMissile()) {
-			Missile missile = enemy.fireMissile(enemy.getRotation().getCurrentOrientation());
+			Missile missile = enemy.fireMissile(enemy.getRotation().getCurrentAngle());
 			spriteManager.registerSprite(missile);
 			missile.getRenderer().setRendered(true);
 		}
@@ -50,8 +50,8 @@ public class EnemyMissiles implements GTickListener {
 
 			missile.getMovement().accelerate(delta);
 			missile.getMovement().move(
-					missile.getMovement().getXMovement() * missile.getMovement().getVelocity() * delta / 1000000000F,
-					missile.getMovement().getYMovement() * missile.getMovement().getVelocity() * delta / 1000000000F
+					Math.cos(missile.getRotation().getCurrentAngle()) * missile.getMovement().getVelocity() * delta / 1000000000D,
+					Math.sin(missile.getRotation().getCurrentAngle()) * missile.getMovement().getVelocity() * delta / 1000000000D
 			);
 
 			SpriteManager.PlayAreaEdge canvasEdge = spriteManager.checkForEdgeCollision(missile);

@@ -8,6 +8,7 @@ import org.zp.gworks.gui.sprites.filter.AddAlphaFilter;
 import org.zp.gworks.gui.sprites.filter.Filter;
 import org.zp.gworks.gui.sprites.filter.RotationFilter;
 import org.zp.gworks.gui.sprites.filter.SquaringFilter;
+import org.zp.gworks.gui.sprites.forces.Force;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -15,7 +16,9 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public abstract class Sprite {
 	protected final Movement movement;
@@ -44,23 +47,17 @@ public abstract class Sprite {
 	//TODO: convert from angle & magnitude to x and y
 	public class Movement {
 		private Point2D currentLocation;
-		private double angle;
-		private double acceleration;
-		private double deceleration;
-		private double naturalDeceleration;
-		private double velocity;
-		private double maxVelocity;
+		private double xVelocity;
+		private double yVelocity;
+		private double maxVelocity; //In either x or y direction
 		private Shape collisionArea;
+		private ArrayList<Force> accelerations;
 
 		//Speed in pixels per second
 		public Movement() {
 			this.currentLocation = new Point2D.Double(0, 0);
-			this.angle = 0;
-			this.acceleration = 0;
-			this.deceleration = 0;
-			this.naturalDeceleration = 0;
-			this.velocity = 0;
 			this.maxVelocity = 0;
+			this.accelerations = new ArrayList<Force>();
 		}
 
 		public Point2D getLocation() {
@@ -71,78 +68,100 @@ public abstract class Sprite {
 			currentLocation.setLocation(x, y);
 		}
 
-		public double getAngle() {
-			if (angle > 0) {
-				while (angle > Math.PI * 2) {
-					angle -= Math.PI * 2;
-				}
+		public void move(final double x, final double y) {
+			currentLocation.setLocation(currentLocation.getX() + x, currentLocation.getY() + y);
+		}
+
+		public void accelerate(final long delta) {
+			final double dXVel = getXAcceleration() * delta / 1000000000D;
+			final double dYVel = getYAcceleration() * delta / 1000000000D;
+			if (xVelocity + dXVel > maxVelocity) {
+				xVelocity = maxVelocity;
+			} else if (xVelocity + dXVel < -maxVelocity) {
+				xVelocity = -maxVelocity;
 			} else {
-				while (angle < -Math.PI * 2) {
-					angle += Math.PI * 2;
-				}
+				xVelocity += dXVel;
 			}
-			return angle;
-		}
 
-		public void setAngle(double angle) {
-			if (angle > 0) {
-				while (angle > Math.PI * 2) {
-					angle -= Math.PI * 2;
-				}
+			if (yVelocity + dYVel > maxVelocity) {
+				yVelocity = maxVelocity;
+			} else if (yVelocity + dYVel < -maxVelocity) {
+				yVelocity = -maxVelocity;
 			} else {
-				while (angle < -Math.PI * 2) {
-					angle += Math.PI * 2;
-				}
+				yVelocity += dYVel;
 			}
-			this.angle = angle;
 		}
 
-		public double getAcceleration() {
-			return acceleration;
+		//Accelerations
+		public double getXAcceleration() {
+			return accelerations.parallelStream().filter(Force::isActive).mapToDouble(Force::getX).reduce((a, b) -> a + b).orElse(0);
 		}
 
-		public void setAcceleration(double acceleration) {
-			this.acceleration = acceleration;
+		public double getYAcceleration() {
+			return accelerations.parallelStream().filter(Force::isActive).mapToDouble(Force::getY).reduce((a, b) -> a + b).orElse(0);
 		}
 
-		public double getDeceleration() {
-			return deceleration;
+		//All these functions add forces by reference
+		public void addForce(Force force) {
+			accelerations.add(force);
 		}
 
-		public void setDeceleration(int deceleration) {
-			this.deceleration = deceleration;
+		public void addForces(final List<Force> forces) {
+			accelerations.addAll(forces);
 		}
 
-		public double getNaturalDeceleration() {
-			return naturalDeceleration;
+		public void setForces(final List<Force> forces) {
+			accelerations.clear();
+			accelerations.addAll(forces);
 		}
 
-		public void setNaturalDeceleration(double naturalDeceleration) {
-			this.naturalDeceleration = naturalDeceleration;
+		//velocities
+		public double getXVelocity() {
+			return xVelocity;
+		}
+
+		public void setXVelocity(final double xVel) {
+			this.xVelocity = xVel;
+		}
+
+		public double getYVelocity() {
+			return yVelocity;
+		}
+
+		public void setYVelocity(final double yVel) {
+			this.yVelocity = yVel;
 		}
 
 		public double getVelocity() {
-			return velocity;
+			return Math.hypot(getXVelocity(), getYVelocity());
 		}
 
-		public void setVelocity(final double velocity) {
-			this.velocity = velocity;
+		public void setVelocity(final double magnitude, final double angle) {
+			setXVelocity(Math.cos(angle) * magnitude);
+			setYVelocity(Math.sin(angle) * magnitude);
 		}
 
 		public double getMaxVelocity() {
 			return maxVelocity;
 		}
 
-		public void setMaxVelocity(double maxVelocity) {
+		public void setMaxVelocity(final double maxVelocity) {
 			this.maxVelocity = maxVelocity;
 		}
 
-		public double getXMovement() {
-			return Math.cos(angle);
+		//Angles
+		public double getForwardAngle() {
+			double x = getXVelocity();
+			double y = getYVelocity();
+			return Math.atan2(y, x);
 		}
 
-		public double getYMovement() {
-			return Math.sin(angle);
+		public double getBackwardAngle() {
+			final double forward = getForwardAngle();
+			if (forward + Math.PI < 2 * Math.PI)
+				return forward + Math.PI;
+			else
+				return forward - Math.PI;
 		}
 
 		public double angleTo(final double x, final double y) {
@@ -155,57 +174,10 @@ public abstract class Sprite {
 			x = Math.abs(x - currentLocation.getX());
 			y = Math.abs(y - currentLocation.getY());
 
-			return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+			return Math.hypot(x, y);
 		}
 
-		public void accelerate(final long delta, final double acceleration) {
-			double dVelocity = acceleration * delta / 1000000000D;
-			if (velocity + dVelocity <= maxVelocity) {
-				velocity += dVelocity;
-			} else {
-				velocity = maxVelocity;
-			}
-		}
-
-		public void accelerate(final long delta) {
-			accelerate(delta, acceleration);
-		}
-
-		public void decelerate(final long delta, final double deceleration) {
-			double dVelocity = deceleration * delta / 1000000000D;
-			if (velocity + dVelocity >= -maxVelocity) {
-				velocity += dVelocity;
-			} else {
-				velocity = -maxVelocity;
-			}
-		}
-
-		public void decelerate(final long delta) {
-			decelerate(delta, deceleration);
-		}
-
-		public void decelerateToZero(final long delta) {
-			if (velocity > 0) {
-				double dVelocity = naturalDeceleration * delta / 1000000000D;
-				if (velocity + dVelocity >= 0) {
-					velocity += dVelocity;
-				} else {
-					velocity = 0;
-				}
-			} else if (velocity < 0) {
-				double dVelocity = -naturalDeceleration * delta / 1000000000D;
-				if (velocity + dVelocity <= 0) {
-					velocity += dVelocity;
-				} else {
-					velocity = 0;
-				}
-			}
-		}
-
-		public void move(final double x, final double y) {
-			currentLocation.setLocation(currentLocation.getX() + x, currentLocation.getY() + y);
-		}
-
+		//Collisions
 		public Shape getCollisionArea() {
 			if (collisionArea == null) {
 				collisionArea = new Rectangle(renderer.getSprite().getWidth(), renderer.getSprite().getHeight());
@@ -234,8 +206,16 @@ public abstract class Sprite {
 			this.rotationFilter = new RotationFilter();
 		}
 
-		public double getCurrentOrientation() {
+		public double getCurrentAngle() {
 			return rotationFilter.getOrientation();
+		}
+
+		public double getBackwardAngle() {
+			final double forward = getCurrentAngle();
+			if (forward + Math.PI < 2 * Math.PI)
+				return forward + Math.PI;
+			else
+				return forward - Math.PI;
 		}
 
 		public void setCurrentOrientation(final double currentOrientation) {
@@ -415,7 +395,7 @@ public abstract class Sprite {
 			}
 
 
-			if (rotation.getCurrentOrientation() != 0 || rotation.moving) {
+			if (rotation.getCurrentAngle() != 0 || rotation.moving) {
 				filteredImage = squaringFilter.getFilteredImage(filteredImage);
 				filteredImage = rotation.getRotatedFilter().getFilteredImage(filteredImage);
 			}

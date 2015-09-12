@@ -15,19 +15,23 @@ import java.util.LinkedList;
 public abstract class Actor extends Sprite {
 	protected final LinkedList<Missile> missiles;
 	private final Color color;
+	private final double naturalDeceleration;        //todo: move to movement classes
 	protected double lastMissileFiredTime;
 	protected double missilesPerSecond;
 	protected int missileDamage;
 	protected int health;
+	private double acceleration;
+	private double deceleration;
 	private BufferedImage image;
+
 
 	public Actor(int size, Color color) {
 		this.color = color;
 		createSprite(size);
-		movement.setAcceleration(200);
 		movement.setMaxVelocity(250);
-		movement.setNaturalDeceleration(-75);
-		movement.setDeceleration(-200);
+		naturalDeceleration = -200;
+		acceleration = 500;
+		deceleration = -500;
 		rotation.getVelocity(Math.PI);
 		renderer.setSprite(image);
 		missiles = new LinkedList<Missile>();
@@ -63,9 +67,8 @@ public abstract class Actor extends Sprite {
 		double y1 = y0 - (missile.getRotation().getRotatedBounds().getBounds().getHeight() / 2);
 		Point2D rotatedPoint = getRotation().rotatePoint(x1, y1, x0, y0, theta);
 		missile.getMovement().setLocation(rotatedPoint.getX(), rotatedPoint.getY());
-		missile.getRotation().setCurrentOrientation(rotation.getCurrentOrientation());
-		missile.getMovement().setAngle(missile.getRotation().getCurrentOrientation());
-		missile.getMovement().setVelocity(missile.getMovement().getMaxVelocity());
+		missile.getRotation().setCurrentOrientation(rotation.getCurrentAngle());
+		missile.getMovement().setVelocity(missile.getMovement().getMaxVelocity(), rotation.getCurrentAngle());
 		missiles.add(missile);
 		lastMissileFiredTime = System.nanoTime();
 		return missile;
@@ -81,6 +84,26 @@ public abstract class Actor extends Sprite {
 
 	public void setMissileDamage(int missileDamage) {
 		this.missileDamage = missileDamage;
+	}
+
+	public double getNaturalDeceleration() {
+		return naturalDeceleration;
+	}
+
+	public double getAcceleration() {
+		return acceleration;
+	}
+
+	public void setAcceleration(double acceleration) {
+		this.acceleration = acceleration;
+	}
+
+	public double getDeceleration() {
+		return deceleration;
+	}
+
+	public void setDeceleration(double deceleration) {
+		this.deceleration = deceleration;
 	}
 
 	public int getHealth() {

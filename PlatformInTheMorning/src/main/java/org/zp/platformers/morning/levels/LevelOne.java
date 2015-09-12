@@ -36,8 +36,8 @@ public class LevelOne extends Level {
 
 
 	private void placePlayer() {
-		playState.getPlayer().getMovement().setLocation(100, 1800);
-		dynamicSprites.addSprite(playState.getPlayer());
+		//playState.getPlayer().getMovement().setLocation(100, 1800);
+		//dynamicSprites.addSprite(playState.getPlayer());
 	}
 
 }

@@ -24,6 +24,7 @@ public class Camera implements GRenderListener, GTickListener {
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
+		/*
 		if (playState.getLevel() != null) {
 			int c_x = (int) playState.getPlayer().getMovement().getLocation().getX() +
 					(playState.getPlayer().getRotation().getRotatedBounds().getBounds().width / 2);
@@ -52,6 +53,7 @@ public class Camera implements GRenderListener, GTickListener {
 			}
 			sprites = newSprites;
 		}
+		*/
 	}
 
 	@Override

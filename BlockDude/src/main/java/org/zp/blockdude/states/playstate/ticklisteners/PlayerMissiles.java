@@ -33,7 +33,7 @@ public class PlayerMissiles implements GTickListener {
 	@Override
 	public void tick(GCanvas canvas, long delta) {
 		if (keyListener.getPressedKeyCodes().contains(KeyEvent.VK_SPACE) && player.canFireMissile()) {
-			Missile missile = player.fireMissile(player.getRotation().getCurrentOrientation());
+			Missile missile = player.fireMissile(player.getRotation().getCurrentAngle());
 			spriteManager.registerSprite(missile);
 			missile.getRenderer().setRendered(true);
 		}
@@ -50,8 +50,8 @@ public class PlayerMissiles implements GTickListener {
 
 			missile.getMovement().accelerate(delta);
 			missile.getMovement().move(
-					missile.getMovement().getXMovement() * missile.getMovement().getVelocity() * delta / 1000000000F,
-					missile.getMovement().getYMovement() * missile.getMovement().getVelocity() * delta / 1000000000F
+					Math.cos(missile.getRotation().getCurrentAngle()) * missile.getMovement().getVelocity() * delta / 1000000000D,
+					Math.sin(missile.getRotation().getCurrentAngle()) * missile.getMovement().getVelocity() * delta / 1000000000D
 			);
 
 			SpriteManager.PlayAreaEdge canvasEdge = spriteManager.checkForEdgeCollision(missile);

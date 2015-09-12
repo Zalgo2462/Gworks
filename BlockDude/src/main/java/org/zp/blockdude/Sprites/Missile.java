@@ -12,9 +12,6 @@ import java.awt.image.BufferedImage;
 public class Missile extends Sprite {
 	//TODO: upgradable
 	private static final long MAX_AGE = 5 * 100000000L;
-	private static final int ACCELERATION = 200;
-	private static final int MAX_SPEED = 750;
-	private static final int NATURAL_DECELERATION = -200;
 	private static final int WIDTH = 20;
 	private static final int HEIGHT = 5;
 	private final Color color;
@@ -26,11 +23,9 @@ public class Missile extends Sprite {
 		this.color = color;
 		this.age = 0;
 		this.maxDamage = maxDamage;
+		this.getMovement().setMaxVelocity(750);
 		createSprite();
 		renderer.setSprite(image);
-		movement.setAcceleration(ACCELERATION);
-		movement.setMaxVelocity(MAX_SPEED);
-		movement.setNaturalDeceleration(NATURAL_DECELERATION);
 	}
 
 	private void createSprite() {

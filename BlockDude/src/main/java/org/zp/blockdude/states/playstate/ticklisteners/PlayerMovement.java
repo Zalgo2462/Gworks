@@ -7,6 +7,7 @@ import org.zp.blockdude.states.playstate.SpriteManager;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.input.GKeyListener;
 import org.zp.gworks.gui.sprites.Sprite;
+import org.zp.gworks.gui.sprites.forces.SimpleForce;
 import org.zp.gworks.logic.GTickListener;
 
 import java.awt.event.KeyEvent;
@@ -15,32 +16,45 @@ public class PlayerMovement implements GTickListener {
 	private final PlayState playState;
 	private Player player;
 	private GKeyListener keyListener;
+	private SimpleForce acceleration;
+	private SimpleForce deceleration;
+	private SimpleForce naturalDeceleration;
 
 	public PlayerMovement(PlayState playState, Player player) {
 		this.playState = playState;
 		this.player = player;
 		this.keyListener = playState.getCanvas().getGKeyListener();
+		this.acceleration = new SimpleForce();
+		this.deceleration = new SimpleForce();
+		this.naturalDeceleration = new SimpleForce();
+
+		player.getMovement().addForce(acceleration);
+		player.getMovement().addForce(deceleration);
+		player.getMovement().addForce(naturalDeceleration);
 	}
 
 	@Override
 	public void tick(GCanvas canvas, long delta) {
-		checkInput(delta);
-
-		move(delta);
+		checkInput();
 
 		rotate(delta);
+
+		updateForces(delta);
+
+		move(delta);
 
 		checkForWallCollisions();
 
 		checkForEnemyCollisions(delta);
 	}
 
-	private void checkInput(long delta) {
+	private void checkInput() {
 		for (Integer keyCode : keyListener.getPressedKeyCodes()) {
 			switch (keyCode) {
 				case KeyEvent.VK_W:
 				case KeyEvent.VK_UP:
-					player.getMovement().accelerate(delta);
+					acceleration.setActive(true);
+					deceleration.setActive(false);
 					break;
 				case KeyEvent.VK_D:
 				case KeyEvent.VK_RIGHT:
@@ -49,7 +63,8 @@ public class PlayerMovement implements GTickListener {
 					break;
 				case KeyEvent.VK_S:
 				case KeyEvent.VK_DOWN:
-					player.getMovement().decelerate(delta);
+					acceleration.setActive(false);
+					deceleration.setActive(true);
 					break;
 				case KeyEvent.VK_A:
 				case KeyEvent.VK_LEFT:
@@ -63,7 +78,8 @@ public class PlayerMovement implements GTickListener {
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_DOWN) &&
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_W) &&
 				!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_S)) {
-			player.getMovement().decelerateToZero(delta);
+			acceleration.setActive(false);
+			deceleration.setActive(false);
 		}
 
 		if (!keyListener.getPressedKeyCodes().contains(KeyEvent.VK_LEFT) &&
@@ -74,10 +90,31 @@ public class PlayerMovement implements GTickListener {
 		}
 	}
 
+	private void updateForces(long delta) {
+		acceleration.setForce(
+				Math.cos(player.getRotation().getCurrentAngle()) * player.getAcceleration(),
+				Math.sin(player.getRotation().getCurrentAngle()) * player.getAcceleration()
+		);
+		deceleration.setForce(
+				Math.cos(player.getRotation().getCurrentAngle()) * player.getDeceleration(),
+				Math.sin(player.getRotation().getCurrentAngle()) * player.getDeceleration()
+		);
+		naturalDeceleration.setForce(
+				Math.cos(player.getMovement().getForwardAngle()) * player.getNaturalDeceleration(),
+				Math.sin(player.getMovement().getForwardAngle()) * player.getNaturalDeceleration()
+		);
+		if (Math.abs(player.getMovement().getVelocity()) <= 0.000001) {
+			naturalDeceleration.setActive(false);
+		} else {
+			naturalDeceleration.setActive(true);
+		}
+	}
+
 	private void move(long delta) {
+		player.getMovement().accelerate(delta);
 		player.getMovement().move(
-				player.getMovement().getXMovement() * player.getMovement().getVelocity() * delta / 1000000000D,
-				player.getMovement().getYMovement() * player.getMovement().getVelocity() * delta / 1000000000D
+				player.getMovement().getXVelocity() * delta / 1000000000D,
+				player.getMovement().getYVelocity() * delta / 1000000000D
 		);
 	}
 
@@ -85,7 +122,6 @@ public class PlayerMovement implements GTickListener {
 		if (player.getRotation().isMoving()) {
 			double dTheta = player.getRotation().getVelocity() * delta / 1000000000D;
 			player.getRotation().rotate(dTheta);
-			player.getMovement().setAngle(player.getRotation().getCurrentOrientation());
 		}
 	}
 
@@ -93,26 +129,20 @@ public class PlayerMovement implements GTickListener {
 		Sprite collided = playState.getSpriteManager().checkForCollision(player, playState.getEnemies());
 		if (collided != null) {
 			Enemy e = (Enemy) collided;
-			double oldPlayerAngle = player.getMovement().getAngle();
-			double oldEnemyAngle = e.getMovement().getAngle();
 			player.damage(1);
 			e.damage(1);
 			while ((collided = playState.getSpriteManager().checkForCollision(player, playState.getEnemies())) != null) {
 				e = (Enemy) collided;
 				Double theta = playState.getSpriteManager().getAngleIfCollision(player, e);
-				player.getMovement().setAngle(theta + Math.PI);
-				e.getMovement().setAngle(theta);
 				player.getMovement().move(
-						player.getMovement().getXMovement() * delta / 1000000000D,
-						player.getMovement().getYMovement() * delta / 1000000000D
+						Math.cos(theta + Math.PI) * delta / 1000000000D,
+						Math.sin(theta + Math.PI) * delta / 1000000000D
 				);
 				e.getMovement().move(
-						e.getMovement().getXMovement() * delta / 1000000000D,
-						e.getMovement().getYMovement() * delta / 1000000000D
+						Math.cos(theta) * delta / 1000000000D,
+						Math.sin(theta) * delta / 1000000000D
 				);
 			}
-			player.getMovement().setAngle(oldPlayerAngle);
-			e.getMovement().setAngle(oldEnemyAngle);
 		}
 	}
 
