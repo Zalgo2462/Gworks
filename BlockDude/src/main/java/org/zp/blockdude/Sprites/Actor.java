@@ -33,7 +33,7 @@ public abstract class Actor extends Sprite {
 		missiles = new LinkedList<Missile>();
 		lastMissileFiredTime = System.nanoTime();
 		missilesPerSecond = 3;
-		missileDamage = 100;
+		missileDamage = 25;
 		health = 100;
 	}
 
