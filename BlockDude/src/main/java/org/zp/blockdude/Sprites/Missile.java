@@ -37,7 +37,7 @@ public class Missile extends Sprite {
 	}
 
 	public double getDamage() {
-		return (maxDamage * age / MAX_AGE);
+		return (maxDamage * (1 - (age / MAX_AGE)));
 	}
 
 	public void age(long delta) {
