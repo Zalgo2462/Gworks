@@ -76,4 +76,8 @@ public class UniMovement extends Movement {
 	public void setMaxVelocity(final double maxVelocity) {
 		this.maxVelocity = maxVelocity;
 	}
+
+	public boolean isMovingForward() {
+		return velocity > 0;
+	}
 }

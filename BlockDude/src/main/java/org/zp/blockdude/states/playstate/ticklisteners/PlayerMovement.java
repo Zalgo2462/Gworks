@@ -9,6 +9,7 @@ import org.zp.gworks.gui.canvas.input.GKeyListener;
 import org.zp.gworks.logic.GTickListener;
 import org.zp.gworks.sprites.Sprite;
 import org.zp.gworks.sprites.movement.movement2d.forces.SimpleForce2D;
+import org.zp.gworks.sprites.movement.unimovement.forces.SimpleForce1D;
 
 import java.awt.event.KeyEvent;
 
@@ -16,17 +17,17 @@ public class PlayerMovement implements GTickListener {
 	private final PlayState playState;
 	private Player player;
 	private GKeyListener keyListener;
-	private SimpleForce2D acceleration;
-	private SimpleForce2D deceleration;
-	private SimpleForce2D naturalDeceleration;
+	private SimpleForce1D acceleration;
+	private SimpleForce1D deceleration;
+	private SimpleForce1D naturalDeceleration;
 
 	public PlayerMovement(PlayState playState, Player player) {
 		this.playState = playState;
 		this.player = player;
 		this.keyListener = playState.getCanvas().getGKeyListener();
-		this.acceleration = new SimpleForce2D();
-		this.deceleration = new SimpleForce2D();
-		this.naturalDeceleration = new SimpleForce2D();
+		this.acceleration = new SimpleForce1D(player.getAcceleration());
+		this.deceleration = new SimpleForce1D(player.getDeceleration());
+		this.naturalDeceleration = new SimpleForce1D(player.getNaturalDeceleration());
 
 		player.getMovement().addForce(acceleration);
 		player.getMovement().addForce(deceleration);
@@ -91,18 +92,10 @@ public class PlayerMovement implements GTickListener {
 	}
 
 	private void updateForces(long delta) {
-		acceleration.setForce(
-				Math.cos(player.getRotation().getCurrentAngle()) * player.getAcceleration(),
-				Math.sin(player.getRotation().getCurrentAngle()) * player.getAcceleration()
-		);
-		deceleration.setForce(
-				Math.cos(player.getRotation().getCurrentAngle()) * player.getDeceleration(),
-				Math.sin(player.getRotation().getCurrentAngle()) * player.getDeceleration()
-		);
-		naturalDeceleration.setForce(
-				Math.cos(player.getMovement().getForwardAngle()) * player.getNaturalDeceleration(),
-				Math.sin(player.getMovement().getForwardAngle()) * player.getNaturalDeceleration()
-		);
+		if (player.getMovement().isMovingForward())
+			naturalDeceleration.setX(player.getNaturalDeceleration());
+		else
+			naturalDeceleration.setX(-player.getNaturalDeceleration());
 		if (Math.abs(player.getMovement().getVelocity()) <= 0.000001) {
 			naturalDeceleration.setActive(false);
 		} else {
