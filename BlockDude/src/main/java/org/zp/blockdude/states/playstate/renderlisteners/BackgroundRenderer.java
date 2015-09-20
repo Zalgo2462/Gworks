@@ -18,8 +18,8 @@ public class BackgroundRenderer implements GRenderListener {
 	public void paint(GCanvas canvas, Graphics graphics, long delta) {
 		graphics.setColor(ColorScheme.MENU_BACKGROUND.getColor());
 		graphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        graphics.setColor(ColorScheme.DARKER_GREEN.getColor());
-        graphics.drawLine(0, PlayState.UI_CONSTANTS.PLAY_AREA_TOP,
-                GameFrame.DIMENSION.width, PlayState.UI_CONSTANTS.PLAY_AREA_TOP);
+		graphics.setColor(ColorScheme.DARKER_GREEN.getColor());
+		graphics.drawLine(0, PlayState.UI_CONSTANTS.PLAY_AREA_TOP,
+				GameFrame.DIMENSION.width, PlayState.UI_CONSTANTS.PLAY_AREA_TOP);
 	}
 }

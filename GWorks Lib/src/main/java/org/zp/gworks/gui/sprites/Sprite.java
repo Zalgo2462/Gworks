@@ -1,18 +1,27 @@
 package org.zp.gworks.gui.sprites;
 
 
-public abstract class Sprite {
-	protected final Movement movement;
+import org.zp.gworks.gui.sprites.movement.Movement;
+
+import java.lang.reflect.InvocationTargetException;
+
+public abstract class Sprite<MovementType extends Movement> {
 	protected final Renderer renderer;
 	protected final Rotation rotation;
+	protected MovementType movement;
 
-	public Sprite() {
+	public Sprite(Class<MovementType> clazz) {
+		try {
+			movement = clazz.getConstructor(Sprite.class).newInstance(this);
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			//If using gworks classes this should never happen
+			e.printStackTrace();
+		}
 		renderer = new Renderer(this);
-		movement = new Movement(this);
 		rotation = new Rotation(this);
 	}
 
-	public Movement getMovement() {
+	public MovementType getMovement() {
 		return movement;
 	}
 

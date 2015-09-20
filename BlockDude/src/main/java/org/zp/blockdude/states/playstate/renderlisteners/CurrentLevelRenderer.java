@@ -11,19 +11,19 @@ import java.awt.*;
  */
 public class CurrentLevelRenderer implements GRenderListener {
 
-    private PlayState playState;
+	private PlayState playState;
 
-    public CurrentLevelRenderer(PlayState playState) {
-        this.playState = playState;
-    }
+	public CurrentLevelRenderer(PlayState playState) {
+		this.playState = playState;
+	}
 
-    @Override
-    public void paint(GCanvas canvas, Graphics graphics, long delta) {
-        graphics.setFont(graphics.getFont().deriveFont((float) PlayState.UI_CONSTANTS.INFO_AREA_HEIGHT));
-        graphics.drawString(
-                "Level: " + (playState.getCurrentLevel().ordinal() + 1),
-                PlayState.UI_CONSTANTS.LEVEL_BAR_START,
-                PlayState.UI_CONSTANTS.INFO_AREA_TOP + PlayState.UI_CONSTANTS.INFO_AREA_HEIGHT
-        );
-    }
+	@Override
+	public void paint(GCanvas canvas, Graphics graphics, long delta) {
+		graphics.setFont(graphics.getFont().deriveFont((float) PlayState.UI_CONSTANTS.INFO_AREA_HEIGHT));
+		graphics.drawString(
+				"Level: " + (playState.getCurrentLevel().ordinal() + 1),
+				PlayState.UI_CONSTANTS.LEVEL_BAR_START,
+				PlayState.UI_CONSTANTS.INFO_AREA_TOP + PlayState.UI_CONSTANTS.INFO_AREA_HEIGHT
+		);
+	}
 }
