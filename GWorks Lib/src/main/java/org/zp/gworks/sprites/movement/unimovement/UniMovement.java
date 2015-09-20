@@ -16,7 +16,7 @@ public class UniMovement extends Movement {
 	private double maxVelocity;
 	private ArrayList<Force1D> accelerations;
 
-	protected UniMovement(Sprite sprite) {
+	public UniMovement(Sprite sprite) {
 		super(sprite);
 		this.currentLocation = new Point2D.Double(0, 0);
 		this.maxVelocity = 0;
@@ -67,5 +67,13 @@ public class UniMovement extends Movement {
 	@Override
 	public double getYVelocity() {
 		return Math.sin(sprite.getRotation().getCurrentAngle()) * velocity;
+	}
+
+	public double getMaxVelocity() {
+		return maxVelocity;
+	}
+
+	public void setMaxVelocity(final double maxVelocity) {
+		this.maxVelocity = maxVelocity;
 	}
 }

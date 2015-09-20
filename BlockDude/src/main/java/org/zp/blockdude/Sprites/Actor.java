@@ -70,7 +70,7 @@ public abstract class Actor extends Sprite<Movement2D> {
 		Point2D rotatedPoint = getRotation().rotatePoint(x1, y1, x0, y0, theta);
 		missile.getMovement().setLocation(rotatedPoint.getX(), rotatedPoint.getY());
 		missile.getRotation().setCurrentOrientation(rotation.getCurrentAngle());
-		missile.getMovement().setVelocity(missile.getMovement().getMaxVelocity(), rotation.getCurrentAngle());
+		missile.getMovement().setVelocity(missile.getMovement().getMaxVelocity());
 		missiles.add(missile);
 		lastMissileFiredTime = System.nanoTime();
 		return missile;

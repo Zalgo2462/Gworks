@@ -8,7 +8,7 @@ import org.zp.gworks.sprites.movement.Movement;
  * Time: 6:31 PM
  */
 public class Stationary extends Movement {
-	protected Stationary(Sprite sprite) {
+	public Stationary(Sprite sprite) {
 		super(sprite);
 	}
 
