@@ -1,4 +1,4 @@
-package org.zp.gworks.gui.sprites.movement.movement2d.forces;
+package org.zp.gworks.sprites.movement.movement2d.forces;
 
 /**
  * Date: 9/11/2015

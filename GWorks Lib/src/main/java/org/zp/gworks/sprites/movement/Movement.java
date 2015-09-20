@@ -1,6 +1,6 @@
-package org.zp.gworks.gui.sprites.movement;
+package org.zp.gworks.sprites.movement;
 
-import org.zp.gworks.gui.sprites.Sprite;
+import org.zp.gworks.sprites.Sprite;
 
 import java.awt.*;
 import java.awt.geom.Point2D;

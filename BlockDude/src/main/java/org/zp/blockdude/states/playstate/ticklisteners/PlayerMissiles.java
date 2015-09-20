@@ -7,8 +7,8 @@ import org.zp.blockdude.states.playstate.PlayState;
 import org.zp.blockdude.states.playstate.SpriteManager;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.input.GKeyListener;
-import org.zp.gworks.gui.sprites.Sprite;
 import org.zp.gworks.logic.GTickListener;
+import org.zp.gworks.sprites.Sprite;
 
 import java.awt.event.KeyEvent;
 import java.util.Iterator;

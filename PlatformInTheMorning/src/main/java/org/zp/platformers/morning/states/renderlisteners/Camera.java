@@ -2,8 +2,8 @@ package org.zp.platformers.morning.states.renderlisteners;
 
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
-import org.zp.gworks.gui.sprites.Sprite;
 import org.zp.gworks.logic.GTickListener;
+import org.zp.gworks.sprites.Sprite;
 import org.zp.platformers.morning.states.PlayState;
 
 import java.awt.*;

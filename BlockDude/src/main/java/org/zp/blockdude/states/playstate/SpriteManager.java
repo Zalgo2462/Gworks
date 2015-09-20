@@ -1,7 +1,7 @@
 package org.zp.blockdude.states.playstate;
 
-import org.zp.gworks.gui.sprites.Sprite;
 import org.zp.gworks.logic.GState.GMutableState;
+import org.zp.gworks.sprites.Sprite;
 
 import java.awt.*;
 import java.awt.geom.Area;

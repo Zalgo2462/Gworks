@@ -1,6 +1,6 @@
 package org.zp.platformers.morning.sprites;
 
-import org.zp.gworks.gui.sprites.Sprite;
+import org.zp.gworks.sprites.Sprite;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

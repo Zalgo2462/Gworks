@@ -1,4 +1,4 @@
-package org.zp.gworks.gui.sprites.filter;
+package org.zp.gworks.sprites.filter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

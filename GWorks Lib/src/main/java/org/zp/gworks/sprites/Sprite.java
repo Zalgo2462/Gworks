@@ -1,7 +1,7 @@
-package org.zp.gworks.gui.sprites;
+package org.zp.gworks.sprites;
 
 
-import org.zp.gworks.gui.sprites.movement.Movement;
+import org.zp.gworks.sprites.movement.Movement;
 
 import java.lang.reflect.InvocationTargetException;
 

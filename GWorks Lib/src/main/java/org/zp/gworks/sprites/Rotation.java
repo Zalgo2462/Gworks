@@ -1,6 +1,6 @@
-package org.zp.gworks.gui.sprites;
+package org.zp.gworks.sprites;
 
-import org.zp.gworks.gui.sprites.filter.RotationFilter;
+import org.zp.gworks.sprites.filter.RotationFilter;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

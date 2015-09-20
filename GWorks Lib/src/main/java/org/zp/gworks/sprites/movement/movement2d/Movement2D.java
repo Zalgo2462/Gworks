@@ -1,8 +1,8 @@
-package org.zp.gworks.gui.sprites.movement.movement2d;
+package org.zp.gworks.sprites.movement.movement2d;
 
-import org.zp.gworks.gui.sprites.Sprite;
-import org.zp.gworks.gui.sprites.movement.Movement;
-import org.zp.gworks.gui.sprites.movement.movement2d.forces.Force;
+import org.zp.gworks.sprites.Sprite;
+import org.zp.gworks.sprites.movement.Movement;
+import org.zp.gworks.sprites.movement.movement2d.forces.Force;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

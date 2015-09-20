@@ -2,7 +2,7 @@ package org.zp.platformers.morning.sprites.collisions;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.zp.gworks.gui.sprites.Sprite;
+import org.zp.gworks.sprites.Sprite;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

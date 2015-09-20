@@ -1,6 +1,6 @@
 package org.zp.platformers.morning.levels;
 
-import org.zp.gworks.gui.sprites.Sprite;
+import org.zp.gworks.sprites.Sprite;
 import org.zp.platformers.morning.sprites.collisions.DynamicSpriteList;
 import org.zp.platformers.morning.sprites.collisions.StaticSpriteTree;
 import org.zp.platformers.morning.states.PlayState;

@@ -1,4 +1,4 @@
-package org.zp.gworks.gui.sprites.animations;
+package org.zp.gworks.sprites.animations;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

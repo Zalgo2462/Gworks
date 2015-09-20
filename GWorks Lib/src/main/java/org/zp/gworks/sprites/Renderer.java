@@ -1,11 +1,11 @@
-package org.zp.gworks.gui.sprites;
+package org.zp.gworks.sprites;
 
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.rendering.GRenderListener;
-import org.zp.gworks.gui.sprites.animations.Animation;
-import org.zp.gworks.gui.sprites.filter.AddAlphaFilter;
-import org.zp.gworks.gui.sprites.filter.Filter;
-import org.zp.gworks.gui.sprites.filter.SquaringFilter;
+import org.zp.gworks.sprites.animations.Animation;
+import org.zp.gworks.sprites.filter.AddAlphaFilter;
+import org.zp.gworks.sprites.filter.Filter;
+import org.zp.gworks.sprites.filter.SquaringFilter;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
