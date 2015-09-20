@@ -2,7 +2,6 @@ package org.zp.blockdude.sprites;
 
 import org.zp.gworks.sprites.Sprite;
 import org.zp.gworks.sprites.movement.movement2d.Movement2D;
-import org.zp.gworks.sprites.movement.unimovement.UniMovement;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -14,10 +13,10 @@ import java.util.LinkedList;
  * Date: 7/25/2014
  * Time: 12:18 AM
  */
-public abstract class Actor extends Sprite<UniMovement> {
+public abstract class Actor extends Sprite<Movement2D> {
 	protected final LinkedList<Missile> missiles;
 	private final Color color;
-	private final double naturalDeceleration;
+	private final double naturalDeceleration;        //todo: move to movement classes
 	protected double lastMissileFiredTime;
 	protected double missilesPerSecond;
 	protected int missileDamage;
@@ -28,7 +27,7 @@ public abstract class Actor extends Sprite<UniMovement> {
 
 
 	public Actor(int size, Color color) {
-		super(UniMovement.class);
+		super(Movement2D.class);
 		this.color = color;
 		createSprite(size);
 		movement.setMaxVelocity(250);

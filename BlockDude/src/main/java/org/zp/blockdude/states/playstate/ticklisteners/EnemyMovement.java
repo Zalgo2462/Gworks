@@ -7,7 +7,6 @@ import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.logic.GTickListener;
 import org.zp.gworks.sprites.Sprite;
 import org.zp.gworks.sprites.movement.movement2d.forces.SimpleForce2D;
-import org.zp.gworks.sprites.movement.unimovement.forces.SimpleForce1D;
 
 import java.util.Random;
 
@@ -19,9 +18,9 @@ public class EnemyMovement implements GTickListener {
 	private final PlayState playState;
 	private final Enemy enemy;
 	private final Random random;
-	private SimpleForce1D acceleration;
-	private SimpleForce1D deceleration;
-	private SimpleForce1D naturalDeceleration;
+	private SimpleForce2D acceleration;
+	private SimpleForce2D deceleration;
+	private SimpleForce2D naturalDeceleration;
 
 
 	public EnemyMovement(final PlayState playState, final Enemy enemy) {
@@ -29,11 +28,11 @@ public class EnemyMovement implements GTickListener {
 		this.enemy = enemy;
 		this.random = new Random();
 
-		this.acceleration = new SimpleForce1D(enemy.getAcceleration());
+		this.acceleration = new SimpleForce2D();
 		acceleration.setActive(false);
-		this.deceleration = new SimpleForce1D(enemy.getDeceleration());
+		this.deceleration = new SimpleForce2D();
 		acceleration.setActive(false);
-		this.naturalDeceleration = new SimpleForce1D(enemy.getNaturalDeceleration());
+		this.naturalDeceleration = new SimpleForce2D();
 
 		enemy.getMovement().addForce(acceleration);
 		enemy.getMovement().addForce(deceleration);
@@ -145,10 +144,18 @@ public class EnemyMovement implements GTickListener {
 	}
 
 	private void updateForces() {
-		if (enemy.getMovement().getVelocity() > 0)
-			naturalDeceleration.setX(enemy.getNaturalDeceleration());
-		else
-			naturalDeceleration.setX(-enemy.getNaturalDeceleration());
+		acceleration.setForce(
+				Math.cos(enemy.getRotation().getCurrentAngle()) * enemy.getAcceleration(),
+				Math.sin(enemy.getRotation().getCurrentAngle()) * enemy.getAcceleration()
+		);
+		deceleration.setForce(
+				Math.cos(enemy.getRotation().getCurrentAngle()) * enemy.getDeceleration(),
+				Math.sin(enemy.getRotation().getCurrentAngle()) * enemy.getDeceleration()
+		);
+		naturalDeceleration.setForce(
+				Math.cos(enemy.getMovement().getForwardAngle()) * enemy.getNaturalDeceleration(),
+				Math.sin(enemy.getMovement().getForwardAngle()) * enemy.getNaturalDeceleration()
+		);
 		if (Math.abs(enemy.getMovement().getVelocity()) <= 0.000001) {
 			naturalDeceleration.setActive(false);
 		} else {
