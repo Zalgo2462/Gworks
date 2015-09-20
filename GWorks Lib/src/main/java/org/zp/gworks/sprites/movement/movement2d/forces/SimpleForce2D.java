@@ -4,16 +4,16 @@ package org.zp.gworks.sprites.movement.movement2d.forces;
  * Date: 9/11/2015
  * Time: 4:45 PM
  */
-public class SimpleForce implements Force {
+public class SimpleForce2D implements Force2D {
 	private double x;
 	private double y;
 	private boolean active;
 
-	public SimpleForce() {
+	public SimpleForce2D() {
 		this(0, 0);
 	}
 
-	public SimpleForce(double x, double y) {
+	public SimpleForce2D(double x, double y) {
 		this.x = x;
 		this.y = y;
 		active = true;

@@ -2,7 +2,7 @@ package org.zp.gworks.sprites.movement.movement2d;
 
 import org.zp.gworks.sprites.Sprite;
 import org.zp.gworks.sprites.movement.Movement;
-import org.zp.gworks.sprites.movement.movement2d.forces.Force;
+import org.zp.gworks.sprites.movement.movement2d.forces.Force2D;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -14,34 +14,17 @@ import java.util.ArrayList;
  * Time: 5:12 PM
  */
 public class Movement2D extends Movement {
-	private Point2D currentLocation;
 	private double xVelocity;
 	private double yVelocity;
 	private double maxVelocity; //In either x or y direction
-	private Shape collisionArea;
-	private ArrayList<Force> accelerations;
+	private ArrayList<Force2D> accelerations;
 
 	//Speed in pixels per second
 	public Movement2D(Sprite sprite) {
 		super(sprite);
 		this.currentLocation = new Point2D.Double(0, 0);
 		this.maxVelocity = 0;
-		this.accelerations = new ArrayList<Force>();
-	}
-
-	@Override
-	public Point2D getLocation() {
-		return currentLocation;
-	}
-
-	@Override
-	public void setLocation(final double x, final double y) {
-		currentLocation.setLocation(x, y);
-	}
-
-	@Override
-	public void move(final double x, final double y) {
-		currentLocation.setLocation(currentLocation.getX() + x, currentLocation.getY() + y);
+		this.accelerations = new ArrayList<Force2D>();
 	}
 
 	public void accelerate(final long delta) {
@@ -66,25 +49,25 @@ public class Movement2D extends Movement {
 
 	//Accelerations
 	public double getXAcceleration() {
-		return accelerations.parallelStream().filter(Force::isActive).mapToDouble(Force::getX).reduce((a, b) -> a + b).orElse(0);
+		return accelerations.parallelStream().filter(Force2D::isActive).mapToDouble(Force2D::getX).reduce((a, b) -> a + b).orElse(0);
 	}
 
 	public double getYAcceleration() {
-		return accelerations.parallelStream().filter(Force::isActive).mapToDouble(Force::getY).reduce((a, b) -> a + b).orElse(0);
+		return accelerations.parallelStream().filter(Force2D::isActive).mapToDouble(Force2D::getY).reduce((a, b) -> a + b).orElse(0);
 	}
 
 	//All these functions add forces by reference
-	public void addForce(Force force) {
-		accelerations.add(force);
+	public void addForce(Force2D force2D) {
+		accelerations.add(force2D);
 	}
 
-	public void addForces(final java.util.List<Force> forces) {
-		accelerations.addAll(forces);
+	public void addForces(final java.util.List<Force2D> force2Ds) {
+		accelerations.addAll(force2Ds);
 	}
 
-	public void setForces(final java.util.List<Force> forces) {
+	public void setForces(final java.util.List<Force2D> force2Ds) {
 		accelerations.clear();
-		accelerations.addAll(forces);
+		accelerations.addAll(force2Ds);
 	}
 
 	//velocities
@@ -117,27 +100,5 @@ public class Movement2D extends Movement {
 
 	public void setMaxVelocity(final double maxVelocity) {
 		this.maxVelocity = maxVelocity;
-	}
-
-	//Collisions
-	@Override
-	public Shape getCollisionArea() {
-
-		AffineTransform trans = new AffineTransform();
-		trans.translate(currentLocation.getX(), currentLocation.getY());
-		return trans.createTransformedShape(collisionArea);
-	}
-
-	@Override
-	public void setCollisionArea(Shape collisionArea) {
-		this.collisionArea = collisionArea;
-	}
-
-	@Override
-	public Shape getUntranslatedCollisionArea() {
-		if (collisionArea == null) {
-			collisionArea = new Rectangle(sprite.getRenderer().getSprite().getWidth(), sprite.getRenderer().getSprite().getHeight());
-		}
-		return collisionArea;
 	}
 }

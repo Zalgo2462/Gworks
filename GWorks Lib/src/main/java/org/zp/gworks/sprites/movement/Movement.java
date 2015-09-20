@@ -3,6 +3,7 @@ package org.zp.gworks.sprites.movement;
 import org.zp.gworks.sprites.Sprite;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
@@ -11,16 +12,24 @@ import java.awt.geom.Point2D;
  */
 public abstract class Movement {
 	protected Sprite sprite;
+	protected Point2D currentLocation;
+	protected Shape collisionArea;
 
 	protected Movement(Sprite sprite) {
 		this.sprite = sprite;
 	}
 
-	public abstract Point2D getLocation();
+	public Point2D getLocation() {
+		return currentLocation;
+	}
 
-	public abstract void setLocation(double x, double y);
+	public void setLocation(double x, double y) {
+		getLocation().setLocation(x, y);
+	}
 
-	public abstract void move(double x, double y);
+	public void move(double x, double y) {
+		getLocation().setLocation(getLocation().getX() + x, getLocation().getY() + y);
+	}
 
 	//velocities
 	public abstract double getXVelocity();
@@ -60,9 +69,20 @@ public abstract class Movement {
 	}
 
 	//Collisions
-	public abstract Shape getCollisionArea();
+	public Shape getCollisionArea() {
+		AffineTransform trans = new AffineTransform();
+		trans.translate(getLocation().getX(), getLocation().getY());
+		return trans.createTransformedShape(collisionArea);
+	}
 
-	public abstract void setCollisionArea(Shape collisionArea);
+	public void setCollisionArea(Shape collisionArea) {
+		this.collisionArea = collisionArea;
+	}
 
-	public abstract Shape getUntranslatedCollisionArea();
+	public Shape getUntranslatedCollisionArea() {
+		if (collisionArea == null) {
+			collisionArea = new Rectangle(sprite.getRenderer().getSprite().getWidth(), sprite.getRenderer().getSprite().getHeight());
+		}
+		return collisionArea;
+	}
 }

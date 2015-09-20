@@ -8,7 +8,7 @@ import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.gui.canvas.input.GKeyListener;
 import org.zp.gworks.logic.GTickListener;
 import org.zp.gworks.sprites.Sprite;
-import org.zp.gworks.sprites.movement.movement2d.forces.SimpleForce;
+import org.zp.gworks.sprites.movement.movement2d.forces.SimpleForce2D;
 
 import java.awt.event.KeyEvent;
 
@@ -16,17 +16,17 @@ public class PlayerMovement implements GTickListener {
 	private final PlayState playState;
 	private Player player;
 	private GKeyListener keyListener;
-	private SimpleForce acceleration;
-	private SimpleForce deceleration;
-	private SimpleForce naturalDeceleration;
+	private SimpleForce2D acceleration;
+	private SimpleForce2D deceleration;
+	private SimpleForce2D naturalDeceleration;
 
 	public PlayerMovement(PlayState playState, Player player) {
 		this.playState = playState;
 		this.player = player;
 		this.keyListener = playState.getCanvas().getGKeyListener();
-		this.acceleration = new SimpleForce();
-		this.deceleration = new SimpleForce();
-		this.naturalDeceleration = new SimpleForce();
+		this.acceleration = new SimpleForce2D();
+		this.deceleration = new SimpleForce2D();
+		this.naturalDeceleration = new SimpleForce2D();
 
 		player.getMovement().addForce(acceleration);
 		player.getMovement().addForce(deceleration);

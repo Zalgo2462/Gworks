@@ -1,6 +1,7 @@
 package org.zp.platformers.morning.sprites;
 
 import org.zp.gworks.sprites.Sprite;
+import org.zp.gworks.sprites.movement.stationary.Stationary;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,9 +10,10 @@ import java.awt.image.BufferedImage;
  * Date: 8/30/2015
  * Time: 1:59 PM
  */
-public class Platform extends Sprite {
+public class Platform extends Sprite<Stationary> {
 
 	public Platform(int x, int y, int width, int height) {
+		super(Stationary.class);
 		getMovement().setLocation(x, y);
 		getRenderer().setSprite(createSprite(width, height));
 	}

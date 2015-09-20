@@ -1,7 +1,7 @@
 package org.zp.blockdude.sprites;
 
-import org.zp.gworks.gui.sprites.Sprite;
-import org.zp.gworks.gui.sprites.movement.movement2d.Movement2D;
+import org.zp.gworks.sprites.Sprite;
+import org.zp.gworks.sprites.movement.movement2d.Movement2D;
 
 import java.awt.*;
 import java.awt.geom.Point2D;

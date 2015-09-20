@@ -6,7 +6,7 @@ import org.zp.blockdude.states.playstate.SpriteManager;
 import org.zp.gworks.gui.canvas.GCanvas;
 import org.zp.gworks.logic.GTickListener;
 import org.zp.gworks.sprites.Sprite;
-import org.zp.gworks.sprites.movement.movement2d.forces.SimpleForce;
+import org.zp.gworks.sprites.movement.movement2d.forces.SimpleForce2D;
 
 import java.util.Random;
 
@@ -18,9 +18,9 @@ public class EnemyMovement implements GTickListener {
 	private final PlayState playState;
 	private final Enemy enemy;
 	private final Random random;
-	private SimpleForce acceleration;
-	private SimpleForce deceleration;
-	private SimpleForce naturalDeceleration;
+	private SimpleForce2D acceleration;
+	private SimpleForce2D deceleration;
+	private SimpleForce2D naturalDeceleration;
 
 
 	public EnemyMovement(final PlayState playState, final Enemy enemy) {
@@ -28,11 +28,11 @@ public class EnemyMovement implements GTickListener {
 		this.enemy = enemy;
 		this.random = new Random();
 
-		this.acceleration = new SimpleForce();
+		this.acceleration = new SimpleForce2D();
 		acceleration.setActive(false);
-		this.deceleration = new SimpleForce();
+		this.deceleration = new SimpleForce2D();
 		acceleration.setActive(false);
-		this.naturalDeceleration = new SimpleForce();
+		this.naturalDeceleration = new SimpleForce2D();
 
 		enemy.getMovement().addForce(acceleration);
 		enemy.getMovement().addForce(deceleration);
