@@ -1,6 +1,7 @@
 package org.zp.blockdude.sprites;
 
 import org.zp.gworks.gui.sprites.Sprite;
+import org.zp.gworks.gui.sprites.movement.movement2d.Movement2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,7 +10,7 @@ import java.awt.image.BufferedImage;
  * Date: 7/25/2014
  * Time: 12:20 AM
  */
-public class Missile extends Sprite {
+public class Missile extends Sprite<Movement2D> {
 	//TODO: upgradable
 	private static final long MAX_AGE = 5 * 100000000L;
 	private static final int WIDTH = 20;
@@ -20,6 +21,7 @@ public class Missile extends Sprite {
 	private double maxDamage;
 
 	public Missile(final Color color, final double maxDamage) {
+		super(Movement2D.class);
 		this.color = color;
 		this.age = 0;
 		this.maxDamage = maxDamage;
